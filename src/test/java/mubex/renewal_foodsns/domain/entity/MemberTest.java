@@ -1,4 +1,4 @@
-package mubex.renewal_foodsns.domain.member.entity;
+package mubex.renewal_foodsns.domain.entity;
 
 import static org.assertj.core.api.Assertions.*;
 
