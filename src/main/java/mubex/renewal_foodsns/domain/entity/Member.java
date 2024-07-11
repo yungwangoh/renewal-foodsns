@@ -1,4 +1,4 @@
-package mubex.renewal_foodsns.domain.member.entity;
+package mubex.renewal_foodsns.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,9 +11,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import mubex.renewal_foodsns.domain.BaseEntity;
-import mubex.renewal_foodsns.domain.member.MemberRank;
+import mubex.renewal_foodsns.domain.type.MemberRank;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

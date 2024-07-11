@@ -1,4 +1,4 @@
-package mubex.renewal_foodsns.domain.blacklist.entity;
+package mubex.renewal_foodsns.domain.entity;
 
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -12,7 +12,6 @@ import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import mubex.renewal_foodsns.domain.member.entity.Member;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

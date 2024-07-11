@@ -1,4 +1,4 @@
-package mubex.renewal_foodsns.domain;
+package mubex.renewal_foodsns.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

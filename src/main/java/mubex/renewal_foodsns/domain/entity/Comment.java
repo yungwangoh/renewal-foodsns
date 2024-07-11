@@ -1,4 +1,4 @@
-package mubex.renewal_foodsns.domain.comment.entity;
+package mubex.renewal_foodsns.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -9,14 +9,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import mubex.renewal_foodsns.domain.BaseEntity;
-import mubex.renewal_foodsns.domain.member.entity.Member;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

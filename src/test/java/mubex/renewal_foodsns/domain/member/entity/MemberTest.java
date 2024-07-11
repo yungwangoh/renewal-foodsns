@@ -2,7 +2,8 @@ package mubex.renewal_foodsns.domain.member.entity;
 
 import static org.assertj.core.api.Assertions.*;
 
-import mubex.renewal_foodsns.domain.member.MemberRank;
+import mubex.renewal_foodsns.domain.entity.Member;
+import mubex.renewal_foodsns.domain.type.MemberRank;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;

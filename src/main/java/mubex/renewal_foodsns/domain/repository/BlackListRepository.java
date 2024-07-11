@@ -1,6 +1,6 @@
 package mubex.renewal_foodsns.domain.repository;
 
-import mubex.renewal_foodsns.domain.blacklist.entity.BlackList;
+import mubex.renewal_foodsns.domain.entity.BlackList;
 
 public interface BlackListRepository {
 

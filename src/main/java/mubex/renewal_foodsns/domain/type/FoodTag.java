@@ -1,4 +1,4 @@
-package mubex.renewal_foodsns.domain.post;
+package mubex.renewal_foodsns.domain.type;
 
 public enum FoodTag {
     NOODLE, // 면
