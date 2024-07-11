@@ -36,3 +36,10 @@ out/
 ### VS Code ###
 .vscode/
 application.yml
+QBaseEntity.java
+QPost.java
+QMember.java
+QCommentHeart.java
+QPostHeart.java
+QComment.java
+QBlackList.java
