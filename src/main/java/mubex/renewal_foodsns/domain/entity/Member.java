@@ -7,6 +7,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +18,14 @@ import mubex.renewal_foodsns.domain.type.MemberRank;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Table(
+        name = "member",
+        indexes = {
+                @Index(name = "nick_name_idx", columnList = "nick_name", unique = true),
+                @Index(name = "login_idx", columnList = "email, password", unique = true),
+                @Index(name = "member_rank_idx", columnList = "member_rank")
+        }
+)
 public class Member extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -101,11 +111,13 @@ public class Member extends BaseEntity {
         this.isBlackList = true;
     }
 
-    public void addHeart() {
-        this.heart++;
+    public void addHeart(long heart) {
+        if(heart < 0) throw new IllegalArgumentException("유효하지 않은 값입니다.");
+        this.heart += heart;
     }
 
-    public void addReport() {
-        this.report++;
+    public void addReport(int report) {
+        if(report < 0) throw new IllegalArgumentException("유효하지 않은 값입니다.");
+        this.report += report;
     }
 }
