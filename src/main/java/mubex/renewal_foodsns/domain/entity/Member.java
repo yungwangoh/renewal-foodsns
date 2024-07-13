@@ -14,7 +14,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mubex.renewal_foodsns.domain.type.MemberRank;
-import mubex.renewal_foodsns.domain.util.PasswordUtil;
+import mubex.renewal_foodsns.common.util.PasswordUtil;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

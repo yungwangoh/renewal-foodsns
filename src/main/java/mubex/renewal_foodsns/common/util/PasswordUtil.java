@@ -1,4 +1,4 @@
-package mubex.renewal_foodsns.domain.util;
+package mubex.renewal_foodsns.common.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

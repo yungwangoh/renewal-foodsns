@@ -1,4 +1,4 @@
-package mubex.renewal_foodsns.application.mapper;
+package mubex.renewal_foodsns.common.mapper;
 
 import mubex.renewal_foodsns.domain.dto.response.MemberResponse;
 import mubex.renewal_foodsns.domain.entity.Member;

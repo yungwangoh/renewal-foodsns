@@ -2,7 +2,7 @@ package mubex.renewal_foodsns.application.login;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import mubex.renewal_foodsns.application.mapper.MemberMapper;
+import mubex.renewal_foodsns.common.mapper.MemberMapper;
 import mubex.renewal_foodsns.domain.dto.response.MemberResponse;
 import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.repository.MemberRepository;

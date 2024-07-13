@@ -8,7 +8,7 @@ import mubex.renewal_foodsns.domain.exception.LoginException;
 import mubex.renewal_foodsns.domain.exception.NotFoundException;
 import mubex.renewal_foodsns.domain.repository.MemberRepository;
 import mubex.renewal_foodsns.domain.type.MemberRank;
-import mubex.renewal_foodsns.domain.util.PasswordUtil;
+import mubex.renewal_foodsns.common.util.PasswordUtil;
 import mubex.renewal_foodsns.infrastructure.persistance.jpa.MemberJpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
