@@ -11,9 +11,9 @@ public enum MemberRank {
 
         if (heart <= 100) {
             return NORMAL;
-        } else if (heart <= 200) {
+        } else if (heart <= 500) {
             return MIDDLE;
-        } else if (heart <= 300) {
+        } else if (heart <= 5000) {
             return SENIOR;
         } else {
             return EXPERT;
