@@ -1,8 +1,10 @@
 package mubex.renewal_foodsns.domain.entity;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import mubex.renewal_foodsns.domain.type.MemberRank;
+import mubex.renewal_foodsns.domain.util.PasswordUtil;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,7 @@ class MemberTest {
                 "name",
                 "pwd",
                 "email",
+                1,
                 heart,
                 1,
                 false,
@@ -44,11 +47,34 @@ class MemberTest {
                 "email",
                 0,
                 1,
+                1,
                 false,
                 MemberRank.NORMAL,
                 false);
 
         assertThatThrownBy(() -> member.updateMemberRank(MemberRank.convert(invalidHeart)))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void 유저_비밀번호_암호화_() {
+        // given
+        String password = "qwer1234@A";
+        Member member = Member.create(
+                "name",
+                password,
+                "qwer1234@na.com",
+                1,
+                0,
+                1,
+                false,
+                MemberRank.NORMAL,
+                false);
+
+        // when
+        String encryptedPassword = member.getPassword();
+
+        // then
+        assertTrue(PasswordUtil.match(encryptedPassword, password));
     }
 }
