@@ -3,6 +3,7 @@ package mubex.renewal_foodsns.application;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.login.LoginHandler;
+import mubex.renewal_foodsns.application.mapper.MemberMapper;
 import mubex.renewal_foodsns.domain.dto.response.MemberResponse;
 import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.repository.MemberRepository;
@@ -22,12 +23,17 @@ public class MemberService {
     private final LoginHandler loginHandler;
 
     @Transactional
-    public void signUp(final String email, final String nickName, final String password) {
+    public void signUp(final String email, final String nickName, final String password, int profileId) {
+
+        if(memberRepository.existsByNickName(nickName)) {
+            throw new IllegalArgumentException("닉네임이 중복 됩니다.");
+        }
 
         Member member = Member.create(
                 nickName,
                 password,
                 email,
+                profileId,
                 0,
                 0,
                 false,
@@ -48,13 +54,13 @@ public class MemberService {
     }
 
     @Transactional
-    public String updateNickName(final String nickName, final String updatedNickName) {
+    public MemberResponse updateNickName(final String nickName, final String updatedNickName) {
         Member member = memberRepository.findByNickName(nickName);
 
         if(!memberRepository.existsByNickName(updatedNickName)) {
             member.updateNickName(updatedNickName);
 
-            return memberRepository.findById(member.getId()).getNickName();
+            return MemberMapper.INSTANCE.toResponse(member);
         } else {
             throw new IllegalArgumentException("변경하고자 하는 닉네임이 이미 존재합니다.");
         }
@@ -85,6 +91,10 @@ public class MemberService {
     public void markAsDeleted(final String nickName) {
         Member member = memberRepository.findByNickName(nickName);
 
+        if(member.isInDeleted()) {
+            throw new IllegalArgumentException("이미 삭제된 유저입니다.");
+        }
+
         member.markAsDeleted();
     }
 
@@ -92,21 +102,27 @@ public class MemberService {
     public void addToBlacklist(final String nickName) {
         Member member = memberRepository.findByNickName(nickName);
 
-        if(member.getReport() >= 10) {
+        if(member.checkMemberBlackList()) {
             member.addToBlacklist();
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("이미 블랙리스트 기준에 적합하지 않은 유저입니다.");
         }
     }
 
-    public List<Member> findByMemberRank(MemberRank memberRank) {
-        return memberRepository.findAllByMemberRank(memberRank);
+    public List<MemberResponse> findByMemberRank(MemberRank memberRank) {
+        return memberRepository.findAllByMemberRank(memberRank)
+                .stream()
+                .map(MemberMapper.INSTANCE::toResponse)
+                .toList();
     }
 
-    public Page<Member> viewPagingMemberRank(PageRequest pageRequest) {
+    public Page<MemberResponse> viewPagingMemberRank(PageRequest pageRequest) {
 
-        List<Member> members = memberRepository.findAll();
+        List<MemberResponse> list = memberRepository.findAll()
+                .stream()
+                .map(MemberMapper.INSTANCE::toResponse)
+                .toList();
 
-        return new PageImpl<>(members, pageRequest, members.size());
+        return new PageImpl<>(list, pageRequest, list.size());
     }
 }
