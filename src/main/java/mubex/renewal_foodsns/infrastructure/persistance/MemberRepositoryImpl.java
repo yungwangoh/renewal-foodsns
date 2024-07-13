@@ -4,9 +4,11 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.common.exception.ExceptionResolver;
 import mubex.renewal_foodsns.domain.entity.Member;
+import mubex.renewal_foodsns.domain.exception.LoginException;
 import mubex.renewal_foodsns.domain.exception.NotFoundException;
 import mubex.renewal_foodsns.domain.repository.MemberRepository;
 import mubex.renewal_foodsns.domain.type.MemberRank;
+import mubex.renewal_foodsns.domain.util.PasswordUtil;
 import mubex.renewal_foodsns.infrastructure.persistance.jpa.MemberJpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,8 +50,14 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public Member findByEmailAndPassword(String email, String password) {
-        return memberJpaRepository.findByEmailAndPassword(email, password)
+        Member member = memberJpaRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException(ExceptionResolver.NOT_FOUND_MEMBER));
+
+        if(PasswordUtil.match(member.getPassword(), password)) {
+            return member;
+        } else {
+            throw new LoginException(ExceptionResolver.LOGIN_FAILED);
+        }
     }
 
     @Override
