@@ -9,22 +9,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Table(
-        name = "post_heart"
-)
-public class PostHeart {
+public class PostImage {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,24 +27,4 @@ public class PostHeart {
             foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT)
     )
     private Post post;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "member_id",
-            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT)
-    )
-    private Member member;
-
-    @Builder
-    private PostHeart(Post post, Member member) {
-        this.post = post;
-        this.member = member;
-    }
-
-    public static PostHeart create(Post post, Member member) {
-        return PostHeart.builder()
-                .post(post)
-                .member(member)
-                .build();
-    }
 }

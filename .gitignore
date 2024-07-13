@@ -44,6 +44,6 @@ QPostHeart.java
 QComment.java
 QBlackList.java
 MemberMapperImpl.java
-application-test.yml
 data.sql
 init.sql
+application-test.yml

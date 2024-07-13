@@ -44,6 +44,12 @@ dependencies {
 	// map struct
 	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+	// mysql test-container
+	testImplementation "org.testcontainers:testcontainers:1.19.3"
+	testImplementation "org.testcontainers:junit-jupiter:1.19.3"
+	testImplementation "org.testcontainers:mysql:1.19.3"
+	testImplementation 'org.testcontainers:jdbc:1.19.4'
 }
 
 tasks.named('test') {
