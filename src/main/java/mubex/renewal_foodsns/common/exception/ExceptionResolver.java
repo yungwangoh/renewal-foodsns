@@ -15,7 +15,12 @@ public enum ExceptionResolver implements ErrorResponse {
     NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, "NOT_FOUND_002", "댓글을 찾을 수 없습니다."),
     NOT_FOUND_COMMENT_HEART(HttpStatus.NOT_FOUND, "NOT_FOUNT_003", "댓글 좋아요를 찾을 수 없습니다."),
     NOT_FOUND_POST_HEART(HttpStatus.NOT_FOUND, "NOT_FOUNT_004", "게시물 좋아요를 찾을 수 없습니다."),
-    NOT_FOUND_BLACK_LIST(HttpStatus.NOT_FOUND, "NOT_FOUNT_005", "블랙 리스트를 찾을 수 없습니다.")
+    NOT_FOUND_BLACK_LIST(HttpStatus.NOT_FOUND, "NOT_FOUNT_005", "블랙 리스트를 찾을 수 없습니다."),
+
+    // un_authorized 401
+    LOGIN_FAILED(HttpStatus.UNAUTHORIZED, "UN_AUTHORIZED_000", "로그인에 실패하였습니다."),
+
+    // bad_request 400
     ;
 
     private final HttpStatus httpStatus;
