@@ -1,4 +1,4 @@
-package mubex.renewal_foodsns.domain.dto.request;
+package mubex.renewal_foodsns.domain.dto.request.update;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
