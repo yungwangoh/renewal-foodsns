@@ -1,4 +1,4 @@
-package mubex.renewal_foodsns.infrastructure.config.querydsl;
+package mubex.renewal_foodsns.common.config.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
