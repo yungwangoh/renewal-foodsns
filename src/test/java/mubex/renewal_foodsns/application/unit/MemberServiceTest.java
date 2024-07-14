@@ -6,6 +6,7 @@ import static org.mockito.BDDMockito.*;
 import mubex.renewal_foodsns.application.MemberService;
 import mubex.renewal_foodsns.application.login.LoginHandler;
 import mubex.renewal_foodsns.domain.dto.response.MemberResponse;
+import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.repository.MemberRepository;
 import mubex.renewal_foodsns.domain.type.MemberRank;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -30,29 +31,95 @@ class MemberServiceTest {
     private LoginHandler loginHandler;
 
     @Test
-    void 로그인() {
-        // given
-        String email = "qwer1234@na.com";
-        String password = "qwer1234@A";
+    void 유저가_회원_가입을_하는데_이미_존재하는_경우_예외_발생() {
 
-        MemberResponse mr = MemberResponse.builder()
-                .profileId(1)
-                .heart(1)
-                .inBlackList(false)
-                .report(1)
-                .memberRank(MemberRank.NORMAL)
-                .nickName("name")
-                .build();
+        given(memberRepository.existsByNickName(anyString())).willReturn(true);
 
-        given(loginHandler.signIn(anyString(), anyString())).willReturn(mr);
+        assertThatThrownBy(() -> memberService.signUp(
+                "qwer1234@na.com",
+                "name",
+                "qwer1234",
+                1)
+        ).isInstanceOf(IllegalArgumentException.class);
+    }
 
-        // when
-        MemberResponse memberResponse = memberService.signIn(email, password);
+    @Test
+    void 유저가_이미_탈퇴_하였는데_또_다시_탈퇴하는_경우_예외_발생() {
+        Member member = Member.create(
+                "name",
+                "pwd",
+                "email",
+                0,
+                1,
+                1,
+                false,
+                MemberRank.NORMAL,
+                true);
 
-        // then
-        assertThat(memberResponse).isNotNull();
-        assertThat(memberResponse.nickName()).isEqualTo("name");
-        assertThat(memberResponse.memberRank()).isEqualTo(MemberRank.NORMAL);
-        assertThat(memberResponse.inBlackList()).isEqualTo(false);
+        given(memberRepository.findByNickName(anyString()))
+                .willReturn(member);
+
+        assertThatThrownBy(() -> memberService.markAsDeleted("name"))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void 유저의_블랙_리스트_기준이_넘지않는다_이미_블랙리스트로_등록_예외_발생() {
+        Member member = Member.create(
+                "name",
+                "pwd",
+                "email",
+                0,
+                1,
+                1,
+                true,
+                MemberRank.NORMAL,
+                true);
+
+        given(memberRepository.findByNickName(anyString()))
+                .willReturn(member);
+
+        assertThatThrownBy(() -> memberService.addToBlacklist("name"))
+                .isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    void 유저의_블랙_리스트_기준이_넘지않는다_신고_수가_기준에_달성_하지_못함_예외_발생() {
+        Member member = Member.create(
+                "name",
+                "pwd",
+                "email",
+                0,
+                1,
+                1,
+                true,
+                MemberRank.NORMAL,
+                false);
+
+        given(memberRepository.findByNickName(anyString()))
+                .willReturn(member);
+
+        assertThatThrownBy(() -> memberService.addToBlacklist("name"))
+                .isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    void 유저_닉네임_변경_닉네임이_이미_존재하는_경우_예외_발생() {
+        Member member = Member.create(
+                "name",
+                "pwd",
+                "email",
+                0,
+                1,
+                1,
+                true,
+                MemberRank.NORMAL,
+                false);
+
+        given(memberRepository.findByNickName(anyString())).willReturn(member);
+        given(memberRepository.existsByNickName(anyString())).willReturn(true);
+
+        assertThatThrownBy(() -> memberService.updateNickName("name", "updateName"))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }
