@@ -108,7 +108,7 @@ public class Member extends BaseEntity {
     }
 
     public void updatePassword(String password) {
-        this.password = password;
+        this.password = PasswordUtil.encryptPassword(password);
     }
 
     public void updateMemberRank(MemberRank memberRank) {
