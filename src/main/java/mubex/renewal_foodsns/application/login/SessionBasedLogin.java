@@ -21,7 +21,7 @@ public class SessionBasedLogin implements LoginHandler {
     public MemberResponse signIn(String email, String password) {
         Member member = memberRepository.findByEmailAndPassword(email, password);
 
-        httpSession.setAttribute(member.getNickName(), member);
+        httpSession.setAttribute(email, member);
 
         return MemberMapper.INSTANCE.toResponse(member);
     }
