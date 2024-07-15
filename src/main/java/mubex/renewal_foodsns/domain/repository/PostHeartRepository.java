@@ -6,4 +6,5 @@ public interface PostHeartRepository {
 
     PostHeart save(PostHeart postHeart);
     boolean existsByMemberId(Long memberId);
+    boolean existsByMemberNickName(String nickName);
 }
