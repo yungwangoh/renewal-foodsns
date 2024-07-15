@@ -42,7 +42,7 @@ public class MemberServiceTest extends TestContainer {
 
         // when
         MemberResponse memberResponse = memberService.signIn(email, password);
-        Member sessionMember = (Member) httpSession.getAttribute(nickName);
+        Member sessionMember = (Member) httpSession.getAttribute(email);
 
         // then
         assertThat(memberResponse).isNotNull();
