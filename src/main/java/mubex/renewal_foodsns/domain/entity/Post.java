@@ -55,8 +55,8 @@ public class Post extends BaseEntity {
     @Column(name = "views", nullable = false)
     private long views;
 
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
+    @Column(name = "in_deleted", nullable = false)
+    private boolean inDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
@@ -66,7 +66,7 @@ public class Post extends BaseEntity {
     private Member member;
 
     @Builder
-    public Post(String title, String text, long heart, int report, FoodTag foodTag, long views, boolean isDeleted,
+    public Post(String title, String text, long heart, int report, FoodTag foodTag, long views, boolean inDeleted,
                 Member member) {
         this.title = title;
         this.text = text;
@@ -74,11 +74,11 @@ public class Post extends BaseEntity {
         this.report = report;
         this.foodTag = foodTag;
         this.views = views;
-        this.isDeleted = isDeleted;
+        this.inDeleted = inDeleted;
         this.member = member;
     }
 
-    public static Post create(String title, String text, long heart, int report, FoodTag foodTag, long views, boolean isDeleted, Member member) {
+    public static Post create(String title, String text, long heart, int report, FoodTag foodTag, long views, boolean inDeleted, Member member) {
         return Post.builder()
                 .title(title)
                 .text(text)
@@ -86,7 +86,7 @@ public class Post extends BaseEntity {
                 .report(report)
                 .foodTag(foodTag)
                 .views(views)
-                .isDeleted(isDeleted)
+                .inDeleted(inDeleted)
                 .member(member)
                 .build();
     }
@@ -112,6 +112,6 @@ public class Post extends BaseEntity {
     }
 
     public void markAsDeleted() {
-        this.isDeleted = true;
+        this.inDeleted = true;
     }
 }
