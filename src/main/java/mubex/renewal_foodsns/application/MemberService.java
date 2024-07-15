@@ -3,7 +3,8 @@ package mubex.renewal_foodsns.application;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.login.LoginHandler;
-import mubex.renewal_foodsns.common.mapper.MemberMapper;
+import mubex.renewal_foodsns.common.mapper.Mappable;
+import mubex.renewal_foodsns.common.mapper.map.MemberMapper;
 import mubex.renewal_foodsns.domain.dto.response.MemberResponse;
 import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.repository.MemberRepository;
@@ -21,6 +22,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final LoginHandler loginHandler;
+    private final Mappable<MemberResponse, Member> mappable;
 
     @Transactional
     public void signUp(final String email, final String nickName, final String password, int profileId) {
@@ -60,7 +62,7 @@ public class MemberService {
         if(!memberRepository.existsByNickName(updatedNickName)) {
             member.updateNickName(updatedNickName);
 
-            return MemberMapper.INSTANCE.toResponse(member);
+            return mappable.toResponse(member);
         } else {
             throw new IllegalArgumentException("변경하고자 하는 닉네임이 이미 존재합니다.");
         }
@@ -112,7 +114,7 @@ public class MemberService {
     public List<MemberResponse> findByMemberRank(MemberRank memberRank) {
         return memberRepository.findAllByMemberRank(memberRank)
                 .stream()
-                .map(MemberMapper.INSTANCE::toResponse)
+                .map(mappable::toResponse)
                 .toList();
     }
 
@@ -120,7 +122,7 @@ public class MemberService {
 
         List<MemberResponse> list = memberRepository.findAll()
                 .stream()
-                .map(MemberMapper.INSTANCE::toResponse)
+                .map(mappable::toResponse)
                 .toList();
 
         return new PageImpl<>(list, pageRequest, list.size());
