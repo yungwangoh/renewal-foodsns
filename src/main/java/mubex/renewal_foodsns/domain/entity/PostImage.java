@@ -34,8 +34,12 @@ public class PostImage extends BaseEntity {
     private Post post;
 
     @Builder
-    public PostImage(String originFileName, Post post) {
+    private PostImage(String originFileName, Post post) {
         this.originFileName = originFileName;
         this.post = post;
+    }
+
+    public void updateOriginFileName(String originFileName) {
+        this.originFileName = originFileName;
     }
 }
