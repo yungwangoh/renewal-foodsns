@@ -57,6 +57,9 @@ dependencies {
 	testImplementation "org.testcontainers:junit-jupiter:1.19.3"
 	testImplementation "org.testcontainers:mysql:1.19.3"
 	testImplementation 'org.testcontainers:jdbc:1.19.4'
+
+	// thumbnail
+	implementation 'net.coobird:thumbnailator:0.4.20'
 }
 
 tasks.named('test') {
