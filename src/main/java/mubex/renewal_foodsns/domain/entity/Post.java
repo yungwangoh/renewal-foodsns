@@ -13,11 +13,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import mubex.renewal_foodsns.domain.type.FoodTag;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,12 +26,12 @@ import mubex.renewal_foodsns.domain.type.FoodTag;
         name = "post",
         indexes = {
                 @Index(name = "title_idx", columnList = "title", unique = true),
-                @Index(name = "food_tag_idx", columnList = "food_tag")
         }
 )
 public class Post extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "title", nullable = false)
@@ -41,6 +41,9 @@ public class Post extends BaseEntity {
     @Column(name = "text", nullable = false)
     private String text;
 
+    @Column(name = "thumbnail")
+    private String thumbnail;
+
     // 좋아요 수
     @Column(name = "heart", nullable = false)
     private long heart;
@@ -48,9 +51,6 @@ public class Post extends BaseEntity {
     // 신고 수
     @Column(name = "report", nullable = false)
     private int report;
-
-    @Column(name = "food_tag", nullable = false)
-    private FoodTag foodTag;
 
     @Column(name = "views", nullable = false)
     private long views;
@@ -66,25 +66,24 @@ public class Post extends BaseEntity {
     private Member member;
 
     @Builder
-    public Post(String title, String text, long heart, int report, FoodTag foodTag, long views, boolean inDeleted,
-                Member member) {
+    private Post(String title, String text, long heart, int report, long views, boolean inDeleted, Member member) {
+
         this.title = title;
         this.text = text;
         this.heart = heart;
         this.report = report;
-        this.foodTag = foodTag;
         this.views = views;
         this.inDeleted = inDeleted;
         this.member = member;
     }
 
-    public static Post create(String title, String text, long heart, int report, FoodTag foodTag, long views, boolean inDeleted, Member member) {
+    public static Post create(String title, String text, long heart, int report, long views, boolean inDeleted,
+                              Member member) {
         return Post.builder()
                 .title(title)
                 .text(text)
                 .heart(heart)
                 .report(report)
-                .foodTag(foodTag)
                 .views(views)
                 .inDeleted(inDeleted)
                 .member(member)
@@ -107,11 +106,21 @@ public class Post extends BaseEntity {
         this.report++;
     }
 
-    public void updateFoodTag(FoodTag foodTag) {
-        this.foodTag = foodTag;
+    public void addViews() {
+        this.views++;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public void markAsDeleted() {
         this.inDeleted = true;
+    }
+
+    public void checkMemberId(Long memberId) {
+        if (!Objects.equals(this.member.getId(), memberId)) {
+            throw new IllegalArgumentException("글쓴이가 다릅니다.");
+        }
     }
 }
