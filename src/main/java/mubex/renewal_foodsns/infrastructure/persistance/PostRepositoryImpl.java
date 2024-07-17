@@ -5,7 +5,6 @@ import mubex.renewal_foodsns.common.exception.ExceptionResolver;
 import mubex.renewal_foodsns.domain.entity.Post;
 import mubex.renewal_foodsns.domain.exception.NotFoundException;
 import mubex.renewal_foodsns.domain.repository.PostRepository;
-import mubex.renewal_foodsns.domain.type.FoodTag;
 import mubex.renewal_foodsns.infrastructure.persistance.jpa.PostJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,7 +51,7 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public Page<Post> findByFoodTag(FoodTag foodTag, Pageable pageable) {
-        return postJpaRepository.findAllByFoodTag(foodTag, pageable);
+    public boolean existsByTitle(String title) {
+        return postJpaRepository.existsByTitle(title);
     }
 }
