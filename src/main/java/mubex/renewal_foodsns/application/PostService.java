@@ -131,6 +131,12 @@ public class PostService {
         post.markAsDeleted();
     }
 
+    public PostResponse find(Long postId) {
+        Post post = postRepository.findById(postId);
+
+        return postMapper.toResponse(post);
+    }
+
     public Page<PostPageResponse> findPostsByTitle(final String title, final Pageable pageable) {
         return postRepository.findByTitle(title, pageable).map(postPageMapper::toResponse);
     }
