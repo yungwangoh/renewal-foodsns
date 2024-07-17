@@ -1,16 +1,17 @@
 package mubex.renewal_foodsns.domain.dto.response;
 
+import java.util.List;
 import lombok.Builder;
-import mubex.renewal_foodsns.domain.type.FoodTag;
 
 @Builder
 public record PostResponse(
+        long id,
         String title,
         String text,
-        int heart,
+        long heart,
         int report,
-        FoodTag foodTag,
         long views,
-        MemberResponse memberResponse
+        MemberResponse memberResponse,
+        List<PostImageResponse> postImageResponses
 ) {
 }
