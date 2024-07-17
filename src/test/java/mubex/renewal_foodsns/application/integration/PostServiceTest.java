@@ -59,6 +59,7 @@ public class PostServiceTest extends TestContainer {
         // then
         assertThat(postResponse.title()).isEqualTo(title);
         assertThat(postResponse.text()).isEqualTo(text);
+        assertThat(postResponse.memberResponse().nickName()).isEqualTo(nickName);
         assertThat(postResponse.postImageResponses()).hasSize(getMultipartFiles().size());
     }
 
@@ -78,6 +79,7 @@ public class PostServiceTest extends TestContainer {
         // then
         assertThat(update.title()).isEqualTo(title);
         assertThat(update.text()).isEqualTo(text);
+        assertThat(update.memberResponse().nickName()).isEqualTo(nickName);
         assertThat(update.postImageResponses()).hasSize(getMultipartFiles().size());
     }
 
