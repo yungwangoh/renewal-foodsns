@@ -1,7 +1,7 @@
 package mubex.renewal_foodsns.infrastructure.storage.platform;
 
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.common.property.CloudProperties;
+import mubex.renewal_foodsns.common.util.UriUtil;
 import mubex.renewal_foodsns.infrastructure.storage.PlatformStorage;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ResourceUtils;
@@ -25,25 +26,71 @@ public class GoogleCloudPlatformStorage implements PlatformStorage {
     public String process(MultipartFile multipartFile) {
 
         try {
-            String uuid = UUID.randomUUID().toString();
+            StorageInfo storageInfo = getStorageInfo(multipartFile.getContentType());
 
-            String ext = multipartFile.getContentType();
+            Storage storage = getStorage();
 
-            BlobInfo blobInfo = BlobInfo.newBuilder(cloudProperties.bucket(), uuid)
-                    .setContentType(ext)
-                    .build();
+            storage.create(storageInfo.blobInfo(), multipartFile.getBytes());
 
-            InputStream keyFile = ResourceUtils.getURL(cloudProperties.credentials().location()).openStream();
-            Storage storage = StorageOptions.newBuilder()
-                    .setCredentials(GoogleCredentials.fromStream(keyFile))
-                    .build()
-                    .getService();
-
-            storage.create(blobInfo, multipartFile.getBytes());
-
-            return multipartFile.getOriginalFilename();
+            return UriUtil.generate(cloudProperties.bucket(), storageInfo.uuid());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public String process(byte[] content, String format) {
+
+        try {
+            StorageInfo storageInfo = getStorageInfo(format);
+
+            Storage storage = getStorage();
+
+            storage.create(storageInfo.blobInfo, content);
+
+            return UriUtil.generate(cloudProperties.bucket(), storageInfo.uuid());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public String update(MultipartFile multipartFile) {
+
+        try {
+            StorageInfo storageInfo = getStorageInfo(multipartFile.getContentType());
+
+            Storage storage = getStorage();
+
+            if(storage.get(storageInfo.blobInfo().getBlobId()) != null) {
+                storage.delete(storageInfo.blobInfo().getBlobId());
+            }
+
+            storage.create(storageInfo.blobInfo(), multipartFile.getBytes());
+
+            return UriUtil.generate(cloudProperties.bucket(), storageInfo.uuid());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Storage getStorage() throws IOException {
+        InputStream keyFile = ResourceUtils.getURL(cloudProperties.credentials().location()).openStream();
+        return StorageOptions.newBuilder()
+                .setCredentials(GoogleCredentials.fromStream(keyFile))
+                .build()
+                .getService();
+    }
+
+    private StorageInfo getStorageInfo(String format) {
+        String uuid = UUID.randomUUID().toString();
+
+        BlobInfo blobInfo = BlobInfo.newBuilder(cloudProperties.bucket(), uuid)
+                .setContentType(format)
+                .build();
+
+        return new StorageInfo(uuid, blobInfo);
+    }
+
+    private record StorageInfo(String uuid, BlobInfo blobInfo) {}
 }
