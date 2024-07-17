@@ -18,9 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Table(
-        name = "post_heart"
-)
+@Table(name = "post_heart")
 public class PostHeart {
 
     @Id
