@@ -19,12 +19,13 @@ import lombok.NoArgsConstructor;
 @Getter
 public class CommentHeart {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-            name = "commnet_id",
+            name = "comment_id",
             foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT)
     )
     private Comment comment;
