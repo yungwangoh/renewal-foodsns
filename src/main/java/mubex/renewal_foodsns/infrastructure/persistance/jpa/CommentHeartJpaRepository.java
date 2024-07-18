@@ -4,4 +4,6 @@ import mubex.renewal_foodsns.domain.entity.CommentHeart;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CommentHeartJpaRepository extends JpaRepository<CommentHeart, Long> {
+
+    boolean existsByMemberId(Long memberId);
 }

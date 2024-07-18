@@ -3,6 +3,7 @@ package mubex.renewal_foodsns.infrastructure.persistance;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.domain.entity.FoodTag;
+import mubex.renewal_foodsns.domain.entity.Post;
 import mubex.renewal_foodsns.domain.repository.FoodTagRepository;
 import mubex.renewal_foodsns.domain.type.Tag;
 import mubex.renewal_foodsns.infrastructure.persistance.jpa.FoodTagJpaRepository;
@@ -37,5 +38,11 @@ public class FoodTagRepositoryImpl implements FoodTagRepository {
     @Override
     public List<FoodTag> findByPostId(Long postId) {
         return foodTagJpaRepository.findByPostId(postId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteAllByPost(Post post) {
+        foodTagJpaRepository.deleteAllByPost(post);
     }
 }

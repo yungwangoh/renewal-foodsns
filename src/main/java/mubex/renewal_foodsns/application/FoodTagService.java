@@ -1,9 +1,6 @@
 package mubex.renewal_foodsns.application;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.domain.entity.FoodTag;
 import mubex.renewal_foodsns.domain.entity.Post;
@@ -39,16 +36,16 @@ public class FoodTagService {
         });
     }
 
-    public void update(Set<Tag> tags, Long postId) {
+    @Transactional
+    public void update(Set<Tag> tags, Post post) {
 
-        List<FoodTag> foodTags = foodTagRepository.findByPostId(postId);
-        List<Tag> tagList = new ArrayList<>(tags);
+        foodTagRepository.deleteAllByPost(post);
 
-        IntStream.rangeClosed(0, foodTags.size() - 1)
-                .forEach(idx -> {
-                    FoodTag foodTag = foodTags.get(idx);
-                    foodTag.updateTag(tagList.get(idx));
-                });
+        tags.forEach(tag -> {
+            FoodTag foodTag = FoodTag.create(tag, post);
+
+            foodTagRepository.save(foodTag);
+        });
     }
 
     public Slice<FoodTag> findByTag(final Tag tag, final Pageable pageable) {

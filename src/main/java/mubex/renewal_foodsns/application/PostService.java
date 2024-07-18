@@ -77,7 +77,7 @@ public class PostService {
 
         post.updateText(text);
 
-        foodTagService.update(tags, post.getId());
+        foodTagService.update(tags, post);
 
         if (!multipartFiles.isEmpty()) {
             return processImage(multipartFiles, post);

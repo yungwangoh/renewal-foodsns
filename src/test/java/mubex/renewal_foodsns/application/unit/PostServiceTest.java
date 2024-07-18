@@ -8,7 +8,9 @@ import static org.mockito.BDDMockito.given;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import mubex.renewal_foodsns.application.PostImageService;
 import mubex.renewal_foodsns.application.PostService;
 import mubex.renewal_foodsns.common.mapper.map.PostMapper;
@@ -18,6 +20,7 @@ import mubex.renewal_foodsns.domain.repository.MemberRepository;
 import mubex.renewal_foodsns.domain.repository.PostHeartRepository;
 import mubex.renewal_foodsns.domain.repository.PostReportRepository;
 import mubex.renewal_foodsns.domain.repository.PostRepository;
+import mubex.renewal_foodsns.domain.type.Tag;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -62,8 +65,9 @@ public class PostServiceTest {
         String title = "하이";
         String text = "하이용";
         Long memberId = 1L;
+        Set<Tag> tags = new HashSet<>();
 
-        assertThatThrownBy(() -> postService.create(title, text, memberId, getMultipartFiles(11)))
+        assertThatThrownBy(() -> postService.create(title, text, memberId, tags, getMultipartFiles(11)))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -73,10 +77,11 @@ public class PostServiceTest {
         String title = "하이";
         String text = "하이용";
         Long memberId = 1L;
+        Set<Tag> tags = new HashSet<>();
 
         given(postRepository.existsByTitle(anyString())).willReturn(true);
 
-        assertThatThrownBy(() -> postService.create(title, text, memberId, List.of()))
+        assertThatThrownBy(() -> postService.create(title, text, memberId, tags, List.of()))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 

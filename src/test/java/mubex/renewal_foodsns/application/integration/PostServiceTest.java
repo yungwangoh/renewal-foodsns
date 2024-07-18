@@ -6,10 +6,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import mubex.renewal_foodsns.application.MemberService;
 import mubex.renewal_foodsns.application.PostService;
 import mubex.renewal_foodsns.common.TestContainer;
 import mubex.renewal_foodsns.domain.dto.response.PostResponse;
+import mubex.renewal_foodsns.domain.type.Tag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -52,9 +54,10 @@ public class PostServiceTest extends TestContainer {
         Long memberId = 1L;
 
         List<MultipartFile> multipartFiles = getMultipartFiles();
+        Set<Tag> tags = Set.of(Tag.SOUP, Tag.NOODLE);
 
         // when
-        PostResponse postResponse = postService.create(title, text, memberId, multipartFiles);
+        PostResponse postResponse = postService.create(title, text, memberId, tags, multipartFiles);
 
         // then
         assertThat(postResponse.title()).isEqualTo(title);
@@ -71,9 +74,10 @@ public class PostServiceTest extends TestContainer {
 
         PostResponse postResponse = createPost();
         List<MultipartFile> multipartFiles = getMultipartFiles();
+        Set<Tag> tags = Set.of(Tag.SOUP, Tag.NOODLE);
 
         // when
-        PostResponse update = postService.update(postResponse.id(), title, text, memberId, multipartFiles);
+        PostResponse update = postService.update(postResponse.id(), title, text, memberId, tags, multipartFiles);
 
         // then
         assertThat(update.title()).isEqualTo(title);
@@ -133,7 +137,8 @@ public class PostServiceTest extends TestContainer {
         Long memberId = 1L;
 
         List<MultipartFile> multipartFiles = getMultipartFiles();
+        Set<Tag> tags = Set.of(Tag.SOUP, Tag.NOODLE, Tag.SNACK);
 
-        return postService.create(title, text, memberId, multipartFiles);
+        return postService.create(title, text, memberId, tags, multipartFiles);
     }
 }
