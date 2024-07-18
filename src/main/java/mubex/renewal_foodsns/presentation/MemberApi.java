@@ -3,6 +3,7 @@ package mubex.renewal_foodsns.presentation;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mubex.renewal_foodsns.application.MemberService;
 import mubex.renewal_foodsns.domain.dto.request.sign.SignInParam;
 import mubex.renewal_foodsns.domain.dto.request.sign.SignUpParam;
@@ -10,7 +11,6 @@ import mubex.renewal_foodsns.domain.dto.request.update.UpdateNickNameParam;
 import mubex.renewal_foodsns.domain.dto.request.update.UpdatePasswordParam;
 import mubex.renewal_foodsns.domain.dto.response.MemberResponse;
 import mubex.renewal_foodsns.domain.type.MemberRank;
-import mubex.renewal_foodsns.presentation.annotation.Api;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -23,16 +23,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Api
+@RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/members")
+@RequestMapping("/api/v1/")
 @Validated
+@Slf4j
 public class MemberApi {
 
     private final MemberService memberService;
 
-    @PostMapping("")
+    @PostMapping("members")
     public ResponseEntity<Void> signUp(@RequestBody @Valid SignUpParam signUpParam) {
 
         memberService.signUp(
@@ -45,7 +47,7 @@ public class MemberApi {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/sign-in")
+    @PostMapping("members/sign-in")
     public ResponseEntity<MemberResponse> signIn(@RequestBody @Valid SignInParam signInParam) {
 
         MemberResponse memberResponse = memberService.signIn(
@@ -56,15 +58,15 @@ public class MemberApi {
         return ResponseEntity.ok(memberResponse);
     }
 
-    @GetMapping("/sign-out")
-    public ResponseEntity<Void> signOut(@RequestParam("nickName") String nickName) {
+    @GetMapping("members/sign-out")
+    public ResponseEntity<Void> signOut() {
 
-        memberService.signOut(nickName);
+        memberService.signOut();
 
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/nick-name")
+    @PatchMapping("members/nick-name")
     public ResponseEntity<MemberResponse> updateNickName(@RequestBody @Valid UpdateNickNameParam updateNickNameParam) {
 
         MemberResponse memberResponse = memberService.updateNickName(
@@ -75,7 +77,7 @@ public class MemberApi {
         return ResponseEntity.ok(memberResponse);
     }
 
-    @PatchMapping("/password")
+    @PatchMapping("members/password")
     public ResponseEntity<Void> updatePassword(@RequestBody @Valid UpdatePasswordParam updatePasswordParam) {
 
         memberService.updatePassword(
@@ -86,7 +88,7 @@ public class MemberApi {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("members")
     public ResponseEntity<Void> deleteMember(@RequestParam("nickName") String nickName) {
 
         memberService.markAsDeleted(nickName);
@@ -94,7 +96,7 @@ public class MemberApi {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/rank")
+    @GetMapping("members/rank")
     public ResponseEntity<List<MemberResponse>> findMemberRank(@RequestParam("memberRank") MemberRank memberRank) {
 
         List<MemberResponse> memberResponses = memberService.findByMemberRank(memberRank);
@@ -102,7 +104,7 @@ public class MemberApi {
         return ResponseEntity.ok(memberResponses);
     }
 
-    @GetMapping("/page")
+    @GetMapping("members/page")
     public ResponseEntity<Page<MemberResponse>> pagingByDescSort(PageRequest pageRequest) {
 
         Page<MemberResponse> memberResponses = memberService.viewPagingMemberRank(pageRequest);

@@ -20,6 +20,7 @@ public enum ExceptionResolver implements ErrorResponse {
 
     // un_authorized 401
     LOGIN_FAILED(HttpStatus.UNAUTHORIZED, "UN_AUTHORIZED_000", "로그인에 실패하였습니다."),
+    UNAUTHORIZED_MEMBER(HttpStatus.UNAUTHORIZED, "UN_AUTHORIZED_001", "인증되지 않은 사용자입니다."),
 
     // bad_request 400
     ;

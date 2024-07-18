@@ -1,30 +1,30 @@
 package mubex.renewal_foodsns.common.interceptor;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import mubex.renewal_foodsns.domain.dto.request.sign.SignInParam;
-import mubex.renewal_foodsns.domain.entity.Member;
+import jakarta.servlet.http.HttpSession;
+import mubex.renewal_foodsns.common.exception.ExceptionResolver;
+import mubex.renewal_foodsns.domain.exception.LoginException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 @Component
-@RequiredArgsConstructor
 public class LoginInterceptor implements HandlerInterceptor {
-
-    private final ObjectMapper objectMapper;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
 
-        SignInParam signInParam = objectMapper.readValue(request.getReader(), SignInParam.class);
+        HttpSession session = request.getSession();
 
-        Member member = (Member) request.getSession().getAttribute(signInParam.email());
+        Long memberId = (Long) session.getAttribute("session_id");
 
-        return member != null;
+        if (memberId == null) {
+            throw new LoginException(ExceptionResolver.UNAUTHORIZED_MEMBER);
+        }
+
+        return true;
     }
 
     @Override
