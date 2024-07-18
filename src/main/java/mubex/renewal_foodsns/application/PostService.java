@@ -15,8 +15,10 @@ import mubex.renewal_foodsns.domain.repository.MemberRepository;
 import mubex.renewal_foodsns.domain.repository.PostHeartRepository;
 import mubex.renewal_foodsns.domain.repository.PostReportRepository;
 import mubex.renewal_foodsns.domain.repository.PostRepository;
+import mubex.renewal_foodsns.domain.type.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,10 +35,11 @@ public class PostService {
     private final PostReportRepository postReportRepository;
     private final PostMapper postMapper;
     private final PostPageMapper postPageMapper;
+    private final FoodTagService foodTagService;
 
     @Transactional
     public PostResponse create(final String title, final String text, final Long memberId,
-                               final List<MultipartFile> multipartFiles) {
+                               final List<Tag> tags, final List<MultipartFile> multipartFiles) {
 
         checkValidation(title, multipartFiles);
 
@@ -47,6 +50,8 @@ public class PostService {
         post.addViews();
 
         Post savePost = postRepository.save(post);
+
+        foodTagService.create(tags, savePost);
 
         if (!multipartFiles.isEmpty()) {
             return processImages(multipartFiles, post, savePost);
@@ -135,6 +140,11 @@ public class PostService {
         Post post = postRepository.findById(postId);
 
         return postMapper.toResponse(post);
+    }
+
+    public Slice<PostPageResponse> findByTag(final Tag tag, final Pageable pageable) {
+        return foodTagService.findByTag(tag, pageable)
+                .map(foodTag -> postPageMapper.toResponse(foodTag.getPost()));
     }
 
     public Page<PostPageResponse> findPostsByTitle(final String title, final Pageable pageable) {

@@ -6,6 +6,8 @@ import mubex.renewal_foodsns.domain.entity.FoodTag;
 import mubex.renewal_foodsns.domain.repository.FoodTagRepository;
 import mubex.renewal_foodsns.domain.type.Tag;
 import mubex.renewal_foodsns.infrastructure.persistance.jpa.FoodTagJpaRepository;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,5 +27,10 @@ public class FoodTagRepositoryImpl implements FoodTagRepository {
     @Override
     public List<FoodTag> findByTag(Tag tag) {
         return foodTagJpaRepository.findByTag(tag);
+    }
+
+    @Override
+    public Slice<FoodTag> findByTag(Tag tag, Pageable pageable) {
+        return foodTagJpaRepository.findByTag(tag, pageable);
     }
 }
