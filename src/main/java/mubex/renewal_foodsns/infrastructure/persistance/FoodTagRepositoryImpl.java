@@ -33,4 +33,9 @@ public class FoodTagRepositoryImpl implements FoodTagRepository {
     public Slice<FoodTag> findByTag(Tag tag, Pageable pageable) {
         return foodTagJpaRepository.findByTag(tag, pageable);
     }
+
+    @Override
+    public List<FoodTag> findByPostId(Long postId) {
+        return foodTagJpaRepository.findByPostId(postId);
+    }
 }

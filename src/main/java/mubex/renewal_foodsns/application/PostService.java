@@ -1,6 +1,7 @@
 package mubex.renewal_foodsns.application;
 
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.common.mapper.map.PostMapper;
 import mubex.renewal_foodsns.common.mapper.map.PostPageMapper;
@@ -39,7 +40,7 @@ public class PostService {
 
     @Transactional
     public PostResponse create(final String title, final String text, final Long memberId,
-                               final List<Tag> tags, final List<MultipartFile> multipartFiles) {
+                               final Set<Tag> tags, final List<MultipartFile> multipartFiles) {
 
         checkValidation(title, multipartFiles);
 
@@ -61,8 +62,8 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponse update(final Long postId, final String title, final String text, final Long memberId,
-                               final List<MultipartFile> multipartFiles) {
+    public PostResponse update(final Long postId, final String title, final String text,
+                               final Long memberId, final Set<Tag> tags, final List<MultipartFile> multipartFiles) {
 
         checkValidation(title, multipartFiles);
 
@@ -75,6 +76,8 @@ public class PostService {
         post.updateTitle(title);
 
         post.updateText(text);
+
+        foodTagService.update(tags, post.getId());
 
         if (!multipartFiles.isEmpty()) {
             return processImage(multipartFiles, post);

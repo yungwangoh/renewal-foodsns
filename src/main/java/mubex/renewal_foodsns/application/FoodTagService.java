@@ -1,6 +1,9 @@
 package mubex.renewal_foodsns.application;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.domain.entity.FoodTag;
 import mubex.renewal_foodsns.domain.entity.Post;
@@ -19,10 +22,10 @@ public class FoodTagService {
     private final FoodTagRepository foodTagRepository;
 
     @Transactional
-    public void create(final List<Tag> tags, final Post post) {
+    public void create(final Set<Tag> tags, final Post post) {
 
         if (tags.isEmpty()) {
-            throw new IllegalArgumentException("태그가 비어 있습니다.");
+            throw new IllegalArgumentException("태그를 넣어주세요!!.");
         }
 
         if (tags.size() >= 5) {
@@ -34,6 +37,18 @@ public class FoodTagService {
 
             foodTagRepository.save(foodTag);
         });
+    }
+
+    public void update(Set<Tag> tags, Long postId) {
+
+        List<FoodTag> foodTags = foodTagRepository.findByPostId(postId);
+        List<Tag> tagList = new ArrayList<>(tags);
+
+        IntStream.rangeClosed(0, foodTags.size() - 1)
+                .forEach(idx -> {
+                    FoodTag foodTag = foodTags.get(idx);
+                    foodTag.updateTag(tagList.get(idx));
+                });
     }
 
     public Slice<FoodTag> findByTag(final Tag tag, final Pageable pageable) {

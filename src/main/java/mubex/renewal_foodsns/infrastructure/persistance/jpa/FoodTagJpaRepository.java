@@ -12,4 +12,6 @@ public interface FoodTagJpaRepository extends JpaRepository<FoodTag, Long> {
     List<FoodTag> findByTag(Tag tag);
 
     Slice<FoodTag> findByTag(Tag tag, Pageable pageable);
+
+    List<FoodTag> findByPostId(Long postId);
 }

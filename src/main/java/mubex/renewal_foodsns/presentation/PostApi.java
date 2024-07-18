@@ -1,6 +1,7 @@
 package mubex.renewal_foodsns.presentation;
 
 import jakarta.validation.Valid;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.PostService;
 import mubex.renewal_foodsns.common.annotation.Login;
@@ -8,6 +9,7 @@ import mubex.renewal_foodsns.domain.dto.request.PostParam;
 import mubex.renewal_foodsns.domain.dto.request.update.UpdatePostParam;
 import mubex.renewal_foodsns.domain.dto.response.PostPageResponse;
 import mubex.renewal_foodsns.domain.dto.response.PostResponse;
+import mubex.renewal_foodsns.domain.type.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -35,12 +37,14 @@ public class PostApi {
 
     @PostMapping
     public ResponseEntity<PostResponse> create(@RequestBody @Valid PostParam postParam,
+                                               @RequestParam("tag") Set<Tag> tags,
                                                @Login Long memberId) {
 
         PostResponse postResponse = postService.create(
                 postParam.title(),
                 postParam.text(),
                 memberId,
+                tags,
                 postParam.multipartFiles()
         );
 
@@ -49,6 +53,7 @@ public class PostApi {
 
     @PutMapping
     public ResponseEntity<PostResponse> update(@RequestBody @Valid UpdatePostParam updatePostParam,
+                                               @RequestParam("tags") Set<Tag> tags,
                                                @Login Long memberId) {
 
         PostResponse postResponse = postService.update(
@@ -56,6 +61,7 @@ public class PostApi {
                 updatePostParam.title(),
                 updatePostParam.text(),
                 memberId,
+                tags,
                 updatePostParam.multipartFiles()
         );
 

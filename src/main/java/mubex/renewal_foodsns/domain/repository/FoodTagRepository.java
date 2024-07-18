@@ -13,4 +13,6 @@ public interface FoodTagRepository {
     List<FoodTag> findByTag(Tag tag);
 
     Slice<FoodTag> findByTag(Tag tag, Pageable pageable);
+
+    List<FoodTag> findByPostId(Long postId);
 }

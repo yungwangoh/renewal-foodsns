@@ -26,7 +26,7 @@ import mubex.renewal_foodsns.domain.type.Tag;
 @Table(
         name = "food_tag",
         indexes = {
-                @Index(name = "tag_post_idx", columnList = "tag, post"),
+                @Index(name = "tag_post_idx", columnList = "tag, post_id"),
         }
 )
 public class FoodTag {
@@ -35,7 +35,7 @@ public class FoodTag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "tag")
+    @Column(name = "tag", length = 20)
     @Enumerated(EnumType.STRING)
     private Tag tag;
 
@@ -57,5 +57,9 @@ public class FoodTag {
                 .tag(tag)
                 .post(post)
                 .build();
+    }
+
+    public void updateTag(Tag tag) {
+        this.tag = tag;
     }
 }
