@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface PostReportJpaRepository extends JpaRepository<PostReport, Long> {
 
     boolean existsByMemberNickName(String nickName);
+
+    boolean existsByMemberId(Long memberId);
 }

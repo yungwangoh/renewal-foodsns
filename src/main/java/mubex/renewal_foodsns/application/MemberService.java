@@ -4,7 +4,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.login.LoginHandler;
 import mubex.renewal_foodsns.common.mapper.Mappable;
-import mubex.renewal_foodsns.common.mapper.map.MemberMapper;
 import mubex.renewal_foodsns.domain.dto.response.MemberResponse;
 import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.repository.MemberRepository;
@@ -27,7 +26,7 @@ public class MemberService {
     @Transactional
     public void signUp(final String email, final String nickName, final String password, int profileId) {
 
-        if(memberRepository.existsByNickName(nickName)) {
+        if (memberRepository.existsByNickName(nickName)) {
             throw new IllegalArgumentException("닉네임이 중복 됩니다.");
         }
 
@@ -51,15 +50,15 @@ public class MemberService {
     }
 
     @Transactional
-    public void signOut(final String nickName) {
-        loginHandler.signOut(nickName);
+    public void signOut() {
+        loginHandler.signOut();
     }
 
     @Transactional
     public MemberResponse updateNickName(final String nickName, final String updatedNickName) {
         Member member = memberRepository.findByNickName(nickName);
 
-        if(!memberRepository.existsByNickName(updatedNickName)) {
+        if (!memberRepository.existsByNickName(updatedNickName)) {
             member.updateNickName(updatedNickName);
 
             return mappable.toResponse(member);
@@ -93,7 +92,7 @@ public class MemberService {
     public void markAsDeleted(final String nickName) {
         Member member = memberRepository.findByNickName(nickName);
 
-        if(member.isInDeleted()) {
+        if (member.isInDeleted()) {
             throw new IllegalArgumentException("이미 삭제된 유저입니다.");
         }
 
@@ -104,7 +103,7 @@ public class MemberService {
     public void addToBlacklist(final String nickName) {
         Member member = memberRepository.findByNickName(nickName);
 
-        if(member.checkMemberBlackList()) {
+        if (member.checkMemberBlackList()) {
             member.addToBlacklist();
         } else {
             throw new IllegalStateException("이미 블랙리스트 기준에 적합하지 않은 유저입니다.");

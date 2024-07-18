@@ -47,3 +47,11 @@ MemberMapperImpl.java
 data.sql
 init.sql
 application-test.yml
+PostMapperImpl.java
+QPostImage.java
+*.json
+PostImageMapperImpl.java
+QPostReport.java
+QFoodTag.java
+PostPageMapperImpl.java
+CommentMapperImpl.java

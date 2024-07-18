@@ -61,9 +61,9 @@ public class PostServiceTest {
 
         String title = "하이";
         String text = "하이용";
-        String nickName = "매그내릭";
+        Long memberId = 1L;
 
-        assertThatThrownBy(() -> postService.create(title, text, nickName, getMultipartFiles(11)))
+        assertThatThrownBy(() -> postService.create(title, text, memberId, getMultipartFiles(11)))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -72,35 +72,35 @@ public class PostServiceTest {
 
         String title = "하이";
         String text = "하이용";
-        String nickName = "매그내릭";
+        Long memberId = 1L;
 
         given(postRepository.existsByTitle(anyString())).willReturn(true);
 
-        assertThatThrownBy(() -> postService.create(title, text, nickName, List.of()))
+        assertThatThrownBy(() -> postService.create(title, text, memberId, List.of()))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void 유저가_게시물_좋아요를_중복해서_누르면_예외_발생() {
 
-        String nickName = "하이";
+        Long memberId = 1L;
         Long postId = 1L;
 
-        given(postHeartRepository.existsByMemberNickName(anyString())).willReturn(true);
+        given(postHeartRepository.existsByMemberId(anyLong())).willReturn(true);
 
-        assertThatThrownBy(() -> postService.increaseHeart(nickName, postId))
+        assertThatThrownBy(() -> postService.increaseHeart(memberId, postId))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void 유저가_게시물_신고를_중복해서_누르면_예외_발생() {
 
-        String nickName = "하이";
+        Long memberId = 1L;
         Long postId = 1L;
 
-        given(postReportRepository.existsByMemberNickName(anyString())).willReturn(true);
+        given(postReportRepository.existsByMemberId(anyLong())).willReturn(true);
 
-        assertThatThrownBy(() -> postService.increaseReport(nickName, postId))
+        assertThatThrownBy(() -> postService.increaseReport(memberId, postId))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 

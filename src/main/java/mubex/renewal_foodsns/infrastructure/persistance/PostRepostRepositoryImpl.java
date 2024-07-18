@@ -23,4 +23,9 @@ public class PostRepostRepositoryImpl implements PostReportRepository {
     public boolean existsByMemberNickName(String nickName) {
         return postReportJpaRepository.existsByMemberNickName(nickName);
     }
+
+    @Override
+    public boolean existsByMemberId(Long memberId) {
+        return postReportJpaRepository.existsByMemberId(memberId);
+    }
 }

@@ -1,15 +1,13 @@
 package mubex.renewal_foodsns.application.integration;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import jakarta.servlet.http.HttpSession;
 import mubex.renewal_foodsns.application.MemberService;
 import mubex.renewal_foodsns.application.login.LoginHandler;
 import mubex.renewal_foodsns.common.TestContainer;
 import mubex.renewal_foodsns.domain.dto.response.MemberResponse;
-import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.repository.MemberRepository;
-import mubex.renewal_foodsns.domain.type.MemberRank;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +29,8 @@ public class MemberServiceTest extends TestContainer {
     @Autowired
     private HttpSession httpSession;
 
+    private static final String SESSION_ID = "session_id";
+
     @Test
     void 로그인_유저_세션이_등록_되었다() {
         // given
@@ -42,13 +42,10 @@ public class MemberServiceTest extends TestContainer {
 
         // when
         MemberResponse memberResponse = memberService.signIn(email, password);
-        Member sessionMember = (Member) httpSession.getAttribute(email);
+        MemberResponse member = loginHandler.getMember();
 
         // then
-        assertThat(memberResponse).isNotNull();
-        assertThat(sessionMember.getNickName()).isEqualTo(nickName);
-        assertThat(memberResponse.memberRank()).isEqualTo(MemberRank.NORMAL);
-        assertThat(memberResponse.nickName()).isEqualTo(nickName);
+        assertThat(memberResponse).isEqualTo(member);
     }
 
     @Test
@@ -62,10 +59,9 @@ public class MemberServiceTest extends TestContainer {
         memberService.signIn(email, password);
 
         // when
-        memberService.signOut(nickName);
-        Member member = (Member) httpSession.getAttribute(nickName);
+        memberService.signOut();
 
         // then
-        assertThat(member).isNull();
+        assertThat(httpSession.getAttribute(SESSION_ID)).isNull();
     }
 }

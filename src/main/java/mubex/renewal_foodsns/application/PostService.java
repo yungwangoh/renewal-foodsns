@@ -35,12 +35,12 @@ public class PostService {
     private final PostPageMapper postPageMapper;
 
     @Transactional
-    public PostResponse create(final String title, final String text, final String nickName,
+    public PostResponse create(final String title, final String text, final Long memberId,
                                final List<MultipartFile> multipartFiles) {
 
         checkValidation(title, multipartFiles);
 
-        Member member = memberRepository.findByNickName(nickName);
+        Member member = memberRepository.findById(memberId);
 
         Post post = Post.create(title, text, 0, 0, 0, false, member);
 
@@ -56,12 +56,12 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponse update(final Long postId, final String title, final String text, final String nickName,
+    public PostResponse update(final Long postId, final String title, final String text, final Long memberId,
                                final List<MultipartFile> multipartFiles) {
 
         checkValidation(title, multipartFiles);
 
-        Member member = memberRepository.findByNickName(nickName);
+        Member member = memberRepository.findById(memberId);
 
         Post post = postRepository.findById(postId);
 
@@ -79,13 +79,13 @@ public class PostService {
     }
 
     @Transactional
-    public void increaseHeart(final String nickName, final Long postId) {
+    public void increaseHeart(final Long memberId, final Long postId) {
 
-        if (postHeartRepository.existsByMemberNickName(nickName)) {
+        if (postHeartRepository.existsByMemberId(memberId)) {
             throw new IllegalArgumentException("이미 좋아요를 눌렀습니다.");
         }
 
-        Member member = memberRepository.findByNickName(nickName);
+        Member member = memberRepository.findById(memberId);
 
         member.addHeart(1);
 
@@ -100,13 +100,13 @@ public class PostService {
     }
 
     @Transactional
-    public void increaseReport(final String nickName, final Long postId) {
+    public void increaseReport(final Long memberId, final Long postId) {
 
-        if (postReportRepository.existsByMemberNickName(nickName)) {
+        if (postReportRepository.existsByMemberId(memberId)) {
             throw new IllegalArgumentException("이미 신고를 눌렀습니다.");
         }
 
-        Member member = memberRepository.findByNickName(nickName);
+        Member member = memberRepository.findById(memberId);
 
         member.addReport(1);
 

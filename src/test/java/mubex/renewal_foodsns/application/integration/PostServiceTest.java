@@ -49,17 +49,16 @@ public class PostServiceTest extends TestContainer {
         // given
         String title = "야호";
         String text = "야호맨";
-        String nickName = "안녕";
+        Long memberId = 1L;
 
         List<MultipartFile> multipartFiles = getMultipartFiles();
 
         // when
-        PostResponse postResponse = postService.create(title, text, nickName, multipartFiles);
+        PostResponse postResponse = postService.create(title, text, memberId, multipartFiles);
 
         // then
         assertThat(postResponse.title()).isEqualTo(title);
         assertThat(postResponse.text()).isEqualTo(text);
-        assertThat(postResponse.memberResponse().nickName()).isEqualTo(nickName);
         assertThat(postResponse.postImageResponses()).hasSize(getMultipartFiles().size());
     }
 
@@ -68,19 +67,50 @@ public class PostServiceTest extends TestContainer {
         // given
         String title = "호야";
         String text = "홀ㄴ아ㅣㅗㅎ렁나ㅣㅗㅎ";
-        String nickName = "안녕";
+        Long memberId = 1L;
 
         PostResponse postResponse = createPost();
         List<MultipartFile> multipartFiles = getMultipartFiles();
 
         // when
-        PostResponse update = postService.update(postResponse.id(), title, text, nickName, multipartFiles);
+        PostResponse update = postService.update(postResponse.id(), title, text, memberId, multipartFiles);
 
         // then
         assertThat(update.title()).isEqualTo(title);
         assertThat(update.text()).isEqualTo(text);
-        assertThat(update.memberResponse().nickName()).isEqualTo(nickName);
         assertThat(update.postImageResponses()).hasSize(getMultipartFiles().size());
+    }
+
+    @Test
+    void 게시물_좋아요() throws IOException {
+        // given
+        Long memberId = 1L;
+
+        PostResponse postResponse = createPost();
+
+        // when
+        postService.increaseHeart(memberId, postResponse.id());
+
+        PostResponse response = postService.find(postResponse.id());
+
+        // then
+        assertThat(response.heart()).isEqualTo(1);
+    }
+
+    @Test
+    void 게시물_신고() throws IOException {
+        // given
+        Long memberId = 1L;
+
+        PostResponse postResponse = createPost();
+
+        // when
+        postService.increaseReport(memberId, postResponse.id());
+
+        PostResponse response = postService.find(postResponse.id());
+
+        // then
+        assertThat(response.report()).isEqualTo(1);
     }
 
     private List<MultipartFile> getMultipartFiles() throws IOException {
@@ -100,10 +130,10 @@ public class PostServiceTest extends TestContainer {
     private PostResponse createPost() throws IOException {
         String title = "야호";
         String text = "야호맨";
-        String nickName = "안녕";
+        Long memberId = 1L;
 
         List<MultipartFile> multipartFiles = getMultipartFiles();
 
-        return postService.create(title, text, nickName, multipartFiles);
+        return postService.create(title, text, memberId, multipartFiles);
     }
 }
