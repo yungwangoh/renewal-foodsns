@@ -8,6 +8,7 @@ import mubex.renewal_foodsns.domain.repository.PostRepository;
 import mubex.renewal_foodsns.infrastructure.persistance.jpa.PostJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,11 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public Page<Post> findByTitle(String title, Pageable pageable) {
         return postJpaRepository.findAllByTitle(title, pageable);
+    }
+
+    @Override
+    public Slice<Post> findSliceAll(Pageable pageable) {
+        return postJpaRepository.findAll(pageable);
     }
 
     @Override

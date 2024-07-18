@@ -150,6 +150,10 @@ public class PostService {
                 .map(foodTag -> postPageMapper.toResponse(foodTag.getPost()));
     }
 
+    public Slice<PostPageResponse> findAll(Pageable pageable) {
+        return postRepository.findAll(pageable).map(postPageMapper::toResponse);
+    }
+
     public Page<PostPageResponse> findPostsByTitle(final String title, final Pageable pageable) {
         return postRepository.findByTitle(title, pageable).map(postPageMapper::toResponse);
     }

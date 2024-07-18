@@ -12,6 +12,7 @@ import mubex.renewal_foodsns.domain.dto.response.PostResponse;
 import mubex.renewal_foodsns.domain.type.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -116,5 +117,18 @@ public class PostApi {
         Page<PostPageResponse> postsByNickName = postService.findPostsByNickName(nickName, pageable);
 
         return ResponseEntity.ok(postsByNickName);
+    }
+
+    @GetMapping
+    public ResponseEntity<Slice<PostPageResponse>> findAll(
+            @PageableDefault(
+                    sort = "createdAt",
+                    direction = Sort.Direction.DESC
+            )
+            Pageable pageable) {
+
+        Slice<PostPageResponse> all = postService.findAll(pageable);
+
+        return ResponseEntity.ok(all);
     }
 }
