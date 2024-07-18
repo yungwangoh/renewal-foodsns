@@ -8,8 +8,7 @@ import mubex.renewal_foodsns.domain.dto.request.CommentParam;
 import mubex.renewal_foodsns.domain.dto.response.CommentResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -44,14 +43,16 @@ public class CommentApi {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentResponse);
     }
 
-    @PatchMapping("/comments")
+    @PatchMapping("/comments/{commentId}")
     public ResponseEntity<CommentResponse> update(@PathVariable("postId") final Long postId,
+                                                  @PathVariable("commentId") final Long commentId,
                                                   @RequestBody @Valid final CommentParam commentParam,
                                                   @Login final Long memberId) {
 
         CommentResponse commentResponse = commentService.update(
-                memberId,
                 postId,
+                memberId,
+                commentId,
                 commentParam.text()
         );
 
@@ -60,22 +61,49 @@ public class CommentApi {
 
     @GetMapping("/comments/page")
     public ResponseEntity<Page<CommentResponse>> findByPostId(@PathVariable("postId") Long postId,
-                                                              @PageableDefault(
-                                                                      sort = "heart",
-                                                                      direction = Sort.Direction.DESC
-                                                              ) final Pageable pageable) {
+                                                              final Pageable pageable) {
 
         Page<CommentResponse> page = commentService.findPageByPostId(postId, pageable);
 
         return ResponseEntity.ok(page);
     }
 
+    @GetMapping("/comments/slice")
+    public ResponseEntity<Slice<CommentResponse>> findSliceByPostId(@PathVariable("postId") Long postId,
+                                                                    final Pageable pageable) {
+
+        Slice<CommentResponse> slice = commentService.findSliceByPostId(postId, pageable);
+
+        return ResponseEntity.ok(slice);
+    }
+
     @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<Void> delete(@PathVariable("commentId") final Long commentId,
+    public ResponseEntity<Void> delete(@PathVariable("postId") final Long postId,
+                                       @PathVariable("commentId") final Long commentId,
                                        @Login final Long memberId) {
 
-        commentService.delete(commentId, memberId);
+        commentService.delete(postId, memberId, commentId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/comments/{commentId}")
+    public ResponseEntity<CommentResponse> increaseHeart(@PathVariable("postId") final Long postId,
+                                                         @PathVariable("commentId") final Long commentId,
+                                                         @Login final Long memberId) {
+
+        CommentResponse commentResponse = commentService.increaseHeart(postId, memberId, commentId);
+
+        return ResponseEntity.ok(commentResponse);
+    }
+
+    @PatchMapping("/comment/{commentId}")
+    public ResponseEntity<CommentResponse> increaseReport(@PathVariable("postId") final Long postId,
+                                                          @PathVariable("commentId") final Long commentId,
+                                                          @Login final Long memberId) {
+
+        CommentResponse commentResponse = commentService.increaseReport(postId, memberId, commentId);
+
+        return ResponseEntity.ok(commentResponse);
     }
 }

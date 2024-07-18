@@ -9,6 +9,7 @@ import mubex.renewal_foodsns.domain.repository.CommentRepository;
 import mubex.renewal_foodsns.infrastructure.persistance.jpa.CommentJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,5 +45,22 @@ public class CommentRepositoryImpl implements CommentRepository {
     public Comment findByMemberIdAndId(Long memberId, Long id) {
         return commentJpaRepository.findByMemberIdAndId(memberId, id)
                 .orElseThrow(() -> new NotFoundException(ExceptionResolver.NOT_FOUND_COMMENT));
+    }
+
+    @Override
+    public Comment findByPostIdAndId(Long postId, Long id) {
+        return commentJpaRepository.findByPostIdAndId(postId, id)
+                .orElseThrow(() -> new NotFoundException(ExceptionResolver.NOT_FOUND_COMMENT));
+    }
+
+    @Override
+    public Comment findByPostIdAndMemberIdAndId(Long postId, Long memberId, Long id) {
+        return commentJpaRepository.findByPostIdAndMemberIdAndId(postId, memberId, id)
+                .orElseThrow(() -> new NotFoundException(ExceptionResolver.NOT_FOUND_COMMENT));
+    }
+
+    @Override
+    public Slice<Comment> findSliceAllByPostId(Long postId, Pageable pageable) {
+        return commentJpaRepository.findByPostId(postId, pageable);
     }
 }
