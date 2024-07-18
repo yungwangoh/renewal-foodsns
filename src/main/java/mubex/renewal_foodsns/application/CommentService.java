@@ -1,6 +1,5 @@
 package mubex.renewal_foodsns.application;
 
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.common.mapper.Mappable;
 import mubex.renewal_foodsns.domain.dto.response.CommentResponse;
@@ -49,7 +48,7 @@ public class CommentService {
 
         Comment comment = commentRepository.findByPostIdAndMemberIdAndId(postId, memberId, commentId);
 
-        if (!Objects.equals(memberId, comment.getMember().getId())) {
+        if (!comment.isCommentAuthor(memberId)) {
             throw new IllegalArgumentException("유저가 다릅니다.");
         }
 

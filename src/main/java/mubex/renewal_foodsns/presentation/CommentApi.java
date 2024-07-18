@@ -9,6 +9,8 @@ import mubex.renewal_foodsns.domain.dto.response.CommentResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -61,7 +63,10 @@ public class CommentApi {
 
     @GetMapping("/comments/page")
     public ResponseEntity<Page<CommentResponse>> findByPostId(@PathVariable("postId") Long postId,
-                                                              final Pageable pageable) {
+                                                              @PageableDefault(
+                                                                      sort = "createAt",
+                                                                      direction = Direction.DESC
+                                                              ) final Pageable pageable) {
 
         Page<CommentResponse> page = commentService.findPageByPostId(postId, pageable);
 
@@ -70,7 +75,10 @@ public class CommentApi {
 
     @GetMapping("/comments/slice")
     public ResponseEntity<Slice<CommentResponse>> findSliceByPostId(@PathVariable("postId") Long postId,
-                                                                    final Pageable pageable) {
+                                                                    @PageableDefault(
+                                                                            sort = "createAt",
+                                                                            direction = Direction.DESC
+                                                                    ) final Pageable pageable) {
 
         Slice<CommentResponse> slice = commentService.findSliceByPostId(postId, pageable);
 
