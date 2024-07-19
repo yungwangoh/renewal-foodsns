@@ -1,7 +1,7 @@
 package mubex.renewal_foodsns.common.util;
 
 import java.util.Objects;
-import mubex.renewal_foodsns.common.interceptor.RequestPattern;
+import mubex.renewal_foodsns.presentation.interceptor.RequestPattern;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 

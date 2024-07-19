@@ -2,9 +2,9 @@ package mubex.renewal_foodsns.common.config.web;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import mubex.renewal_foodsns.common.interceptor.LoginInterceptor;
-import mubex.renewal_foodsns.common.interceptor.RequestMatcherInterceptor;
-import mubex.renewal_foodsns.common.resolver.LoginArgumentResolver;
+import mubex.renewal_foodsns.presentation.interceptor.LoginInterceptor;
+import mubex.renewal_foodsns.presentation.interceptor.RequestMatcherInterceptor;
+import mubex.renewal_foodsns.presentation.resolver.LoginArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

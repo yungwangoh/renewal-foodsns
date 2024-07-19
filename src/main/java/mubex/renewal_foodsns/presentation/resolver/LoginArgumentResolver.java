@@ -1,4 +1,4 @@
-package mubex.renewal_foodsns.common.resolver;
+package mubex.renewal_foodsns.presentation.resolver;
 
 import jakarta.servlet.http.HttpServletRequest;
 import mubex.renewal_foodsns.common.annotation.Login;

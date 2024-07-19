@@ -1,4 +1,4 @@
-package mubex.renewal_foodsns.common.interceptor;
+package mubex.renewal_foodsns.presentation.interceptor;
 
 import mubex.renewal_foodsns.common.util.MatcherUtil;
 import org.springframework.http.HttpMethod;
