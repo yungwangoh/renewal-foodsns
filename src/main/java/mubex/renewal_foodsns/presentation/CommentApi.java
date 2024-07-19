@@ -96,7 +96,7 @@ public class CommentApi {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/comments/{commentId}")
+    @PatchMapping("/comments/heart/{commentId}")
     public ResponseEntity<CommentResponse> increaseHeart(@PathVariable("postId") final Long postId,
                                                          @PathVariable("commentId") final Long commentId,
                                                          @Login final Long memberId) {
@@ -106,7 +106,7 @@ public class CommentApi {
         return ResponseEntity.ok(commentResponse);
     }
 
-    @PatchMapping("/comment/{commentId}")
+    @PatchMapping("/comments/report/{commentId}")
     public ResponseEntity<CommentResponse> increaseReport(@PathVariable("postId") final Long postId,
                                                           @PathVariable("commentId") final Long commentId,
                                                           @Login final Long memberId) {

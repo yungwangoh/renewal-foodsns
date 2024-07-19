@@ -58,7 +58,7 @@ public class MemberApi {
         return ResponseEntity.ok(memberResponse);
     }
 
-    @GetMapping("members/sign-out")
+    @PostMapping("members/sign-out")
     public ResponseEntity<Void> signOut() {
 
         memberService.signOut();

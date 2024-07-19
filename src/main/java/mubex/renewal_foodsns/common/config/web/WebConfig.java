@@ -3,9 +3,12 @@ package mubex.renewal_foodsns.common.config.web;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.common.interceptor.LoginInterceptor;
+import mubex.renewal_foodsns.common.interceptor.RequestMatcherInterceptor;
 import mubex.renewal_foodsns.common.resolver.LoginArgumentResolver;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -14,16 +17,23 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     private final LoginArgumentResolver loginArgumentResolver;
+    private final LoginInterceptor loginInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor())
-                .addPathPatterns("/**")
-                .excludePathPatterns("/api/v1/members", "/api/v1/members/sign-in");
+        registry.addInterceptor(matchingInterceptor());
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(loginArgumentResolver);
+    }
+
+    private HandlerInterceptor matchingInterceptor() {
+        return new RequestMatcherInterceptor(loginInterceptor)
+                .addIncludingRequestPattern("/**")
+                .addExcludingRequestPattern("/**", HttpMethod.GET)
+                .addExcludingRequestPattern("/**/members", HttpMethod.POST)
+                .addExcludingRequestPattern("/**/sign-in", HttpMethod.POST);
     }
 }
