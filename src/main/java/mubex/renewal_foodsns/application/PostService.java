@@ -16,7 +16,6 @@ import mubex.renewal_foodsns.domain.repository.PostHeartRepository;
 import mubex.renewal_foodsns.domain.repository.PostReportRepository;
 import mubex.renewal_foodsns.domain.repository.PostRepository;
 import mubex.renewal_foodsns.domain.type.Tag;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -37,7 +36,6 @@ public class PostService {
     private final PostMapper postMapper;
     private final PostPageMapper postPageMapper;
     private final FoodTagService foodTagService;
-    private final ApplicationEventPublisher publisher;
 
     @Transactional
     public PostResponse create(final String title, final String text, final Long memberId,
