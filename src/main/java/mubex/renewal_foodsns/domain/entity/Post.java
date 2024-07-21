@@ -123,4 +123,20 @@ public class Post extends BaseEntity {
             throw new IllegalArgumentException("글쓴이가 다릅니다.");
         }
     }
+
+    public void decideDeletedPost() {
+        if (this.report >= 10) {
+            markAsDeleted();
+        }
+    }
+
+    public void checkDeletedPost() {
+        if (this.inDeleted) {
+            throw new IllegalArgumentException("이미 삭제된 게시물 입니다.");
+        }
+    }
+
+    public Long getMemberId() {
+        return this.member.getId();
+    }
 }

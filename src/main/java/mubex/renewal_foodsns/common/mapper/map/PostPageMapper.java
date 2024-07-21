@@ -12,5 +12,6 @@ public interface PostPageMapper extends Mappable<PostPageResponse, Post> {
 
     @Override
     @Mapping(source = "member.nickName", target = "nickName")
+    @Mapping(source = "inDeleted", target = "visible")
     PostPageResponse toResponse(Post post);
 }

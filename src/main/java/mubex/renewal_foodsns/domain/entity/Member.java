@@ -13,8 +13,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import mubex.renewal_foodsns.domain.type.MemberRank;
 import mubex.renewal_foodsns.common.util.PasswordUtil;
+import mubex.renewal_foodsns.domain.type.MemberRank;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,7 +29,8 @@ import mubex.renewal_foodsns.common.util.PasswordUtil;
 )
 public class Member extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "nick_name", length = 20, nullable = false)
@@ -61,8 +62,9 @@ public class Member extends BaseEntity {
     private boolean inDeleted;
 
     @Builder
-    private Member(String nickName, String password, String email, int profileId, long heart, int report, boolean inBlackList,
-                  MemberRank memberRank, boolean inDeleted) {
+    private Member(String nickName, String password, String email, int profileId, long heart, int report,
+                   boolean inBlackList,
+                   MemberRank memberRank, boolean inDeleted) {
 
         this.nickName = nickName;
         this.password = PasswordUtil.encryptPassword(password);
@@ -120,20 +122,29 @@ public class Member extends BaseEntity {
     }
 
     public void addToBlacklist() {
-        this.inBlackList = true;
+
+        if (this.report >= 10) {
+            this.inBlackList = true;
+        }
     }
 
     public void addHeart(long heart) {
-        if(heart < 0) throw new IllegalArgumentException("유효하지 않은 값입니다.");
+        if (heart < 0) {
+            throw new IllegalArgumentException("유효하지 않은 값입니다.");
+        }
         this.heart += heart;
     }
 
     public void addReport(int report) {
-        if(report < 0) throw new IllegalArgumentException("유효하지 않은 값입니다.");
+        if (report < 0) {
+            throw new IllegalArgumentException("유효하지 않은 값입니다.");
+        }
         this.report += report;
     }
 
-    public boolean checkMemberBlackList() {
-        return !this.inBlackList && this.report >= 10;
+    public void checkMemberBlackList() {
+        if (this.inBlackList || this.report >= 10) {
+            throw new IllegalArgumentException("블랙리스트 유저는 사용할 수 없습니다.");
+        }
     }
 }

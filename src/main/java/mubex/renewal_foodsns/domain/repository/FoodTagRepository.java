@@ -18,4 +18,6 @@ public interface FoodTagRepository {
     List<FoodTag> findByPostId(Long postId);
 
     void deleteAllByPost(Post post);
+
+    void saveAll(List<FoodTag> foodTags);
 }

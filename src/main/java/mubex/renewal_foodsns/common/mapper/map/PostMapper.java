@@ -14,6 +14,7 @@ public interface PostMapper extends Mappable<PostResponse, Post> {
 
     @Override
     @Mapping(source = "member", target = "memberResponse")
+    @Mapping(source = "inDeleted", target = "visible")
     @Mapping(target = "postImageResponses", ignore = true)
     PostResponse toResponse(Post post);
 
@@ -26,6 +27,7 @@ public interface PostMapper extends Mappable<PostResponse, Post> {
                 response.heart(),
                 response.report(),
                 response.views(),
+                response.visible(),
                 response.memberResponse(),
                 postImageResponses
         );

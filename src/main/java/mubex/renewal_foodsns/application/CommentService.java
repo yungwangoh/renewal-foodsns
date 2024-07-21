@@ -4,12 +4,13 @@ import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.common.mapper.Mappable;
 import mubex.renewal_foodsns.domain.dto.response.CommentResponse;
 import mubex.renewal_foodsns.domain.entity.Comment;
+import mubex.renewal_foodsns.domain.entity.CommentHeart;
+import mubex.renewal_foodsns.domain.entity.CommentReport;
 import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.entity.Post;
 import mubex.renewal_foodsns.domain.repository.CommentHeartRepository;
 import mubex.renewal_foodsns.domain.repository.CommentReportRepository;
 import mubex.renewal_foodsns.domain.repository.CommentRepository;
-import mubex.renewal_foodsns.domain.repository.MemberRepository;
 import mubex.renewal_foodsns.domain.repository.PostRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,8 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final MemberService memberService;
     private final Mappable<CommentResponse, Comment> mapper;
-    private final MemberRepository memberRepository;
     private final PostRepository postRepository;
     private final CommentHeartRepository commentHeartRepository;
     private final CommentReportRepository commentReportRepository;
@@ -32,7 +33,9 @@ public class CommentService {
     @Transactional
     public CommentResponse create(final Long memberId, final Long postId, final String text) {
 
-        Member member = memberRepository.findById(memberId);
+        Member member = memberService.findMember(memberId);
+
+        member.checkMemberBlackList();
 
         Post post = postRepository.findById(postId);
 
@@ -96,13 +99,19 @@ public class CommentService {
     @Transactional
     public CommentResponse increaseHeart(final Long postId, final Long memberId, final Long commentId) {
 
-        Comment comment = commentRepository.findByPostIdAndMemberIdAndId(postId, memberId, commentId);
-
         if (commentHeartRepository.existByMemberId(memberId)) {
             throw new IllegalArgumentException("이미 좋아요를 눌렀습니다.");
         }
 
+        Comment comment = commentRepository.findByPostIdAndId(postId, commentId);
+
+        Member member = memberService.findMember(memberId);
+
         comment.addHeart();
+
+        CommentHeart commentHeart = CommentHeart.create(comment, member);
+
+        commentHeartRepository.save(commentHeart);
 
         return mapper.toResponse(comment);
     }
@@ -110,13 +119,19 @@ public class CommentService {
     @Transactional
     public CommentResponse increaseReport(final Long postId, final Long memberId, final Long commentId) {
 
-        Comment comment = commentRepository.findByPostIdAndMemberIdAndId(postId, memberId, commentId);
-
         if (commentReportRepository.existsByMemberId(memberId)) {
             throw new IllegalArgumentException("이미 신고를 눌렀습니다.");
         }
 
+        Comment comment = commentRepository.findByPostIdAndMemberIdAndId(postId, memberId, commentId);
+
+        Member member = memberService.findMember(memberId);
+
         comment.addReport();
+
+        CommentReport commentReport = CommentReport.create(member, comment);
+
+        commentReportRepository.save(commentReport);
 
         return mapper.toResponse(comment);
     }

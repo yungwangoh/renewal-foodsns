@@ -70,21 +70,21 @@ public class PostApi {
     }
 
     @PatchMapping("/heart")
-    public ResponseEntity<Void> increaseHeart(@RequestParam("postId") Long postId,
-                                              @Login Long memberId) {
+    public ResponseEntity<PostResponse> increaseHeart(@RequestParam("postId") Long postId,
+                                                      @Login Long memberId) {
 
-        postService.increaseHeart(memberId, postId);
+        PostResponse postResponse = postService.increaseHeart(memberId, postId);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(postResponse);
     }
 
     @PatchMapping("/report")
-    public ResponseEntity<Void> increaseReport(@RequestParam("postId") Long postId,
-                                               @Login Long memberId) {
+    public ResponseEntity<PostResponse> increaseReport(@RequestParam("postId") Long postId,
+                                                       @Login Long memberId) {
 
-        postService.increaseReport(memberId, postId);
+        PostResponse postResponse = postService.increaseReport(memberId, postId);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(postResponse);
     }
 
     @GetMapping("/{postId}")

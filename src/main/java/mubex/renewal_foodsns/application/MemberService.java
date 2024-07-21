@@ -75,20 +75,6 @@ public class MemberService {
     }
 
     @Transactional
-    public void addHeart(final String nickName, long heart) {
-        Member member = memberRepository.findByNickName(nickName);
-
-        member.addHeart(heart);
-    }
-
-    @Transactional
-    public void addReport(final String nickName, int report) {
-        Member member = memberRepository.findByNickName(nickName);
-
-        member.addReport(report);
-    }
-
-    @Transactional
     public void markAsDeleted(final String nickName) {
         Member member = memberRepository.findByNickName(nickName);
 
@@ -103,21 +89,58 @@ public class MemberService {
     public void addToBlacklist(final String nickName) {
         Member member = memberRepository.findByNickName(nickName);
 
-        if (member.checkMemberBlackList()) {
-            member.addToBlacklist();
-        } else {
-            throw new IllegalStateException("이미 블랙리스트 기준에 적합하지 않은 유저입니다.");
-        }
+        member.addToBlacklist();
     }
 
-    public List<MemberResponse> findByMemberRank(MemberRank memberRank) {
+    @Transactional
+    public void addToBlackList(final Long id) {
+        Member member = memberRepository.findById(id);
+
+        member.addToBlacklist();
+    }
+
+    @Transactional
+    public Member addHeart(final Long id, final long heart) {
+        Member member = memberRepository.findById(id);
+
+        member.addHeart(heart);
+
+        return member;
+    }
+
+    @Transactional
+    public Member addReport(final Long id, final int report) {
+        Member member = memberRepository.findById(id);
+
+        member.addReport(report);
+
+        return member;
+    }
+
+    public Member findAfterCheckBlackList(final Long id) {
+        Member member = memberRepository.findById(id);
+
+        member.checkMemberBlackList();
+
+        return member;
+    }
+
+    public Member findMember(final Long id) {
+        return memberRepository.findById(id);
+    }
+
+    public Member findMember(final String nickName) {
+        return memberRepository.findByNickName(nickName);
+    }
+
+    public List<MemberResponse> findByMemberRank(final MemberRank memberRank) {
         return memberRepository.findAllByMemberRank(memberRank)
                 .stream()
                 .map(mappable::toResponse)
                 .toList();
     }
 
-    public Page<MemberResponse> viewPagingMemberRank(PageRequest pageRequest) {
+    public Page<MemberResponse> viewPagingMemberRank(final PageRequest pageRequest) {
 
         List<MemberResponse> list = memberRepository.findAll()
                 .stream()

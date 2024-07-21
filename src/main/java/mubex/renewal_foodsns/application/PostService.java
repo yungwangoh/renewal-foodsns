@@ -12,11 +12,11 @@ import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.entity.Post;
 import mubex.renewal_foodsns.domain.entity.PostHeart;
 import mubex.renewal_foodsns.domain.entity.PostReport;
-import mubex.renewal_foodsns.domain.repository.MemberRepository;
 import mubex.renewal_foodsns.domain.repository.PostHeartRepository;
 import mubex.renewal_foodsns.domain.repository.PostReportRepository;
 import mubex.renewal_foodsns.domain.repository.PostRepository;
 import mubex.renewal_foodsns.domain.type.Tag;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -30,13 +30,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final PostImageService postImageService;
     private final PostHeartRepository postHeartRepository;
     private final PostReportRepository postReportRepository;
     private final PostMapper postMapper;
     private final PostPageMapper postPageMapper;
     private final FoodTagService foodTagService;
+    private final ApplicationEventPublisher publisher;
 
     @Transactional
     public PostResponse create(final String title, final String text, final Long memberId,
@@ -44,7 +45,7 @@ public class PostService {
 
         checkValidation(title, multipartFiles);
 
-        Member member = memberRepository.findById(memberId);
+        Member member = memberService.findAfterCheckBlackList(memberId);
 
         Post post = Post.create(title, text, 0, 0, 0, false, member);
 
@@ -57,7 +58,7 @@ public class PostService {
         if (!multipartFiles.isEmpty()) {
             return processImages(multipartFiles, post, savePost);
         } else {
-            return postMapper.toResponse(savePost);
+            return postMapper.toResponse(post);
         }
     }
 
@@ -67,7 +68,7 @@ public class PostService {
 
         checkValidation(title, multipartFiles);
 
-        Member member = memberRepository.findById(memberId);
+        Member member = memberService.findAfterCheckBlackList(memberId);
 
         Post post = postRepository.findById(postId);
 
@@ -87,15 +88,13 @@ public class PostService {
     }
 
     @Transactional
-    public void increaseHeart(final Long memberId, final Long postId) {
+    public PostResponse increaseHeart(final Long memberId, final Long postId) {
 
         if (postHeartRepository.existsByMemberId(memberId)) {
             throw new IllegalArgumentException("이미 좋아요를 눌렀습니다.");
         }
 
-        Member member = memberRepository.findById(memberId);
-
-        member.addHeart(1);
+        Member member = memberService.findMember(memberId);
 
         Post post = postRepository.findById(postId);
 
@@ -105,18 +104,18 @@ public class PostService {
         postHeartRepository.save(postHeart);
 
         post.addHeart();
+
+        return postMapper.toResponse(post);
     }
 
     @Transactional
-    public void increaseReport(final Long memberId, final Long postId) {
+    public PostResponse increaseReport(final Long memberId, final Long postId) {
 
         if (postReportRepository.existsByMemberId(memberId)) {
             throw new IllegalArgumentException("이미 신고를 눌렀습니다.");
         }
 
-        Member member = memberRepository.findById(memberId);
-
-        member.addReport(1);
+        Member member = memberService.findMember(memberId);
 
         Post post = postRepository.findById(postId);
 
@@ -126,17 +125,19 @@ public class PostService {
         postReportRepository.save(postReport);
 
         post.addReport();
+
+        memberService.addToBlackList(post.getMemberId());
+
+        return postMapper.toResponse(post);
     }
 
     @Transactional
     public void delete(final Long postId) {
         Post post = postRepository.findById(postId);
 
-        if (post.isInDeleted()) {
-            throw new IllegalArgumentException("이미 삭제된 게시물 입니다.");
-        }
+        post.checkDeletedPost();
 
-        post.markAsDeleted();
+        post.decideDeletedPost();
     }
 
     public PostResponse find(Long postId) {

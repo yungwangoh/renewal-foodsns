@@ -1,5 +1,6 @@
 package mubex.renewal_foodsns.application;
 
+import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.domain.entity.FoodTag;
@@ -21,6 +22,36 @@ public class FoodTagService {
     @Transactional
     public void create(final Set<Tag> tags, final Post post) {
 
+        checkValidation(tags);
+
+        List<FoodTag> foodTags = tags
+                .stream()
+                .map(tag -> FoodTag.create(tag, post))
+                .toList();
+
+        foodTagRepository.saveAll(foodTags);
+    }
+
+    @Transactional
+    public void update(final Set<Tag> tags, final Post post) {
+
+        checkValidation(tags);
+
+        foodTagRepository.deleteAllByPost(post);
+
+        List<FoodTag> foodTags = tags
+                .stream()
+                .map(tag -> FoodTag.create(tag, post))
+                .toList();
+
+        foodTagRepository.saveAll(foodTags);
+    }
+
+    public Slice<FoodTag> findByTag(final Tag tag, final Pageable pageable) {
+        return foodTagRepository.findByTag(tag, pageable);
+    }
+
+    private static void checkValidation(Set<Tag> tags) {
         if (tags.isEmpty()) {
             throw new IllegalArgumentException("태그를 넣어주세요!!.");
         }
@@ -28,27 +59,5 @@ public class FoodTagService {
         if (tags.size() >= 5) {
             throw new IllegalArgumentException("태그는 5개까지만 추가 가능합니다.");
         }
-
-        tags.forEach(tag -> {
-            FoodTag foodTag = FoodTag.create(tag, post);
-
-            foodTagRepository.save(foodTag);
-        });
-    }
-
-    @Transactional
-    public void update(Set<Tag> tags, Post post) {
-
-        foodTagRepository.deleteAllByPost(post);
-
-        tags.forEach(tag -> {
-            FoodTag foodTag = FoodTag.create(tag, post);
-
-            foodTagRepository.save(foodTag);
-        });
-    }
-
-    public Slice<FoodTag> findByTag(final Tag tag, final Pageable pageable) {
-        return foodTagRepository.findByTag(tag, pageable);
     }
 }

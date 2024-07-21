@@ -9,6 +9,7 @@ public record PostPageResponse(
         String title,
         long heart,
         long views,
-        String nickName
+        String nickName,
+        boolean visible
 ) {
 }

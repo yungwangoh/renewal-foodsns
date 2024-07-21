@@ -45,4 +45,10 @@ public class FoodTagRepositoryImpl implements FoodTagRepository {
     public void deleteAllByPost(Post post) {
         foodTagJpaRepository.deleteAllByPost(post);
     }
+
+    @Override
+    @Transactional
+    public void saveAll(List<FoodTag> foodTags) {
+        foodTagJpaRepository.saveAll(foodTags);
+    }
 }

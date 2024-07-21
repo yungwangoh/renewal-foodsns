@@ -11,6 +11,7 @@ public record PostResponse(
         long heart,
         int report,
         long views,
+        boolean visible,
         MemberResponse memberResponse,
         List<PostImageResponse> postImageResponses
 ) {
