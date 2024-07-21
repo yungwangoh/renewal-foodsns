@@ -1,5 +1,7 @@
 package mubex.renewal_foodsns.application;
 
+import static mubex.renewal_foodsns.common.util.UriUtil.COMMENT_URI;
+
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.common.mapper.Mappable;
 import mubex.renewal_foodsns.domain.dto.response.CommentResponse;
@@ -12,6 +14,7 @@ import mubex.renewal_foodsns.domain.repository.CommentHeartRepository;
 import mubex.renewal_foodsns.domain.repository.CommentReportRepository;
 import mubex.renewal_foodsns.domain.repository.CommentRepository;
 import mubex.renewal_foodsns.domain.repository.PostRepository;
+import mubex.renewal_foodsns.domain.type.NotificationType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -29,6 +32,7 @@ public class CommentService {
     private final PostRepository postRepository;
     private final CommentHeartRepository commentHeartRepository;
     private final CommentReportRepository commentReportRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public CommentResponse create(final Long memberId, final Long postId, final String text) {
@@ -42,6 +46,12 @@ public class CommentService {
         Comment comment = Comment.create(text, 0, 0, false, post, member);
 
         Comment save = commentRepository.save(comment);
+
+        notificationService.send(
+                post.getMemberId(),
+                NotificationType.COMMENT,
+                COMMENT_URI.generate(postId, comment.getId())
+        );
 
         return mapper.toResponse(save);
     }

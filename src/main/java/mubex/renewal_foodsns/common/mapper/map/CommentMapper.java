@@ -12,5 +12,6 @@ public interface CommentMapper extends Mappable<CommentResponse, Comment> {
 
     @Override
     @Mapping(source = "member.nickName", target = "nickName")
+    @Mapping(source = "post.id", target = "postId")
     CommentResponse toResponse(Comment comment);
 }

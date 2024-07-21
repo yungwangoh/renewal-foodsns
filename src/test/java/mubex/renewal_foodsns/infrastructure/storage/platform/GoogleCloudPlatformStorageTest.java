@@ -40,7 +40,7 @@ class GoogleCloudPlatformStorageTest {
         String process = platformStorage.process(multipartFiles.getFirst());
 
         // then
-        assertThat(process).startsWith(UriUtil.GCS);
+        assertThat(process).startsWith(UriUtil.GCS.getUri());
     }
 
     @Test
@@ -52,7 +52,7 @@ class GoogleCloudPlatformStorageTest {
         String process = platformStorage.process(multipartFile.getBytes(), multipartFile.getContentType());
 
         // then
-        assertThat(process).startsWith(UriUtil.GCS);
+        assertThat(process).startsWith(UriUtil.GCS.getUri());
     }
 
     private List<MultipartFile> getMultipartFiles() throws IOException {

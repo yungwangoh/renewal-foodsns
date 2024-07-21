@@ -1,13 +1,22 @@
 package mubex.renewal_foodsns.common.util;
 
+import lombok.Getter;
 import org.springframework.web.util.UriComponentsBuilder;
 
-public class UriUtil {
+@Getter
+public enum UriUtil {
 
-    public static final String GCS = "https://storage.cloud.google.com/";
-    public static final String GCS_URI = "https://storage.cloud.google.com/{bucket}/{uuid}";
+    COMMENT_URI("https://localhost:8080/api/v1/{postId}/comments/{commentId}"),
+    GCS("https://storage.cloud.google.com/"),
+    GCS_URI("https://storage.cloud.google.com/{bucket}/{uuid}");
 
-    public static String generate(String bucket, String fileName) {
-        return UriComponentsBuilder.fromHttpUrl(GCS_URI).build(bucket, fileName).toString();
+    private final String uri;
+
+    UriUtil(String uri) {
+        this.uri = uri;
+    }
+
+    public String generate(Object... obj) {
+        return UriComponentsBuilder.fromHttpUrl(this.uri).build(obj).toString();
     }
 }

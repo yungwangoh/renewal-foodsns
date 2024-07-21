@@ -22,6 +22,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final LoginHandler loginHandler;
     private final Mappable<MemberResponse, Member> mappable;
+    private final NotificationService notificationService;
 
     @Transactional
     public void signUp(final String email, final String nickName, final String password, int profileId) {
@@ -46,7 +47,13 @@ public class MemberService {
 
     @Transactional
     public MemberResponse signIn(final String email, final String password) {
-        return loginHandler.signIn(email, password);
+        MemberResponse memberResponse = loginHandler.signIn(email, password);
+
+        Member member = memberRepository.findByNickName(memberResponse.nickName());
+
+        notificationService.subscribe(member.getId());
+        
+        return memberResponse;
     }
 
     @Transactional
