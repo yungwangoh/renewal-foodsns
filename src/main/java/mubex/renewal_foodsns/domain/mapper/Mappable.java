@@ -1,7 +1,8 @@
-package mubex.renewal_foodsns.common.mapper;
+package mubex.renewal_foodsns.domain.mapper;
 
 /**
  * mappable
+ *
  * @param <D> DTO
  * @param <E> ENTITY
  */

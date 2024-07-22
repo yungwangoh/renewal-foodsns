@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.processor.MultiPartFileProcessor;
 import mubex.renewal_foodsns.common.call.AsyncCall;
-import mubex.renewal_foodsns.common.mapper.Mappable;
+import mubex.renewal_foodsns.domain.mapper.Mappable;
 import mubex.renewal_foodsns.domain.dto.response.PostImageResponse;
 import mubex.renewal_foodsns.domain.entity.Post;
 import mubex.renewal_foodsns.domain.entity.PostImage;

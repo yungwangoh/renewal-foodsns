@@ -4,7 +4,7 @@ import static mubex.renewal_foodsns.common.util.UriUtil.COMMENT_URI;
 
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.event.RegisteredSendEvent;
-import mubex.renewal_foodsns.common.mapper.Mappable;
+import mubex.renewal_foodsns.domain.mapper.Mappable;
 import mubex.renewal_foodsns.domain.dto.response.CommentResponse;
 import mubex.renewal_foodsns.domain.entity.Comment;
 import mubex.renewal_foodsns.domain.entity.CommentHeart;

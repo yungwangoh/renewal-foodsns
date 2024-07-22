@@ -4,7 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.event.RegisteredSubscribeEvent;
 import mubex.renewal_foodsns.application.login.LoginHandler;
-import mubex.renewal_foodsns.common.mapper.Mappable;
+import mubex.renewal_foodsns.domain.mapper.Mappable;
 import mubex.renewal_foodsns.domain.dto.response.MemberResponse;
 import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.repository.MemberRepository;

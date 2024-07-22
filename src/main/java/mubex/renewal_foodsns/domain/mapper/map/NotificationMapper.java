@@ -1,6 +1,6 @@
-package mubex.renewal_foodsns.common.mapper.map;
+package mubex.renewal_foodsns.domain.mapper.map;
 
-import mubex.renewal_foodsns.common.mapper.Mappable;
+import mubex.renewal_foodsns.domain.mapper.Mappable;
 import mubex.renewal_foodsns.domain.dto.response.NotificationResponse;
 import mubex.renewal_foodsns.domain.entity.Notification;
 import org.mapstruct.Mapper;

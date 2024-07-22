@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 import mubex.renewal_foodsns.application.CommentService;
-import mubex.renewal_foodsns.common.mapper.Mappable;
+import mubex.renewal_foodsns.domain.mapper.Mappable;
 import mubex.renewal_foodsns.domain.dto.response.CommentResponse;
 import mubex.renewal_foodsns.domain.entity.Comment;
 import mubex.renewal_foodsns.domain.exception.NotFoundException;

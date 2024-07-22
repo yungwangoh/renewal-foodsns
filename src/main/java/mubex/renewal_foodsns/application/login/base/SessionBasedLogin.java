@@ -5,7 +5,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.login.LoginHandler;
 import mubex.renewal_foodsns.common.exception.ExceptionResolver;
-import mubex.renewal_foodsns.common.mapper.Mappable;
+import mubex.renewal_foodsns.domain.mapper.Mappable;
 import mubex.renewal_foodsns.common.util.SessionUtil;
 import mubex.renewal_foodsns.domain.dto.response.MemberResponse;
 import mubex.renewal_foodsns.domain.entity.Member;
