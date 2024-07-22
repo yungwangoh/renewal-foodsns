@@ -2,6 +2,7 @@ package mubex.renewal_foodsns.presentation.resolver;
 
 import jakarta.servlet.http.HttpServletRequest;
 import mubex.renewal_foodsns.common.annotation.Login;
+import mubex.renewal_foodsns.common.util.SessionUtil;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -11,8 +12,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
 public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
-
-    private static final String SESSION_ID = "session_id";
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -25,6 +24,6 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) webRequest.getNativeRequest();
 
-        return httpServletRequest.getSession().getAttribute(SESSION_ID);
+        return httpServletRequest.getSession().getAttribute(SessionUtil.SESSION_ID.getValue());
     }
 }

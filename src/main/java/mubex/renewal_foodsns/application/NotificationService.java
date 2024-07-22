@@ -19,7 +19,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @Transactional(readOnly = true)
 public class NotificationService {
 
-    private final MemberService memberService;
     private final NotificationRepository notificationRepository;
     private final EmitterRepository emitterRepository;
     private final Mappable<NotificationResponse, Notification> mappable;
@@ -41,9 +40,7 @@ public class NotificationService {
         sendNotification(emitter, dummyMemberId, convertMemberId, "connection complete.");
     }
 
-    public void send(final Long receiverMemberId, final NotificationType type, final String uri) {
-
-        Member receiver = memberService.findMember(receiverMemberId);
+    public void send(final Member receiver, final NotificationType type, final String uri) {
 
         Notification notification = Notification.create(type.getText(), type, uri, false, receiver);
 

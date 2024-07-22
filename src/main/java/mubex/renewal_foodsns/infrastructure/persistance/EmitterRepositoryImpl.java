@@ -2,54 +2,60 @@ package mubex.renewal_foodsns.infrastructure.persistance;
 
 import java.util.Map;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.domain.repository.EmitterRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Repository
-@RequiredArgsConstructor
-public class EmitterMapRepositoryImpl implements EmitterRepository {
+public class EmitterRepositoryImpl implements EmitterRepository {
 
-    private final Map<String, SseEmitter> emitterMap;
-    private final Map<String, Object> eventMap;
+    private final Map<String, SseEmitter> emitters;
+    private final Map<String, Object> eventCaches;
+
+    public EmitterRepositoryImpl(@Qualifier("emitters") Map<String, SseEmitter> emitters,
+                                 @Qualifier("eventCaches") Map<String, Object> eventCaches) {
+
+        this.emitters = emitters;
+        this.eventCaches = eventCaches;
+    }
 
     @Override
     public SseEmitter save(final String emitterId, final SseEmitter emitter) {
-        emitterMap.put(emitterId, emitter);
+        emitters.put(emitterId, emitter);
         return emitter;
     }
 
     @Override
     public void save(final String eventId, final Object event) {
-        eventMap.put(eventId, event);
+        eventCaches.put(eventId, event);
     }
 
     @Override
     public Map<String, SseEmitter> findAllEmitterStartWithByMemberId(final Long memberId) {
-        return emitterMap.entrySet().stream()
+        return emitters.entrySet().stream()
                 .filter(entry -> entry.getKey().startsWith(String.valueOf(memberId)))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     @Override
     public Map<String, Object> findAllEventCacheStartWithByMemberId(final Long memberId) {
-        return emitterMap.entrySet().stream()
+        return emitters.entrySet().stream()
                 .filter(entry -> entry.getKey().startsWith(String.valueOf(memberId)))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     @Override
     public void deleteById(final String id) {
-        emitterMap.remove(id);
+        emitters.remove(id);
     }
 
     @Override
     public void deleteAllEmitterStartWithId(final Long memberId) {
-        emitterMap.forEach(
+        emitters.forEach(
                 (key, emitter) -> {
                     if (key.startsWith(String.valueOf(memberId))) {
-                        emitterMap.remove(key);
+                        emitters.remove(key);
                     }
                 }
         );
@@ -57,10 +63,10 @@ public class EmitterMapRepositoryImpl implements EmitterRepository {
 
     @Override
     public void deleteAllEventCacheStartWithId(final Long memberId) {
-        eventMap.forEach(
+        eventCaches.forEach(
                 (key, emitter) -> {
                     if (key.startsWith(String.valueOf(memberId))) {
-                        eventMap.remove(key);
+                        eventCaches.remove(key);
                     }
                 }
         );

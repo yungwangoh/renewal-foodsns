@@ -10,12 +10,12 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 public class EmitterConfig {
 
     @Bean
-    public Map<String, SseEmitter> emitterMap() {
+    public Map<String, SseEmitter> emitters() {
         return new ConcurrentHashMap<>();
     }
 
     @Bean
-    public Map<String, Object> eventMap() {
+    public Map<String, Object> eventCaches() {
         return new ConcurrentHashMap<>();
     }
 }

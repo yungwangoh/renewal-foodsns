@@ -1,6 +1,7 @@
 package mubex.renewal_foodsns.presentation;
 
 import jakarta.validation.Valid;
+import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.PostService;
@@ -26,7 +27,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,8 +40,9 @@ public class PostApi {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<PostResponse> create(@RequestBody @Valid PostParam postParam,
+    public ResponseEntity<PostResponse> create(@RequestPart("post") @Valid PostParam postParam,
                                                @RequestParam("tag") Set<Tag> tags,
+                                               @RequestPart(value = "image", required = false) List<MultipartFile> multipartFiles,
                                                @Login Long memberId) {
 
         PostResponse postResponse = postService.create(
@@ -46,7 +50,7 @@ public class PostApi {
                 postParam.text(),
                 memberId,
                 tags,
-                postParam.multipartFiles()
+                multipartFiles
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(postResponse);

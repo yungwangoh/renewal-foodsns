@@ -47,7 +47,7 @@ public class MemberApi {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("members/sign-in")
+    @PostMapping(value = "members/sign-in")
     public ResponseEntity<MemberResponse> signIn(@RequestBody @Valid SignInParam signInParam) {
 
         MemberResponse memberResponse = memberService.signIn(
