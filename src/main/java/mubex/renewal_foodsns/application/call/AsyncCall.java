@@ -1,4 +1,4 @@
-package mubex.renewal_foodsns.common.call;
+package mubex.renewal_foodsns.application.call;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -9,9 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
- *     I는 인풋 타입 O는 아웃풋 타입으로 구성된다.
- *     <br/>ex) CurrentGameParticipant (input) -> ChampionMastery (output)
+ * I는 인풋 타입 O는 아웃풋 타입으로 구성된다. <br/>ex) CurrentGameParticipant (input) -> ChampionMastery (output)
  * </p>
+ *
  * @param <I> input
  * @param <O> output
  */
