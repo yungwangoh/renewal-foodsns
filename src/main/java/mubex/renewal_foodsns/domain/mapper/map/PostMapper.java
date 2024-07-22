@@ -1,10 +1,10 @@
 package mubex.renewal_foodsns.domain.mapper.map;
 
 import java.util.List;
-import mubex.renewal_foodsns.domain.mapper.Mappable;
 import mubex.renewal_foodsns.domain.dto.response.PostImageResponse;
 import mubex.renewal_foodsns.domain.dto.response.PostResponse;
 import mubex.renewal_foodsns.domain.entity.Post;
+import mubex.renewal_foodsns.domain.mapper.Mappable;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants.ComponentModel;

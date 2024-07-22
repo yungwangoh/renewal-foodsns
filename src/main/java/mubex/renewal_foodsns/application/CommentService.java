@@ -4,13 +4,13 @@ import static mubex.renewal_foodsns.common.util.UriUtil.COMMENT_URI;
 
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.event.RegisteredSendEvent;
-import mubex.renewal_foodsns.domain.mapper.Mappable;
 import mubex.renewal_foodsns.domain.dto.response.CommentResponse;
 import mubex.renewal_foodsns.domain.entity.Comment;
 import mubex.renewal_foodsns.domain.entity.CommentHeart;
 import mubex.renewal_foodsns.domain.entity.CommentReport;
 import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.entity.Post;
+import mubex.renewal_foodsns.domain.mapper.Mappable;
 import mubex.renewal_foodsns.domain.repository.CommentHeartRepository;
 import mubex.renewal_foodsns.domain.repository.CommentReportRepository;
 import mubex.renewal_foodsns.domain.repository.CommentRepository;
