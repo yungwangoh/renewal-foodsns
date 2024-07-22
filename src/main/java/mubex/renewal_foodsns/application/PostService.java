@@ -33,8 +33,6 @@ public class PostService {
     private final PostImageService postImageService;
     private final PostHeartRepository postHeartRepository;
     private final PostReportRepository postReportRepository;
-    private final PostMapper postMapper;
-    private final PostPageMapper postPageMapper;
     private final FoodTagService foodTagService;
 
     @Transactional
@@ -56,7 +54,7 @@ public class PostService {
         if (!multipartFiles.isEmpty()) {
             return processImages(multipartFiles, post, savePost);
         } else {
-            return postMapper.toResponse(post);
+            return PostMapper.INSTANCE.toResponse(post);
         }
     }
 
@@ -81,7 +79,7 @@ public class PostService {
         if (!multipartFiles.isEmpty()) {
             return processImage(multipartFiles, post);
         } else {
-            return postMapper.toResponse(post);
+            return PostMapper.INSTANCE.toResponse(post);
         }
     }
 
@@ -103,7 +101,7 @@ public class PostService {
 
         post.addHeart();
 
-        return postMapper.toResponse(post);
+        return PostMapper.INSTANCE.toResponse(post);
     }
 
     @Transactional
@@ -126,7 +124,7 @@ public class PostService {
 
         memberService.addToBlackList(post.getMemberId());
 
-        return postMapper.toResponse(post);
+        return PostMapper.INSTANCE.toResponse(post);
     }
 
     @Transactional
@@ -141,24 +139,24 @@ public class PostService {
     public PostResponse find(Long postId) {
         Post post = postRepository.findById(postId);
 
-        return postMapper.toResponse(post);
+        return PostMapper.INSTANCE.toResponse(post);
     }
 
     public Slice<PostPageResponse> findByTag(final Tag tag, final Pageable pageable) {
         return foodTagService.findByTag(tag, pageable)
-                .map(foodTag -> postPageMapper.toResponse(foodTag.getPost()));
+                .map(foodTag -> PostPageMapper.INSTANCE.toResponse(foodTag.getPost()));
     }
 
     public Slice<PostPageResponse> findAll(Pageable pageable) {
-        return postRepository.findAll(pageable).map(postPageMapper::toResponse);
+        return postRepository.findAll(pageable).map(PostPageMapper.INSTANCE::toResponse);
     }
 
     public Page<PostPageResponse> findPostsByTitle(final String title, final Pageable pageable) {
-        return postRepository.findByTitle(title, pageable).map(postPageMapper::toResponse);
+        return postRepository.findByTitle(title, pageable).map(PostPageMapper.INSTANCE::toResponse);
     }
 
     public Page<PostPageResponse> findPostsByNickName(final String nickName, final Pageable pageable) {
-        return postRepository.findByNickName(nickName, pageable).map(postPageMapper::toResponse);
+        return postRepository.findByNickName(nickName, pageable).map(PostPageMapper.INSTANCE::toResponse);
     }
 
     private PostResponse processImages(List<MultipartFile> multipartFiles, Post post, Post savePost) {
@@ -168,13 +166,13 @@ public class PostService {
 
         List<PostImageResponse> postImageResponses = postImageService.create(savePost, multipartFiles);
 
-        return postMapper.toResponseWithImages(savePost, postImageResponses);
+        return PostMapper.INSTANCE.toResponseWithImages(savePost, postImageResponses);
     }
 
     private PostResponse processImage(List<MultipartFile> multipartFiles, Post post) {
         List<PostImageResponse> postImageResponses = postImageService.update(post, multipartFiles);
 
-        return postMapper.toResponseWithImages(post, postImageResponses);
+        return PostMapper.INSTANCE.toResponseWithImages(post, postImageResponses);
     }
 
     private void checkValidation(String title, List<MultipartFile> multipartFiles) {

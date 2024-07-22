@@ -3,10 +3,9 @@ package mubex.renewal_foodsns.application;
 import java.io.IOException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import mubex.renewal_foodsns.domain.dto.response.NotificationResponse;
 import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.entity.Notification;
-import mubex.renewal_foodsns.domain.mapper.Mappable;
+import mubex.renewal_foodsns.domain.mapper.map.NotificationMapper;
 import mubex.renewal_foodsns.domain.repository.EmitterRepository;
 import mubex.renewal_foodsns.domain.repository.NotificationRepository;
 import mubex.renewal_foodsns.domain.type.NotificationType;
@@ -21,7 +20,6 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final EmitterRepository emitterRepository;
-    private final Mappable<NotificationResponse, Notification> mappable;
 
     private static final Long DEFAULT_TIMEOUT = 60L * 1000L * 60L;
 
@@ -51,7 +49,7 @@ public class NotificationService {
         emitterRepository.findAllEmitterStartWithByMemberId(receiver.getId())
                 .forEach((key, emitter) -> {
                             emitterRepository.save(key, save);
-                            sendNotification(emitter, convertMemberId, key, mappable.toResponse(save));
+                            sendNotification(emitter, convertMemberId, key, NotificationMapper.INSTANCE.toResponse(save));
                         }
                 );
     }

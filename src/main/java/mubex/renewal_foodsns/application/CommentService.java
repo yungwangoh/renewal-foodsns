@@ -10,7 +10,7 @@ import mubex.renewal_foodsns.domain.entity.CommentHeart;
 import mubex.renewal_foodsns.domain.entity.CommentReport;
 import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.entity.Post;
-import mubex.renewal_foodsns.domain.mapper.Mappable;
+import mubex.renewal_foodsns.domain.mapper.map.CommentMapper;
 import mubex.renewal_foodsns.domain.repository.CommentHeartRepository;
 import mubex.renewal_foodsns.domain.repository.CommentReportRepository;
 import mubex.renewal_foodsns.domain.repository.CommentRepository;
@@ -30,7 +30,6 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final MemberService memberService;
-    private final Mappable<CommentResponse, Comment> mapper;
     private final PostRepository postRepository;
     private final CommentHeartRepository commentHeartRepository;
     private final CommentReportRepository commentReportRepository;
@@ -53,7 +52,7 @@ public class CommentService {
                 COMMENT_URI.generate(postId, comment.getId())
         ));
 
-        return mapper.toResponse(save);
+        return CommentMapper.INSTANCE.toResponse(save);
     }
 
     @Transactional
@@ -67,19 +66,19 @@ public class CommentService {
 
         comment.updateText(text);
 
-        return mapper.toResponse(comment);
+        return CommentMapper.INSTANCE.toResponse(comment);
     }
 
     public Page<CommentResponse> findPageByPostId(final Long postId, final Pageable pageable) {
         Page<Comment> page = commentRepository.findAllByPostId(postId, pageable);
 
-        return page.map(mapper::toResponse);
+        return page.map(CommentMapper.INSTANCE::toResponse);
     }
 
     public Slice<CommentResponse> findSliceByPostId(final Long postId, final Pageable pageable) {
         Slice<Comment> page = commentRepository.findSliceAllByPostId(postId, pageable);
 
-        return page.map(mapper::toResponse);
+        return page.map(CommentMapper.INSTANCE::toResponse);
     }
 
     @Transactional
@@ -123,7 +122,7 @@ public class CommentService {
 
         commentHeartRepository.save(commentHeart);
 
-        return mapper.toResponse(comment);
+        return CommentMapper.INSTANCE.toResponse(comment);
     }
 
     @Transactional
@@ -143,6 +142,6 @@ public class CommentService {
 
         commentReportRepository.save(commentReport);
 
-        return mapper.toResponse(comment);
+        return CommentMapper.INSTANCE.toResponse(comment);
     }
 }

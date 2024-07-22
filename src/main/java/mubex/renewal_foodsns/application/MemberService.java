@@ -6,7 +6,7 @@ import mubex.renewal_foodsns.application.event.RegisteredSubscribeEvent;
 import mubex.renewal_foodsns.application.login.LoginHandler;
 import mubex.renewal_foodsns.domain.dto.response.MemberResponse;
 import mubex.renewal_foodsns.domain.entity.Member;
-import mubex.renewal_foodsns.domain.mapper.Mappable;
+import mubex.renewal_foodsns.domain.mapper.map.MemberMapper;
 import mubex.renewal_foodsns.domain.repository.MemberRepository;
 import mubex.renewal_foodsns.domain.type.MemberRank;
 import org.springframework.context.ApplicationEventPublisher;
@@ -23,7 +23,6 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final LoginHandler loginHandler;
-    private final Mappable<MemberResponse, Member> mappable;
     private final ApplicationEventPublisher publisher;
 
     @Transactional
@@ -70,7 +69,7 @@ public class MemberService {
         if (!memberRepository.existsByNickName(updatedNickName)) {
             member.updateNickName(updatedNickName);
 
-            return mappable.toResponse(member);
+            return MemberMapper.INSTANCE.toResponse(member);
         } else {
             throw new IllegalArgumentException("변경하고자 하는 닉네임이 이미 존재합니다.");
         }
@@ -145,7 +144,7 @@ public class MemberService {
     public List<MemberResponse> findByMemberRank(final MemberRank memberRank) {
         return memberRepository.findAllByMemberRank(memberRank)
                 .stream()
-                .map(mappable::toResponse)
+                .map(MemberMapper.INSTANCE::toResponse)
                 .toList();
     }
 
@@ -153,7 +152,7 @@ public class MemberService {
 
         List<MemberResponse> list = memberRepository.findAll()
                 .stream()
-                .map(mappable::toResponse)
+                .map(MemberMapper.INSTANCE::toResponse)
                 .toList();
 
         return new PageImpl<>(list, pageRequest, list.size());

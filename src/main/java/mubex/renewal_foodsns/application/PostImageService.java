@@ -12,7 +12,7 @@ import mubex.renewal_foodsns.application.processor.MultiPartFileProcessor;
 import mubex.renewal_foodsns.domain.dto.response.PostImageResponse;
 import mubex.renewal_foodsns.domain.entity.Post;
 import mubex.renewal_foodsns.domain.entity.PostImage;
-import mubex.renewal_foodsns.domain.mapper.Mappable;
+import mubex.renewal_foodsns.domain.mapper.map.PostImageMapper;
 import mubex.renewal_foodsns.domain.repository.PostImageRepository;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,6 @@ public class PostImageService {
 
     private final MultiPartFileProcessor fileProcessor;
     private final PostImageRepository postImageRepository;
-    private final Mappable<PostImageResponse, PostImage> mappable;
 
     @Transactional
     public List<PostImageResponse> create(Post post, List<MultipartFile> multipartFiles) {
@@ -37,7 +36,7 @@ public class PostImageService {
 
         return fileNames.stream()
                 .map(fileName -> savePostImage(fileName, post))
-                .map(mappable::toResponse)
+                .map(PostImageMapper.INSTANCE::toResponse)
                 .toList();
     }
 
@@ -46,7 +45,7 @@ public class PostImageService {
 
         PostImage postImage = savePostImage(fileProcessor.write(multipartFile), post);
 
-        return mappable.toResponse(postImage);
+        return PostImageMapper.INSTANCE.toResponse(postImage);
     }
 
     @Transactional
@@ -62,7 +61,7 @@ public class PostImageService {
                     multipartFile.getContentType()
             );
 
-            return mappable.toResponse(savePostImage(thumbnail, post));
+            return PostImageMapper.INSTANCE.toResponse(savePostImage(thumbnail, post));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -75,7 +74,7 @@ public class PostImageService {
 
         return IntStream.rangeClosed(0, multipartFiles.size() - 1)
                 .mapToObj(idx -> update(multipartFiles, idx, postImages))
-                .map(mappable::toResponse)
+                .map(PostImageMapper.INSTANCE::toResponse)
                 .toList();
     }
 

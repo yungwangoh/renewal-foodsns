@@ -7,10 +7,12 @@ import mubex.renewal_foodsns.domain.entity.Post;
 import mubex.renewal_foodsns.domain.mapper.Mappable;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants.ComponentModel;
+import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = ComponentModel.SPRING)
+@Mapper
 public interface PostMapper extends Mappable<PostResponse, Post> {
+
+    PostMapper INSTANCE = Mappers.getMapper(PostMapper.class);
 
     @Override
     @Mapping(source = "member", target = "memberResponse")

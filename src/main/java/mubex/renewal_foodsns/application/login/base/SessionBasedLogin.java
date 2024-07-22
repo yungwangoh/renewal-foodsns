@@ -9,7 +9,7 @@ import mubex.renewal_foodsns.common.util.SessionUtil;
 import mubex.renewal_foodsns.domain.dto.response.MemberResponse;
 import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.exception.LoginException;
-import mubex.renewal_foodsns.domain.mapper.Mappable;
+import mubex.renewal_foodsns.domain.mapper.map.MemberMapper;
 import mubex.renewal_foodsns.domain.repository.MemberRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,6 @@ public class SessionBasedLogin implements LoginHandler {
 
     private final HttpSession httpSession;
     private final MemberRepository memberRepository;
-    private final Mappable<MemberResponse, Member> mappable;
 
     @Override
     public MemberResponse signIn(String email, String password) {
@@ -29,7 +28,7 @@ public class SessionBasedLogin implements LoginHandler {
 
         httpSession.setAttribute(SessionUtil.SESSION_ID.getValue(), member.getId());
 
-        return mappable.toResponse(member);
+        return MemberMapper.INSTANCE.toResponse(member);
     }
 
     @Override
@@ -44,7 +43,7 @@ public class SessionBasedLogin implements LoginHandler {
 
         Member member = memberRepository.findById(memberId);
 
-        return mappable.toResponse(member);
+        return MemberMapper.INSTANCE.toResponse(member);
     }
 
     @Override
