@@ -16,6 +16,7 @@ import mubex.renewal_foodsns.domain.mapper.map.PostPageMapper;
 import mubex.renewal_foodsns.domain.repository.PostHeartRepository;
 import mubex.renewal_foodsns.domain.repository.PostReportRepository;
 import mubex.renewal_foodsns.domain.repository.PostRepository;
+import mubex.renewal_foodsns.domain.type.NotificationType;
 import mubex.renewal_foodsns.domain.type.Tag;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -104,7 +105,7 @@ public class PostService {
 
         post.addHeart(heart);
 
-        publisher.publishEvent(new RegisteredLevelUpEvent(post.getMember(), post));
+        publisher.publishEvent(new RegisteredLevelUpEvent(post.getMember(), NotificationType.MEMBER_RANK, post));
 
         return PostMapper.INSTANCE.toResponse(post);
     }

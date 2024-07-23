@@ -26,6 +26,6 @@ public class EventHandler {
 
     @TransactionalEventListener
     public void levelUpHandler(final RegisteredLevelUpEvent event) {
-        notificationService.sendTo(event.member(), event.post());
+        notificationService.sendTo(event.member(), event.type(), event.post());
     }
 }

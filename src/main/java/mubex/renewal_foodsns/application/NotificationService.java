@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mubex.renewal_foodsns.domain.dto.response.MemberResponse;
+import mubex.renewal_foodsns.domain.dto.response.NotificationResponse;
 import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.entity.Notification;
 import mubex.renewal_foodsns.domain.entity.Post;
@@ -72,15 +74,22 @@ public class NotificationService {
         send(data, sseEmitter);
     }
 
-    public void sendTo(final Member receiver, final Post post) {
+    public void sendTo(final Member receiver, final NotificationType type, final Post post) {
         receiver.levelUp(post.getHeart());
 
         final SseEmitter sseEmitter = emitterRepository.get(receiver.getId());
 
+        final Notification notification = Notification.create(type.getText(), type, null, false, receiver);
+
+        final Notification saveNotification = notificationRepository.save(notification);
+
         final SseEventBuilder data = SseEmitter.event()
                 .id(uuid(receiver.getId()))
                 .name(SSE_NAME)
-                .data(MemberMapper.INSTANCE.toResponse(receiver));
+                .data(LevelUpResponse.of(
+                        NotificationMapper.INSTANCE.toResponse(saveNotification),
+                        MemberMapper.INSTANCE.toResponse(receiver)
+                ));
 
         send(data, sseEmitter);
     }
@@ -96,5 +105,14 @@ public class NotificationService {
 
     private String uuid(final Long id) {
         return id + "_" + UUID.randomUUID();
+    }
+
+    private record LevelUpResponse(NotificationResponse notificationResponse, MemberResponse memberResponse) {
+
+        private static LevelUpResponse of(final NotificationResponse notificationResponse,
+                                          final MemberResponse memberResponse) {
+
+            return new LevelUpResponse(notificationResponse, memberResponse);
+        }
     }
 }
