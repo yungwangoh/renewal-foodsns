@@ -10,7 +10,7 @@ public enum SessionUtil {
 
     private final String value;
 
-    SessionUtil(String value) {
+    SessionUtil(final String value) {
         this.value = value;
     }
 }

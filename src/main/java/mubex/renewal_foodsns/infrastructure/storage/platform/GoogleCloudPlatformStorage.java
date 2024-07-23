@@ -23,12 +23,12 @@ public class GoogleCloudPlatformStorage implements PlatformStorage {
     private final CloudProperties cloudProperties;
 
     @Override
-    public String process(MultipartFile multipartFile) {
+    public String process(final MultipartFile multipartFile) {
 
         try {
-            StorageInfo storageInfo = getStorageInfo(multipartFile.getContentType());
+            final StorageInfo storageInfo = getStorageInfo(multipartFile.getContentType());
 
-            Storage storage = getStorage();
+            final Storage storage = getStorage();
 
             storage.create(storageInfo.blobInfo(), multipartFile.getBytes());
 
@@ -39,12 +39,12 @@ public class GoogleCloudPlatformStorage implements PlatformStorage {
     }
 
     @Override
-    public String process(byte[] content, String format) {
+    public String process(final byte[] content, final String format) {
 
         try {
-            StorageInfo storageInfo = getStorageInfo(format);
+            final StorageInfo storageInfo = getStorageInfo(format);
 
-            Storage storage = getStorage();
+            final Storage storage = getStorage();
 
             storage.create(storageInfo.blobInfo, content);
 
@@ -55,12 +55,12 @@ public class GoogleCloudPlatformStorage implements PlatformStorage {
     }
 
     @Override
-    public String update(MultipartFile multipartFile) {
+    public String update(final MultipartFile multipartFile) {
 
         try {
-            StorageInfo storageInfo = getStorageInfo(multipartFile.getContentType());
+            final StorageInfo storageInfo = getStorageInfo(multipartFile.getContentType());
 
-            Storage storage = getStorage();
+            final Storage storage = getStorage();
 
             if (storage.get(storageInfo.blobInfo().getBlobId()) != null) {
                 storage.delete(storageInfo.blobInfo().getBlobId());
@@ -75,17 +75,17 @@ public class GoogleCloudPlatformStorage implements PlatformStorage {
     }
 
     private Storage getStorage() throws IOException {
-        InputStream keyFile = ResourceUtils.getURL(cloudProperties.credentials().location()).openStream();
+        final InputStream keyFile = ResourceUtils.getURL(cloudProperties.credentials().location()).openStream();
         return StorageOptions.newBuilder()
                 .setCredentials(GoogleCredentials.fromStream(keyFile))
                 .build()
                 .getService();
     }
 
-    private StorageInfo getStorageInfo(String format) {
-        String uuid = UUID.randomUUID().toString();
+    private StorageInfo getStorageInfo(final String format) {
+        final String uuid = UUID.randomUUID().toString();
 
-        BlobInfo blobInfo = BlobInfo.newBuilder(cloudProperties.bucket(), uuid)
+        final BlobInfo blobInfo = BlobInfo.newBuilder(cloudProperties.bucket(), uuid)
                 .setContentType(format)
                 .build();
 

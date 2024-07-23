@@ -17,8 +17,9 @@ public class NotificationApi {
     private final NotificationService notificationService;
 
     @GetMapping
-    public ResponseEntity<SseEmitter> notification(@Login Long memberId) {
-        SseEmitter sseEmitter = notificationService.subscribe(memberId);
+    public ResponseEntity<SseEmitter> notification(@Login final Long memberId) {
+        
+        final SseEmitter sseEmitter = notificationService.subscribe(memberId);
 
         return ResponseEntity.ok(sseEmitter);
     }

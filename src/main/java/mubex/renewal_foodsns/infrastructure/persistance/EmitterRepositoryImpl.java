@@ -22,12 +22,12 @@ public class EmitterRepositoryImpl implements EmitterRepository {
     }
 
     @Override
-    public SseEmitter get(Long memberId) {
+    public SseEmitter get(final Long memberId) {
         return emitters.get(memberId);
     }
 
     @Override
-    public void remove(Long memberId) {
+    public void remove(final Long memberId) {
         emitters.remove(memberId);
     }
 }

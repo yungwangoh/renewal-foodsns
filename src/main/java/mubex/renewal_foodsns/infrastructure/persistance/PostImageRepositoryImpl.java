@@ -19,18 +19,18 @@ public class PostImageRepositoryImpl implements PostImageRepository {
 
     @Override
     @Transactional
-    public PostImage save(PostImage postImage) {
+    public PostImage save(final PostImage postImage) {
         return postImageJpaRepository.save(postImage);
     }
 
     @Override
-    public PostImage findById(Long id) {
+    public PostImage findById(final Long id) {
         return postImageJpaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ExceptionResolver.NOT_FOUND_POST_IMAGE));
     }
 
     @Override
-    public List<PostImage> findAllByPostId(Long postId) {
+    public List<PostImage> findAllByPostId(final Long postId) {
         return postImageJpaRepository.findAllByPostId(postId);
     }
 }

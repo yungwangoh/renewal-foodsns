@@ -40,12 +40,12 @@ public class PostApi {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<PostResponse> create(@RequestPart("post") @Valid PostParam postParam,
-                                               @RequestParam("tag") Set<Tag> tags,
-                                               @RequestPart(value = "image", required = false) List<MultipartFile> multipartFiles,
-                                               @Login Long memberId) {
+    public ResponseEntity<PostResponse> create(@RequestPart("post") @Valid final PostParam postParam,
+                                               @RequestParam("tag") final Set<Tag> tags,
+                                               @RequestPart(value = "image", required = false) final List<MultipartFile> multipartFiles,
+                                               @Login final Long memberId) {
 
-        PostResponse postResponse = postService.create(
+        final PostResponse postResponse = postService.create(
                 postParam.title(),
                 postParam.text(),
                 memberId,
@@ -57,11 +57,11 @@ public class PostApi {
     }
 
     @PutMapping
-    public ResponseEntity<PostResponse> update(@RequestBody @Valid UpdatePostParam updatePostParam,
-                                               @RequestParam("tags") Set<Tag> tags,
-                                               @Login Long memberId) {
+    public ResponseEntity<PostResponse> update(@RequestBody @Valid final UpdatePostParam updatePostParam,
+                                               @RequestParam("tags") final Set<Tag> tags,
+                                               @Login final Long memberId) {
 
-        PostResponse postResponse = postService.update(
+        final PostResponse postResponse = postService.update(
                 updatePostParam.postId(),
                 updatePostParam.title(),
                 updatePostParam.text(),
@@ -74,51 +74,51 @@ public class PostApi {
     }
 
     @PatchMapping("/heart")
-    public ResponseEntity<PostResponse> increaseHeart(@RequestParam("postId") Long postId,
-                                                      @Login Long memberId) {
+    public ResponseEntity<PostResponse> increaseHeart(@RequestParam("postId") final Long postId,
+                                                      @Login final Long memberId) {
 
-        PostResponse postResponse = postService.increaseHeart(memberId, postId, 1);
+        final PostResponse postResponse = postService.increaseHeart(memberId, postId, 1);
 
         return ResponseEntity.ok(postResponse);
     }
 
     @PatchMapping("/report")
-    public ResponseEntity<PostResponse> increaseReport(@RequestParam("postId") Long postId,
-                                                       @Login Long memberId) {
+    public ResponseEntity<PostResponse> increaseReport(@RequestParam("postId") final Long postId,
+                                                       @Login final Long memberId) {
 
-        PostResponse postResponse = postService.increaseReport(memberId, postId);
+        final PostResponse postResponse = postService.increaseReport(memberId, postId);
 
         return ResponseEntity.ok(postResponse);
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostResponse> find(@PathVariable("postId") Long postId) {
+    public ResponseEntity<PostResponse> find(@PathVariable("postId") final Long postId) {
 
-        PostResponse postResponse = postService.find(postId);
+        final PostResponse postResponse = postService.find(postId);
 
         return ResponseEntity.ok(postResponse);
     }
 
     @GetMapping("/{title}/page")
-    public ResponseEntity<Page<PostPageResponse>> findPage(@PathVariable("title") String title,
+    public ResponseEntity<Page<PostPageResponse>> findPage(@PathVariable("title") final String title,
                                                            @PageableDefault(
                                                                    sort = "createdAt",
                                                                    direction = Sort.Direction.DESC
-                                                           ) Pageable pageable) {
+                                                           ) final Pageable pageable) {
 
-        Page<PostPageResponse> postsByTitle = postService.findPostsByTitle(title, pageable);
+        final Page<PostPageResponse> postsByTitle = postService.findPostsByTitle(title, pageable);
 
         return ResponseEntity.ok(postsByTitle);
     }
 
     @GetMapping("/{nickName}/page")
-    public ResponseEntity<Page<PostPageResponse>> findPageByNickName(@PathVariable("nickName") String nickName,
+    public ResponseEntity<Page<PostPageResponse>> findPageByNickName(@PathVariable("nickName") final String nickName,
                                                                      @PageableDefault(
                                                                              sort = "createdAt",
                                                                              direction = Sort.Direction.DESC
-                                                                     ) Pageable pageable) {
+                                                                     ) final Pageable pageable) {
 
-        Page<PostPageResponse> postsByNickName = postService.findPostsByNickName(nickName, pageable);
+        final Page<PostPageResponse> postsByNickName = postService.findPostsByNickName(nickName, pageable);
 
         return ResponseEntity.ok(postsByNickName);
     }
@@ -128,10 +128,9 @@ public class PostApi {
             @PageableDefault(
                     sort = "createdAt",
                     direction = Sort.Direction.DESC
-            )
-            Pageable pageable) {
+            ) final Pageable pageable) {
 
-        Slice<PostPageResponse> all = postService.findAll(pageable);
+        final Slice<PostPageResponse> all = postService.findAll(pageable);
 
         return ResponseEntity.ok(all);
     }

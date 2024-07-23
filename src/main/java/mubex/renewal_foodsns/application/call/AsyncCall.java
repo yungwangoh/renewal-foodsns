@@ -20,13 +20,13 @@ public class AsyncCall<I, O> {
 
     private final List<I> lists;
 
-    public AsyncCall(List<I> lists) {
+    public AsyncCall(final List<I> lists) {
         this.lists = lists;
     }
 
-    public List<O> execute(int nThread, Function<I, O> function) {
+    public List<O> execute(final int nThread, final Function<I, O> function) {
         try (ExecutorService executorService = Executors.newFixedThreadPool(nThread)) {
-            List<CompletableFuture<O>> futures = lists.stream()
+            final List<CompletableFuture<O>> futures = lists.stream()
                     .map(list -> CompletableFuture.supplyAsync(() -> function.apply(list), executorService))
                     .toList();
 

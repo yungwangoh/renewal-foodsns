@@ -38,13 +38,13 @@ public class CommentService {
     @Transactional
     public CommentResponse create(final Long memberId, final Long postId, final String text) {
 
-        Member member = memberService.findAfterCheckBlackList(memberId);
+        final Member member = memberService.findAfterCheckBlackList(memberId);
 
-        Post post = postRepository.findById(postId);
+        final Post post = postRepository.findById(postId);
 
-        Comment comment = Comment.create(text, 0, 0, false, post, member);
+        final Comment comment = Comment.create(text, 0, 0, false, post, member);
 
-        Comment save = commentRepository.save(comment);
+        final Comment save = commentRepository.save(comment);
 
         publisher.publishEvent(new RegisteredSendEvent(
                 post.getMember(),
@@ -59,7 +59,7 @@ public class CommentService {
     @Transactional
     public CommentResponse update(final Long postId, final Long memberId, final Long commentId, final String text) {
 
-        Comment comment = commentRepository.findByPostIdAndMemberIdAndId(postId, memberId, commentId);
+        final Comment comment = commentRepository.findByPostIdAndMemberIdAndId(postId, memberId, commentId);
 
         if (!comment.isCommentAuthor(memberId)) {
             throw new IllegalArgumentException("유저가 다릅니다.");
@@ -71,13 +71,13 @@ public class CommentService {
     }
 
     public Page<CommentResponse> findPageByPostId(final Long postId, final Pageable pageable) {
-        Page<Comment> page = commentRepository.findAllByPostId(postId, pageable);
+        final Page<Comment> page = commentRepository.findAllByPostId(postId, pageable);
 
         return page.map(CommentMapper.INSTANCE::toResponse);
     }
 
     public Slice<CommentResponse> findSliceByPostId(final Long postId, final Pageable pageable) {
-        Slice<Comment> page = commentRepository.findSliceAllByPostId(postId, pageable);
+        final Slice<Comment> page = commentRepository.findSliceAllByPostId(postId, pageable);
 
         return page.map(CommentMapper.INSTANCE::toResponse);
     }
@@ -85,7 +85,7 @@ public class CommentService {
     @Transactional
     public void delete(final Long memberId, final Long commentId) {
 
-        Comment comment = commentRepository.findByMemberIdAndId(memberId, commentId);
+        final Comment comment = commentRepository.findByMemberIdAndId(memberId, commentId);
 
         if (comment.isDeleted()) {
             throw new IllegalArgumentException("이미 삭제한 댓글입니다.");
@@ -97,7 +97,7 @@ public class CommentService {
     @Transactional
     public void delete(final Long postId, final Long memberId, final Long commentId) {
 
-        Comment comment = commentRepository.findByPostIdAndMemberIdAndId(postId, memberId, commentId);
+        final Comment comment = commentRepository.findByPostIdAndMemberIdAndId(postId, memberId, commentId);
 
         if (comment.isDeleted()) {
             throw new IllegalArgumentException("이미 삭제한 댓글입니다.");
@@ -113,13 +113,13 @@ public class CommentService {
             throw new IllegalArgumentException("이미 좋아요를 눌렀습니다.");
         }
 
-        Comment comment = commentRepository.findByPostIdAndId(postId, commentId);
+        final Comment comment = commentRepository.findByPostIdAndId(postId, commentId);
 
-        Member member = memberService.findMember(memberId);
+        final Member member = memberService.findMember(memberId);
 
         comment.addHeart();
 
-        CommentHeart commentHeart = CommentHeart.create(comment, member);
+        final CommentHeart commentHeart = CommentHeart.create(comment, member);
 
         commentHeartRepository.save(commentHeart);
 
@@ -133,13 +133,13 @@ public class CommentService {
             throw new IllegalArgumentException("이미 신고를 눌렀습니다.");
         }
 
-        Comment comment = commentRepository.findByPostIdAndMemberIdAndId(postId, memberId, commentId);
+        final Comment comment = commentRepository.findByPostIdAndMemberIdAndId(postId, memberId, commentId);
 
-        Member member = memberService.findMember(memberId);
+        final Member member = memberService.findMember(memberId);
 
         comment.addReport();
 
-        CommentReport commentReport = CommentReport.create(member, comment);
+        final CommentReport commentReport = CommentReport.create(member, comment);
 
         commentReportRepository.save(commentReport);
 

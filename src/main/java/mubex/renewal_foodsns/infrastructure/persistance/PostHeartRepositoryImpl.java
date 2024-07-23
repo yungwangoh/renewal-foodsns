@@ -15,17 +15,17 @@ public class PostHeartRepositoryImpl implements PostHeartRepository {
 
     @Override
     @Transactional
-    public PostHeart save(PostHeart postHeart) {
+    public PostHeart save(final PostHeart postHeart) {
         return postHeartJpaRepository.save(postHeart);
     }
 
     @Override
-    public boolean existsByMemberId(Long memberId) {
+    public boolean existsByMemberId(final Long memberId) {
         return postHeartJpaRepository.existsByMemberId(memberId);
     }
 
     @Override
-    public boolean existsByMemberNickName(String nickName) {
+    public boolean existsByMemberNickName(final String nickName) {
         return postHeartJpaRepository.existsByMemberNickName(nickName);
     }
 }

@@ -12,11 +12,11 @@ public enum UriUtil {
 
     private final String uri;
 
-    UriUtil(String uri) {
+    UriUtil(final String uri) {
         this.uri = uri;
     }
 
-    public String generate(Object... obj) {
+    public String generate(final Object... obj) {
         return UriComponentsBuilder.fromHttpUrl(this.uri).build(obj).toString();
     }
 }

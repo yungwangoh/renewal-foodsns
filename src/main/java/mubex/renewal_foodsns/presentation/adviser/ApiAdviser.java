@@ -18,42 +18,46 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ApiAdviser {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(final IllegalArgumentException exception) {
 
-        ErrorResponse errorResponse = new ErrorResponseException(HttpStatus.BAD_REQUEST, exception);
+        final ErrorResponse errorResponse = new ErrorResponseException(HttpStatus.BAD_REQUEST, exception);
 
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
     @ExceptionHandler(LoginException.class)
-    public ResponseEntity<ErrorResponse> handleLoginException(LoginException exception) {
+    public ResponseEntity<ErrorResponse> handleLoginException(final LoginException exception) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getExceptionResolver());
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException exception) {
+    public ResponseEntity<ErrorResponse> handleNotFoundException(final NotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getExceptionResolver());
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException exception) {
+    public ResponseEntity<ErrorResponse> handleRuntimeException(final RuntimeException exception) {
 
-        ErrorResponse errorResponse = new ErrorResponseException(HttpStatus.INTERNAL_SERVER_ERROR, exception);
+        final ErrorResponse errorResponse = new ErrorResponseException(HttpStatus.INTERNAL_SERVER_ERROR, exception);
 
         return ResponseEntity.internalServerError().body(errorResponse);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
-            MethodArgumentNotValidException exception) {
-        ErrorResponse errorResponse = new ErrorResponseException(HttpStatus.BAD_REQUEST, exception);
+            final MethodArgumentNotValidException exception) {
+
+        final ErrorResponse errorResponse = new ErrorResponseException(HttpStatus.BAD_REQUEST, exception);
 
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException exception) {
-        ErrorResponse errorResponse = new ErrorResponseException(HttpStatus.BAD_REQUEST, exception);
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(
+            final ConstraintViolationException exception) {
+
+        final ErrorResponse errorResponse = new ErrorResponseException(HttpStatus.BAD_REQUEST, exception);
+
         return ResponseEntity.badRequest().body(errorResponse);
     }
 }

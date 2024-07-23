@@ -11,7 +11,7 @@ public enum Tag {
 
     private final int value;
 
-    Tag(int value) {
+    Tag(final int value) {
         this.value = value;
     }
 }

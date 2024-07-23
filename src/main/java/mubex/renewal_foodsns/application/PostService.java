@@ -44,13 +44,13 @@ public class PostService {
 
         checkValidation(title, multipartFiles);
 
-        Member member = memberService.findAfterCheckBlackList(memberId);
+        final Member member = memberService.findAfterCheckBlackList(memberId);
 
         Post post = Post.create(title, text, 0, 0, 0, false, member);
 
         post.addViews();
 
-        Post savePost = postRepository.save(post);
+        final Post savePost = postRepository.save(post);
 
         foodTagService.create(tags, savePost);
 
@@ -67,9 +67,9 @@ public class PostService {
 
         checkValidation(title, multipartFiles);
 
-        Member member = memberService.findAfterCheckBlackList(memberId);
+        final Member member = memberService.findAfterCheckBlackList(memberId);
 
-        Post post = postRepository.findById(postId);
+        final Post post = postRepository.findById(postId);
 
         post.checkMemberId(member.getId());
 
@@ -93,9 +93,9 @@ public class PostService {
             throw new IllegalArgumentException("이미 좋아요를 눌렀습니다.");
         }
 
-        Member member = memberService.findMember(memberId);
+        final Member member = memberService.findMember(memberId);
 
-        Post post = postRepository.findById(postId);
+        final Post post = postRepository.findById(postId);
 
         // post heart logic
         PostHeart postHeart = PostHeart.create(post, member);
@@ -116,12 +116,12 @@ public class PostService {
             throw new IllegalArgumentException("이미 신고를 눌렀습니다.");
         }
 
-        Member member = memberService.findMember(memberId);
+        final Member member = memberService.findMember(memberId);
 
-        Post post = postRepository.findById(postId);
+        final Post post = postRepository.findById(postId);
 
         // post heart logic
-        PostReport postReport = PostReport.create(post, member);
+        final PostReport postReport = PostReport.create(post, member);
 
         postReportRepository.save(postReport);
 
@@ -134,15 +134,15 @@ public class PostService {
 
     @Transactional
     public void delete(final Long postId) {
-        Post post = postRepository.findById(postId);
+        final Post post = postRepository.findById(postId);
 
         post.checkDeletedPost();
 
         post.decideDeletedPost();
     }
 
-    public PostResponse find(Long postId) {
-        Post post = postRepository.findById(postId);
+    public PostResponse find(final Long postId) {
+        final Post post = postRepository.findById(postId);
 
         return PostMapper.INSTANCE.toResponse(post);
     }
@@ -152,7 +152,7 @@ public class PostService {
                 .map(foodTag -> PostPageMapper.INSTANCE.toResponse(foodTag.getPost()));
     }
 
-    public Slice<PostPageResponse> findAll(Pageable pageable) {
+    public Slice<PostPageResponse> findAll(final Pageable pageable) {
         return postRepository.findAll(pageable).map(PostPageMapper.INSTANCE::toResponse);
     }
 
@@ -164,23 +164,23 @@ public class PostService {
         return postRepository.findByNickName(nickName, pageable).map(PostPageMapper.INSTANCE::toResponse);
     }
 
-    private PostResponse processImage(List<MultipartFile> multipartFiles, Post post, Post savePost) {
-        String thumbnailFileName = postImageService.thumbnail(post, multipartFiles.getFirst()).originFileName();
+    private PostResponse processImage(final List<MultipartFile> multipartFiles, final Post post, final Post savePost) {
+        final String thumbnailFileName = postImageService.thumbnail(post, multipartFiles.getFirst()).originFileName();
 
         savePost.setThumbnail(thumbnailFileName);
 
-        List<PostImageResponse> postImageResponses = postImageService.create(savePost, multipartFiles);
+        final List<PostImageResponse> postImageResponses = postImageService.create(savePost, multipartFiles);
 
         return PostMapper.INSTANCE.toResponseWithImages(savePost, postImageResponses);
     }
 
-    private PostResponse processImage(List<MultipartFile> multipartFiles, Post post) {
-        List<PostImageResponse> postImageResponses = postImageService.update(post, multipartFiles);
+    private PostResponse processImage(final List<MultipartFile> multipartFiles, final Post post) {
+        final List<PostImageResponse> postImageResponses = postImageService.update(post, multipartFiles);
 
         return PostMapper.INSTANCE.toResponseWithImages(post, postImageResponses);
     }
 
-    private void checkValidation(String title, List<MultipartFile> multipartFiles) {
+    private void checkValidation(final String title, final List<MultipartFile> multipartFiles) {
         if (multipartFiles.size() > 10) {
             throw new IllegalArgumentException("파일 저장은 10개 이하로만 가능합니다.");
         }

@@ -12,11 +12,11 @@ public enum NotificationType {
 
     private final String text;
 
-    NotificationType(String text) {
+    NotificationType(final String text) {
         this.text = text;
     }
 
-    public String generate(String nickName) {
+    public String generate(final String nickName) {
         return String.format(text, nickName);
     }
 }

@@ -37,7 +37,7 @@ public class CommentApi {
                                                   @RequestBody @Valid final CommentParam commentParam,
                                                   @Login final Long memberId) {
 
-        CommentResponse commentResponse = commentService.create(
+        final CommentResponse commentResponse = commentService.create(
                 memberId,
                 postId,
                 commentParam.text()
@@ -52,7 +52,7 @@ public class CommentApi {
                                                   @RequestBody @Valid final CommentParam commentParam,
                                                   @Login final Long memberId) {
 
-        CommentResponse commentResponse = commentService.update(
+        final CommentResponse commentResponse = commentService.update(
                 postId,
                 memberId,
                 commentId,
@@ -69,7 +69,7 @@ public class CommentApi {
                                                                       direction = Direction.DESC
                                                               ) final Pageable pageable) {
 
-        Page<CommentResponse> page = commentService.findPageByPostId(postId, pageable);
+        final Page<CommentResponse> page = commentService.findPageByPostId(postId, pageable);
 
         return ResponseEntity.ok(page);
     }
@@ -81,7 +81,7 @@ public class CommentApi {
                                                                             direction = Direction.DESC
                                                                     ) final Pageable pageable) {
 
-        Slice<CommentResponse> slice = commentService.findSliceByPostId(postId, pageable);
+        final Slice<CommentResponse> slice = commentService.findSliceByPostId(postId, pageable);
 
         return ResponseEntity.ok(slice);
     }
@@ -101,7 +101,7 @@ public class CommentApi {
                                                          @PathVariable("commentId") final Long commentId,
                                                          @Login final Long memberId) {
 
-        CommentResponse commentResponse = commentService.increaseHeart(postId, memberId, commentId);
+        final CommentResponse commentResponse = commentService.increaseHeart(postId, memberId, commentId);
 
         return ResponseEntity.ok(commentResponse);
     }
@@ -111,7 +111,7 @@ public class CommentApi {
                                                           @PathVariable("commentId") final Long commentId,
                                                           @Login final Long memberId) {
 
-        CommentResponse commentResponse = commentService.increaseReport(postId, memberId, commentId);
+        final CommentResponse commentResponse = commentService.increaseReport(postId, memberId, commentId);
 
         return ResponseEntity.ok(commentResponse);
     }

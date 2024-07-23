@@ -6,23 +6,23 @@ import java.util.Objects;
 
 public class PasswordUtil {
 
-    private static String getToHex(byte[] bytes) {
+    private static String getToHex(final byte[] bytes) {
         StringBuilder sb = new StringBuilder();
 
-        for(var a : bytes) {
+        for (var a : bytes) {
             sb.append(String.format("%02x", a));
         }
 
         return sb.toString();
     }
 
-    public static String encryptPassword(String password) {
+    public static String encryptPassword(final String password) {
 
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            final MessageDigest md = MessageDigest.getInstance("SHA-256");
 
             md.update((password).getBytes());
-            byte[] saltedPassword = md.digest();
+            final byte[] saltedPassword = md.digest();
 
             return getToHex(saltedPassword);
 
@@ -32,13 +32,12 @@ public class PasswordUtil {
     }
 
     /**
-     *
-     * @param encryptedPassword  암호화된 패스워드
-     * @param password  비교할 패스워드
+     * @param encryptedPassword 암호화된 패스워드
+     * @param password          비교할 패스워드
      * @return true, false
      */
-    public static boolean match(String encryptedPassword, String password) {
-        String pwd = PasswordUtil.encryptPassword(password);
+    public static boolean match(final String encryptedPassword, final String password) {
+        final String pwd = PasswordUtil.encryptPassword(password);
 
         return Objects.equals(encryptedPassword, pwd);
     }

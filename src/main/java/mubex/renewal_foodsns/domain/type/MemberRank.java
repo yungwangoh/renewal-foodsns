@@ -6,7 +6,7 @@ public enum MemberRank {
     SENIOR,
     EXPERT;
 
-    public static MemberRank convert(long heart) {
+    public static MemberRank convert(final long heart) {
         if (heart < 0) {
             throw new IllegalArgumentException("유효하지 않은 좋아요 개수 입니다.");
         }

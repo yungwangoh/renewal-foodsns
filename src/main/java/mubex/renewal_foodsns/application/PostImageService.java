@@ -28,11 +28,11 @@ public class PostImageService {
     private final PostImageRepository postImageRepository;
 
     @Transactional
-    public List<PostImageResponse> create(Post post, List<MultipartFile> multipartFiles) {
+    public List<PostImageResponse> create(final Post post, final List<MultipartFile> multipartFiles) {
 
-        AsyncCall<MultipartFile, String> asyncCall = new AsyncCall<>(multipartFiles);
+        final AsyncCall<MultipartFile, String> asyncCall = new AsyncCall<>(multipartFiles);
 
-        List<String> fileNames = asyncCall.execute(10, fileProcessor::write);
+        final List<String> fileNames = asyncCall.execute(10, fileProcessor::write);
 
         return fileNames.stream()
                 .map(fileName -> savePostImage(fileName, post))
@@ -41,22 +41,22 @@ public class PostImageService {
     }
 
     @Transactional
-    public PostImageResponse create(Post post, MultipartFile multipartFile) {
+    public PostImageResponse create(final Post post, final MultipartFile multipartFile) {
 
-        PostImage postImage = savePostImage(fileProcessor.write(multipartFile), post);
+        final PostImage postImage = savePostImage(fileProcessor.write(multipartFile), post);
 
         return PostImageMapper.INSTANCE.toResponse(postImage);
     }
 
     @Transactional
-    public PostImageResponse thumbnail(Post post, MultipartFile multipartFile) {
+    public PostImageResponse thumbnail(final Post post, final MultipartFile multipartFile) {
 
         try {
-            BufferedImage bufferedImage = Thumbnails.of(multipartFile.getInputStream())
+            final BufferedImage bufferedImage = Thumbnails.of(multipartFile.getInputStream())
                     .size(100, 100)
                     .asBufferedImage();
 
-            String thumbnail = fileProcessor.thumbnail(
+            final String thumbnail = fileProcessor.thumbnail(
                     imageToByteArray(bufferedImage, multipartFile.getContentType()),
                     multipartFile.getContentType()
             );
@@ -68,9 +68,9 @@ public class PostImageService {
     }
 
     @Transactional
-    public List<PostImageResponse> update(Post post, List<MultipartFile> multipartFiles) {
+    public List<PostImageResponse> update(final Post post, final List<MultipartFile> multipartFiles) {
 
-        List<PostImage> postImages = postImageRepository.findAllByPostId(post.getId());
+        final List<PostImage> postImages = postImageRepository.findAllByPostId(post.getId());
 
         return IntStream.rangeClosed(0, multipartFiles.size() - 1)
                 .mapToObj(idx -> update(multipartFiles, idx, postImages))
@@ -78,18 +78,22 @@ public class PostImageService {
                 .toList();
     }
 
-    private PostImage update(List<MultipartFile> multipartFiles, int idx, List<PostImage> postImages) {
-        PostImage postImage = postImages.get(idx);
-        MultipartFile multipartFile = multipartFiles.get(idx);
+    private PostImage update(final List<MultipartFile> multipartFiles,
+                             final int idx,
+                             final List<PostImage> postImages) {
 
-        String updateFileName = fileProcessor.update(multipartFile);
+        final PostImage postImage = postImages.get(idx);
+
+        final MultipartFile multipartFile = multipartFiles.get(idx);
+
+        final String updateFileName = fileProcessor.update(multipartFile);
 
         postImage.updateOriginFileName(updateFileName);
         return postImage;
     }
 
-    private PostImage savePostImage(String fileName, Post savePost) {
-        PostImage postImage = PostImage.builder()
+    private PostImage savePostImage(final String fileName, final Post savePost) {
+        final PostImage postImage = PostImage.builder()
                 .originFileName(fileName)
                 .post(savePost)
                 .build();
@@ -97,8 +101,8 @@ public class PostImageService {
         return postImageRepository.save(postImage);
     }
 
-    private byte[] imageToByteArray(BufferedImage bufferedImage, String format) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    private byte[] imageToByteArray(final BufferedImage bufferedImage, final String format) {
+        final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
         try {
             ImageIO.write(bufferedImage, format, byteArrayOutputStream);

@@ -35,7 +35,7 @@ public class MemberApi {
     private final MemberService memberService;
 
     @PostMapping("members")
-    public ResponseEntity<Void> signUp(@RequestBody @Valid SignUpParam signUpParam) {
+    public ResponseEntity<Void> signUp(@RequestBody @Valid final SignUpParam signUpParam) {
 
         memberService.signUp(
                 signUpParam.email(),
@@ -48,9 +48,9 @@ public class MemberApi {
     }
 
     @PostMapping(value = "members/sign-in")
-    public ResponseEntity<MemberResponse> signIn(@RequestBody @Valid SignInParam signInParam) {
+    public ResponseEntity<MemberResponse> signIn(@RequestBody @Valid final SignInParam signInParam) {
 
-        MemberResponse memberResponse = memberService.signIn(
+        final MemberResponse memberResponse = memberService.signIn(
                 signInParam.email(),
                 signInParam.password()
         );
@@ -67,9 +67,10 @@ public class MemberApi {
     }
 
     @PatchMapping("members/nick-name")
-    public ResponseEntity<MemberResponse> updateNickName(@RequestBody @Valid UpdateNickNameParam updateNickNameParam) {
+    public ResponseEntity<MemberResponse> updateNickName(
+            @RequestBody @Valid final UpdateNickNameParam updateNickNameParam) {
 
-        MemberResponse memberResponse = memberService.updateNickName(
+        final MemberResponse memberResponse = memberService.updateNickName(
                 updateNickNameParam.nickName(),
                 updateNickNameParam.updatedNickName()
         );
@@ -78,7 +79,7 @@ public class MemberApi {
     }
 
     @PatchMapping("members/password")
-    public ResponseEntity<Void> updatePassword(@RequestBody @Valid UpdatePasswordParam updatePasswordParam) {
+    public ResponseEntity<Void> updatePassword(@RequestBody @Valid final UpdatePasswordParam updatePasswordParam) {
 
         memberService.updatePassword(
                 updatePasswordParam.nickName(),
@@ -89,7 +90,7 @@ public class MemberApi {
     }
 
     @DeleteMapping("members")
-    public ResponseEntity<Void> deleteMember(@RequestParam("nickName") String nickName) {
+    public ResponseEntity<Void> deleteMember(@RequestParam("nickName") final String nickName) {
 
         memberService.markAsDeleted(nickName);
 
@@ -97,17 +98,18 @@ public class MemberApi {
     }
 
     @GetMapping("members/rank")
-    public ResponseEntity<List<MemberResponse>> findMemberRank(@RequestParam("memberRank") MemberRank memberRank) {
+    public ResponseEntity<List<MemberResponse>> findMemberRank(
+            @RequestParam("memberRank") final MemberRank memberRank) {
 
-        List<MemberResponse> memberResponses = memberService.findByMemberRank(memberRank);
+        final List<MemberResponse> memberResponses = memberService.findByMemberRank(memberRank);
 
         return ResponseEntity.ok(memberResponses);
     }
 
     @GetMapping("members/page")
-    public ResponseEntity<Page<MemberResponse>> pagingByDescSort(PageRequest pageRequest) {
+    public ResponseEntity<Page<MemberResponse>> pagingByDescSort(final PageRequest pageRequest) {
 
-        Page<MemberResponse> memberResponses = memberService.viewPagingMemberRank(pageRequest);
+        final Page<MemberResponse> memberResponses = memberService.viewPagingMemberRank(pageRequest);
 
         return ResponseEntity.ok(memberResponses);
     }

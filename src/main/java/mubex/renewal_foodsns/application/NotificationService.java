@@ -32,14 +32,14 @@ public class NotificationService {
 
     public SseEmitter subscribe(final Long memberId) {
 
-        SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
+        final SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
 
-        SseEventBuilder data = SseEmitter.event()
+        final SseEventBuilder data = SseEmitter.event()
                 .id(uuid(memberId))
                 .name(SSE_NAME)
                 .data("connection!");
 
-        SseEmitter save = emitterRepository.save(memberId, emitter);
+        final SseEmitter save = emitterRepository.save(memberId, emitter);
 
         emitter.onCompletion(() -> emitterRepository.remove(memberId));
 
@@ -50,18 +50,21 @@ public class NotificationService {
         return save;
     }
 
-    public void sendTo(Member receiver, Member sender, NotificationType type, String uri) {
+    public void sendTo(final Member receiver,
+                       final Member sender,
+                       final NotificationType type,
+                       final String uri) {
 
-        Notification notification = Notification.create(type.generate(sender.getNickName()), type, uri, false,
+        final Notification notification = Notification.create(type.generate(sender.getNickName()), type, uri, false,
                 receiver);
 
         notificationRepository.save(notification);
 
-        SseEmitter sseEmitter = emitterRepository.get(receiver.getId());
+        final SseEmitter sseEmitter = emitterRepository.get(receiver.getId());
 
         log.info("sseEmitter: {}", sseEmitter);
 
-        SseEventBuilder data = SseEmitter.event()
+        final SseEventBuilder data = SseEmitter.event()
                 .id(uuid(receiver.getId()))
                 .name(SSE_NAME)
                 .data(NotificationMapper.INSTANCE.toResponse(notification));
@@ -69,12 +72,12 @@ public class NotificationService {
         send(data, sseEmitter);
     }
 
-    public void sendTo(Member receiver, Post post) {
+    public void sendTo(final Member receiver, final Post post) {
         receiver.levelUp(post.getHeart());
 
-        SseEmitter sseEmitter = emitterRepository.get(receiver.getId());
+        final SseEmitter sseEmitter = emitterRepository.get(receiver.getId());
 
-        SseEventBuilder data = SseEmitter.event()
+        final SseEventBuilder data = SseEmitter.event()
                 .id(uuid(receiver.getId()))
                 .name(SSE_NAME)
                 .data(MemberMapper.INSTANCE.toResponse(receiver));
@@ -82,7 +85,7 @@ public class NotificationService {
         send(data, sseEmitter);
     }
 
-    private void send(SseEventBuilder builder, SseEmitter sseEmitter) {
+    private void send(final SseEventBuilder builder, final SseEmitter sseEmitter) {
 
         try {
             sseEmitter.send(builder);
@@ -91,7 +94,7 @@ public class NotificationService {
         }
     }
 
-    private String uuid(Long id) {
+    private String uuid(final Long id) {
         return id + "_" + UUID.randomUUID();
     }
 }

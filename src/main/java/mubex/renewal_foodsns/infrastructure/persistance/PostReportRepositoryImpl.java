@@ -15,17 +15,17 @@ public class PostReportRepositoryImpl implements PostReportRepository {
 
     @Override
     @Transactional
-    public PostReport save(PostReport postReport) {
+    public PostReport save(final PostReport postReport) {
         return postReportJpaRepository.save(postReport);
     }
 
     @Override
-    public boolean existsByMemberNickName(String nickName) {
+    public boolean existsByMemberNickName(final String nickName) {
         return postReportJpaRepository.existsByMemberNickName(nickName);
     }
 
     @Override
-    public boolean existsByMemberId(Long memberId) {
+    public boolean existsByMemberId(final Long memberId) {
         return postReportJpaRepository.existsByMemberId(memberId);
     }
 }

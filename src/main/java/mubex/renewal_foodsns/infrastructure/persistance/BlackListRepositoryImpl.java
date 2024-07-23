@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 public class BlackListRepositoryImpl implements BlackListRepository {
 
     @Override
-    public BlackList save(BlackList blackList) {
+    public BlackList save(final BlackList blackList) {
         return null;
     }
 
@@ -21,12 +21,12 @@ public class BlackListRepositoryImpl implements BlackListRepository {
     }
 
     @Override
-    public BlackList findById(Long id) {
+    public BlackList findById(final Long id) {
         return null;
     }
 
     @Override
-    public BlackList findByMemberId(Long memberId) {
+    public BlackList findByMemberId(final Long memberId) {
         return null;
     }
 }

@@ -21,12 +21,12 @@ public class CommentRepositoryImpl implements CommentRepository {
 
     @Override
     @Transactional
-    public Comment save(Comment comment) {
+    public Comment save(final Comment comment) {
         return commentJpaRepository.save(comment);
     }
 
     @Override
-    public Comment findById(Long id) {
+    public Comment findById(final Long id) {
         return commentJpaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ExceptionResolver.NOT_FOUND_COMMENT));
     }
@@ -37,30 +37,30 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public Page<Comment> findAllByPostId(Long postId, Pageable pageable) {
+    public Page<Comment> findAllByPostId(final Long postId, final Pageable pageable) {
         return commentJpaRepository.findAllByPostId(postId, pageable);
     }
 
     @Override
-    public Comment findByMemberIdAndId(Long memberId, Long id) {
+    public Comment findByMemberIdAndId(final Long memberId, final Long id) {
         return commentJpaRepository.findByMemberIdAndId(memberId, id)
                 .orElseThrow(() -> new NotFoundException(ExceptionResolver.NOT_FOUND_COMMENT));
     }
 
     @Override
-    public Comment findByPostIdAndId(Long postId, Long id) {
+    public Comment findByPostIdAndId(final Long postId, final Long id) {
         return commentJpaRepository.findByPostIdAndId(postId, id)
                 .orElseThrow(() -> new NotFoundException(ExceptionResolver.NOT_FOUND_COMMENT));
     }
 
     @Override
-    public Comment findByPostIdAndMemberIdAndId(Long postId, Long memberId, Long id) {
+    public Comment findByPostIdAndMemberIdAndId(final Long postId, final Long memberId, final Long id) {
         return commentJpaRepository.findByPostIdAndMemberIdAndId(postId, memberId, id)
                 .orElseThrow(() -> new NotFoundException(ExceptionResolver.NOT_FOUND_COMMENT));
     }
 
     @Override
-    public Slice<Comment> findSliceAllByPostId(Long postId, Pageable pageable) {
+    public Slice<Comment> findSliceAllByPostId(final Long postId, final Pageable pageable) {
         return commentJpaRepository.findByPostId(postId, pageable);
     }
 }

@@ -16,17 +16,20 @@ public class NotificationRepositoryImpl implements NotificationRepository {
     private final NotificationJpaRepository notificationJpaRepository;
 
     @Override
-    public Notification save(Notification notification) {
+    public Notification save(final Notification notification) {
         return notificationJpaRepository.save(notification);
     }
 
     @Override
-    public Slice<Notification> findAllByMemberId(Long memberId, Pageable pageable) {
+    public Slice<Notification> findAllByMemberId(final Long memberId, final Pageable pageable) {
         return notificationJpaRepository.findAllByMemberId(memberId, pageable);
     }
 
     @Override
-    public Slice<Notification> findAllByTypeAndMemberId(NotificationType type, Long memberId, Pageable pageable) {
+    public Slice<Notification> findAllByTypeAndMemberId(final NotificationType type,
+                                                        final Long memberId,
+                                                        final Pageable pageable) {
+        
         return notificationJpaRepository.findAllByTypeAndMemberId(type, memberId, pageable);
     }
 }

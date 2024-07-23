@@ -21,28 +21,28 @@ public class FoodTagRepositoryImpl implements FoodTagRepository {
 
     @Override
     @Transactional
-    public FoodTag save(FoodTag foodTag) {
+    public FoodTag save(final FoodTag foodTag) {
         return foodTagJpaRepository.save(foodTag);
     }
 
     @Override
-    public List<FoodTag> findByTag(Tag tag) {
+    public List<FoodTag> findByTag(final Tag tag) {
         return foodTagJpaRepository.findByTag(tag);
     }
 
     @Override
-    public Slice<FoodTag> findByTag(Tag tag, Pageable pageable) {
+    public Slice<FoodTag> findByTag(final Tag tag, final Pageable pageable) {
         return foodTagJpaRepository.findByTag(tag, pageable);
     }
 
     @Override
-    public List<FoodTag> findByPostId(Long postId) {
+    public List<FoodTag> findByPostId(final Long postId) {
         return foodTagJpaRepository.findByPostId(postId);
     }
 
     @Override
     @Transactional
-    public void deleteAllByPost(Post post) {
+    public void deleteAllByPost(final Post post) {
         foodTagJpaRepository.deleteAllByPost(post);
     }
 

@@ -15,12 +15,12 @@ public class CommentReportRepositoryImpl implements CommentReportRepository {
 
     @Override
     @Transactional
-    public CommentReport save(CommentReport commentReport) {
+    public CommentReport save(final CommentReport commentReport) {
         return commentReportJpaRepository.save(commentReport);
     }
 
     @Override
-    public boolean existsByMemberId(Long memberId) {
+    public boolean existsByMemberId(final Long memberId) {
         return commentReportJpaRepository.existsByMemberId(memberId);
     }
 }

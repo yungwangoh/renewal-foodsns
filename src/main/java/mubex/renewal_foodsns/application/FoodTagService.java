@@ -24,7 +24,7 @@ public class FoodTagService {
 
         checkValidation(tags);
 
-        List<FoodTag> foodTags = tags
+        final List<FoodTag> foodTags = tags
                 .stream()
                 .map(tag -> FoodTag.create(tag, post))
                 .toList();
@@ -39,7 +39,7 @@ public class FoodTagService {
 
         foodTagRepository.deleteAllByPost(post);
 
-        List<FoodTag> foodTags = tags
+        final List<FoodTag> foodTags = tags
                 .stream()
                 .map(tag -> FoodTag.create(tag, post))
                 .toList();

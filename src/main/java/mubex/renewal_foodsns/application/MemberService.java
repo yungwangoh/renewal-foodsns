@@ -29,7 +29,7 @@ public class MemberService {
             throw new IllegalArgumentException("닉네임이 중복 됩니다.");
         }
 
-        Member member = Member.create(
+        final Member member = Member.create(
                 nickName,
                 password,
                 email,
@@ -55,7 +55,7 @@ public class MemberService {
 
     @Transactional
     public MemberResponse updateNickName(final String nickName, final String updatedNickName) {
-        Member member = memberRepository.findByNickName(nickName);
+        final Member member = memberRepository.findByNickName(nickName);
 
         if (!memberRepository.existsByNickName(updatedNickName)) {
             member.updateNickName(updatedNickName);
@@ -68,14 +68,14 @@ public class MemberService {
 
     @Transactional
     public void updatePassword(final String nickName, final String updatePassword) {
-        Member member = memberRepository.findByNickName(nickName);
+        final Member member = memberRepository.findByNickName(nickName);
 
         member.updatePassword(updatePassword);
     }
 
     @Transactional
     public void markAsDeleted(final String nickName) {
-        Member member = memberRepository.findByNickName(nickName);
+        final Member member = memberRepository.findByNickName(nickName);
 
         if (member.isInDeleted()) {
             throw new IllegalArgumentException("이미 삭제된 유저입니다.");
@@ -86,21 +86,21 @@ public class MemberService {
 
     @Transactional
     public void addToBlacklist(final String nickName) {
-        Member member = memberRepository.findByNickName(nickName);
+        final Member member = memberRepository.findByNickName(nickName);
 
         member.addToBlacklist();
     }
 
     @Transactional
     public void addToBlackList(final Long id) {
-        Member member = memberRepository.findById(id);
+        final Member member = memberRepository.findById(id);
 
         member.addToBlacklist();
     }
 
     @Transactional
     public Member addHeart(final Long id, final long heart) {
-        Member member = memberRepository.findById(id);
+        final Member member = memberRepository.findById(id);
 
         member.addHeart(heart);
 
@@ -109,7 +109,7 @@ public class MemberService {
 
     @Transactional
     public Member addReport(final Long id, final int report) {
-        Member member = memberRepository.findById(id);
+        final Member member = memberRepository.findById(id);
 
         member.addReport(report);
 
@@ -117,7 +117,7 @@ public class MemberService {
     }
 
     public Member findAfterCheckBlackList(final Long id) {
-        Member member = memberRepository.findById(id);
+        final Member member = memberRepository.findById(id);
 
         member.checkMemberBlackList();
 
@@ -141,7 +141,7 @@ public class MemberService {
 
     public Page<MemberResponse> viewPagingMemberRank(final PageRequest pageRequest) {
 
-        List<MemberResponse> list = memberRepository.findAll()
+        final List<MemberResponse> list = memberRepository.findAll()
                 .stream()
                 .map(MemberMapper.INSTANCE::toResponse)
                 .toList();

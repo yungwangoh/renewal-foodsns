@@ -21,43 +21,43 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     @Transactional
-    public Post save(Post post) {
+    public Post save(final Post post) {
         return postJpaRepository.save(post);
     }
 
     @Override
-    public Post findById(Long id) {
+    public Post findById(final Long id) {
         return postJpaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ExceptionResolver.NOT_FOUND_POST));
     }
 
     @Override
-    public Page<Post> findByTitle(String title, Pageable pageable) {
+    public Page<Post> findByTitle(final String title, final Pageable pageable) {
         return postJpaRepository.findAllByTitle(title, pageable);
     }
 
     @Override
-    public Slice<Post> findSliceAll(Pageable pageable) {
+    public Slice<Post> findSliceAll(final Pageable pageable) {
         return postJpaRepository.findAll(pageable);
     }
 
     @Override
-    public Page<Post> findAll(Pageable pageable) {
+    public Page<Post> findAll(final Pageable pageable) {
         return postJpaRepository.findAll(pageable);
     }
 
     @Override
-    public Page<Post> findByMemberId(Long memberId, Pageable pageable) {
+    public Page<Post> findByMemberId(final Long memberId, final Pageable pageable) {
         return null;
     }
 
     @Override
-    public Page<Post> findByNickName(String nickName, Pageable pageable) {
+    public Page<Post> findByNickName(final String nickName, final Pageable pageable) {
         return postJpaRepository.findAllByMemberNickName(nickName, pageable);
     }
 
     @Override
-    public boolean existsByTitle(String title) {
+    public boolean existsByTitle(final String title) {
         return postJpaRepository.existsByTitle(title);
     }
 }

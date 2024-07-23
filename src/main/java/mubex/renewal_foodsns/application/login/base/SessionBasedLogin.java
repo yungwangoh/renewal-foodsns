@@ -23,8 +23,8 @@ public class SessionBasedLogin implements LoginHandler {
     private final MemberRepository memberRepository;
 
     @Override
-    public MemberResponse signIn(String email, String password) {
-        Member member = memberRepository.findByEmailAndPassword(email, password);
+    public MemberResponse signIn(final String email, final String password) {
+        final Member member = memberRepository.findByEmailAndPassword(email, password);
 
         httpSession.setAttribute(SessionUtil.SESSION_ID.getValue(), member.getId());
 
@@ -38,10 +38,10 @@ public class SessionBasedLogin implements LoginHandler {
 
     @Override
     public MemberResponse getMember() {
-        Long memberId = Optional.ofNullable((Long) httpSession.getAttribute(SessionUtil.SESSION_ID.getValue()))
+        final Long memberId = Optional.ofNullable((Long) httpSession.getAttribute(SessionUtil.SESSION_ID.getValue()))
                 .orElseThrow(() -> new LoginException(ExceptionResolver.LOGIN_FAILED));
 
-        Member member = memberRepository.findById(memberId);
+        final Member member = memberRepository.findById(memberId);
 
         return MemberMapper.INSTANCE.toResponse(member);
     }

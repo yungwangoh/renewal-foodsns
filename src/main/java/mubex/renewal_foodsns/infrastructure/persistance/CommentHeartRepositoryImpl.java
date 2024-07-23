@@ -15,12 +15,12 @@ public class CommentHeartRepositoryImpl implements CommentHeartRepository {
 
     @Override
     @Transactional
-    public CommentHeart save(CommentHeart commentHeart) {
+    public CommentHeart save(final CommentHeart commentHeart) {
         return commentHeartJpaRepository.save(commentHeart);
     }
 
     @Override
-    public boolean existByMemberId(Long memberId) {
+    public boolean existByMemberId(final Long memberId) {
         return commentHeartJpaRepository.existsByMemberId(memberId);
     }
 }
