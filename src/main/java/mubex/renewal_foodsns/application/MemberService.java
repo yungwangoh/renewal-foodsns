@@ -2,14 +2,12 @@ package mubex.renewal_foodsns.application;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import mubex.renewal_foodsns.application.event.RegisteredSubscribeEvent;
 import mubex.renewal_foodsns.application.login.LoginHandler;
 import mubex.renewal_foodsns.domain.dto.response.MemberResponse;
 import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.mapper.map.MemberMapper;
 import mubex.renewal_foodsns.domain.repository.MemberRepository;
 import mubex.renewal_foodsns.domain.type.MemberRank;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +21,6 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final LoginHandler loginHandler;
-    private final ApplicationEventPublisher publisher;
 
     @Transactional
     public void signUp(final String email, final String nickName, final String password, int profileId) {
@@ -48,13 +45,7 @@ public class MemberService {
 
     @Transactional
     public MemberResponse signIn(final String email, final String password) {
-        MemberResponse memberResponse = loginHandler.signIn(email, password);
-
-        Member member = memberRepository.findByNickName(memberResponse.nickName());
-
-        publisher.publishEvent(new RegisteredSubscribeEvent(member.getId()));
-
-        return memberResponse;
+        return loginHandler.signIn(email, password);
     }
 
     @Transactional

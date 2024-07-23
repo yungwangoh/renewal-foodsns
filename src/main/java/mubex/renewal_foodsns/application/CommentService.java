@@ -47,6 +47,7 @@ public class CommentService {
         Comment save = commentRepository.save(comment);
 
         publisher.publishEvent(new RegisteredSendEvent(
+                post.getMember(),
                 member,
                 NotificationType.COMMENT,
                 COMMENT_URI.generate(postId, comment.getId())

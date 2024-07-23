@@ -32,7 +32,7 @@ public class CommentApi {
 
     private final CommentService commentService;
 
-    @PostMapping("/comments")
+    @PostMapping(value = "/comments")
     public ResponseEntity<CommentResponse> create(@PathVariable("postId") final Long postId,
                                                   @RequestBody @Valid final CommentParam commentParam,
                                                   @Login final Long memberId) {

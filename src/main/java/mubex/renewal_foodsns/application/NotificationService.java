@@ -1,8 +1,8 @@
 package mubex.renewal_foodsns.application;
 
 import java.io.IOException;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.entity.Notification;
 import mubex.renewal_foodsns.domain.mapper.map.NotificationMapper;
@@ -12,62 +12,66 @@ import mubex.renewal_foodsns.domain.type.NotificationType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.SseEventBuilder;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final EmitterRepository emitterRepository;
 
+    private static final String SSE_NAME = "sse";
+
     private static final Long DEFAULT_TIMEOUT = 60L * 1000L * 60L;
 
-    public void subscribe(final Long memberId) {
+    public SseEmitter subscribe(final Long memberId) {
 
-        String convertMemberId = convertUUID(memberId);
+        SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
 
-        SseEmitter emitter = emitterRepository.save(convertMemberId, new SseEmitter(DEFAULT_TIMEOUT));
+        SseEventBuilder data = SseEmitter.event()
+                .id(memberId.toString())
+                .name(SSE_NAME)
+                .data("connection!");
 
-        emitter.onCompletion(() -> emitterRepository.deleteById(convertMemberId));
+        SseEmitter save = emitterRepository.save(memberId, emitter);
 
-        emitter.onTimeout(() -> emitterRepository.deleteById(convertMemberId));
+        emitter.onCompletion(() -> emitterRepository.remove(memberId));
 
-        String dummyMemberId = convertUUID(memberId);
+        emitter.onTimeout(() -> emitterRepository.remove(memberId));
 
-        sendNotification(emitter, dummyMemberId, convertMemberId, "connection complete.");
+        send(data, save);
+
+        return save;
     }
 
-    public void send(final Member receiver, final NotificationType type, final String uri) {
+    public void sendTo(Member receiver, Member sender, NotificationType type, String uri) {
 
-        Notification notification = Notification.create(type.getText(), type, uri, false, receiver);
+        Notification notification = Notification.create(type.generate(sender.getNickName()), type, uri, false,
+                receiver);
 
-        Notification save = notificationRepository.save(notification);
+        notificationRepository.save(notification);
 
-        String convertMemberId = convertUUID(receiver.getId());
+        SseEmitter sseEmitter = emitterRepository.get(receiver.getId());
 
-        emitterRepository.findAllEmitterStartWithByMemberId(receiver.getId())
-                .forEach((key, emitter) -> {
-                            emitterRepository.save(key, save);
-                            sendNotification(emitter, convertMemberId, key, NotificationMapper.INSTANCE.toResponse(save));
-                        }
-                );
+        log.info("sseEmitter: {}", sseEmitter);
+
+        SseEventBuilder data = SseEmitter.event()
+                .id(receiver.getId().toString())
+                .name(SSE_NAME)
+                .data(NotificationMapper.INSTANCE.toResponse(notification));
+
+        send(data, sseEmitter);
     }
 
-    private void sendNotification(SseEmitter emitter, String eventId, String emitterId, Object data) {
+    private void send(SseEventBuilder builder, SseEmitter sseEmitter) {
+
         try {
-            emitter.send(SseEmitter.event()
-                    .id(eventId)
-                    .name("sse")
-                    .data(data)
-            );
+            sseEmitter.send(builder);
         } catch (IOException e) {
-            emitterRepository.deleteById(emitterId);
-            throw new RuntimeException(e);
+            sseEmitter.complete();
         }
-    }
-
-    private String convertUUID(final Long memberId) {
-        return memberId + " " + UUID.randomUUID();
     }
 }
