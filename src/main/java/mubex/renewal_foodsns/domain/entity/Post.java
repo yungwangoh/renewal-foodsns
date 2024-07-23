@@ -98,8 +98,8 @@ public class Post extends BaseEntity {
         this.text = text;
     }
 
-    public void addHeart() {
-        this.heart++;
+    public void addHeart(long heart) {
+        this.heart += heart;
     }
 
     public void addReport() {

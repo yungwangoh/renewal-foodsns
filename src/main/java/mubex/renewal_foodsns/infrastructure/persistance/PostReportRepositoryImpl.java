@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @RequiredArgsConstructor
-public class PostRepostRepositoryImpl implements PostReportRepository {
+public class PostReportRepositoryImpl implements PostReportRepository {
 
     private final PostReportJpaRepository postReportJpaRepository;
 

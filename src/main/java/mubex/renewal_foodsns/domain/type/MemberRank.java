@@ -7,13 +7,15 @@ public enum MemberRank {
     EXPERT;
 
     public static MemberRank convert(long heart) {
-        if(heart < 0) throw new IllegalArgumentException("유효하지 않은 좋아요 개수 입니다.");
+        if (heart < 0) {
+            throw new IllegalArgumentException("유효하지 않은 좋아요 개수 입니다.");
+        }
 
-        if (heart <= 100) {
+        if (heart <= 10) {
             return NORMAL;
-        } else if (heart <= 500) {
+        } else if (heart <= 100) {
             return MIDDLE;
-        } else if (heart <= 5000) {
+        } else if (heart <= 1000) {
             return SENIOR;
         } else {
             return EXPERT;

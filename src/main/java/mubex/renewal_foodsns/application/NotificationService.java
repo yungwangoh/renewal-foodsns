@@ -1,10 +1,13 @@
 package mubex.renewal_foodsns.application;
 
 import java.io.IOException;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.entity.Notification;
+import mubex.renewal_foodsns.domain.entity.Post;
+import mubex.renewal_foodsns.domain.mapper.map.MemberMapper;
 import mubex.renewal_foodsns.domain.mapper.map.NotificationMapper;
 import mubex.renewal_foodsns.domain.repository.EmitterRepository;
 import mubex.renewal_foodsns.domain.repository.NotificationRepository;
@@ -32,7 +35,7 @@ public class NotificationService {
         SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
 
         SseEventBuilder data = SseEmitter.event()
-                .id(memberId.toString())
+                .id(uuid(memberId))
                 .name(SSE_NAME)
                 .data("connection!");
 
@@ -59,9 +62,22 @@ public class NotificationService {
         log.info("sseEmitter: {}", sseEmitter);
 
         SseEventBuilder data = SseEmitter.event()
-                .id(receiver.getId().toString())
+                .id(uuid(receiver.getId()))
                 .name(SSE_NAME)
                 .data(NotificationMapper.INSTANCE.toResponse(notification));
+
+        send(data, sseEmitter);
+    }
+
+    public void sendTo(Member receiver, Post post) {
+        receiver.levelUp(post.getHeart());
+
+        SseEmitter sseEmitter = emitterRepository.get(receiver.getId());
+
+        SseEventBuilder data = SseEmitter.event()
+                .id(uuid(receiver.getId()))
+                .name(SSE_NAME)
+                .data(MemberMapper.INSTANCE.toResponse(receiver));
 
         send(data, sseEmitter);
     }
@@ -73,5 +89,9 @@ public class NotificationService {
         } catch (IOException e) {
             sseEmitter.complete();
         }
+    }
+
+    private String uuid(Long id) {
+        return id + "_" + UUID.randomUUID();
     }
 }

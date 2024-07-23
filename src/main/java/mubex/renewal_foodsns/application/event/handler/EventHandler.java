@@ -2,6 +2,7 @@ package mubex.renewal_foodsns.application.event.handler;
 
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.NotificationService;
+import mubex.renewal_foodsns.application.event.RegisteredLevelUpEvent;
 import mubex.renewal_foodsns.application.event.RegisteredSendEvent;
 import mubex.renewal_foodsns.application.event.RegisteredSubscribeEvent;
 import org.springframework.stereotype.Component;
@@ -21,5 +22,10 @@ public class EventHandler {
     @TransactionalEventListener
     public void sendHandler(RegisteredSendEvent event) {
         notificationService.sendTo(event.receiver(), event.sender(), event.type(), event.uri());
+    }
+
+    @TransactionalEventListener
+    public void levelUpHandler(RegisteredLevelUpEvent event) {
+        notificationService.sendTo(event.member(), event.post());
     }
 }

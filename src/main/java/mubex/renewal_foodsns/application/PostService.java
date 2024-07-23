@@ -3,6 +3,7 @@ package mubex.renewal_foodsns.application;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import mubex.renewal_foodsns.application.event.RegisteredLevelUpEvent;
 import mubex.renewal_foodsns.domain.dto.response.PostImageResponse;
 import mubex.renewal_foodsns.domain.dto.response.PostPageResponse;
 import mubex.renewal_foodsns.domain.dto.response.PostResponse;
@@ -16,6 +17,7 @@ import mubex.renewal_foodsns.domain.repository.PostHeartRepository;
 import mubex.renewal_foodsns.domain.repository.PostReportRepository;
 import mubex.renewal_foodsns.domain.repository.PostRepository;
 import mubex.renewal_foodsns.domain.type.Tag;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -34,6 +36,7 @@ public class PostService {
     private final PostHeartRepository postHeartRepository;
     private final PostReportRepository postReportRepository;
     private final FoodTagService foodTagService;
+    private final ApplicationEventPublisher publisher;
 
     @Transactional
     public PostResponse create(final String title, final String text, final Long memberId,
@@ -52,7 +55,7 @@ public class PostService {
         foodTagService.create(tags, savePost);
 
         if (!multipartFiles.isEmpty()) {
-            return processImages(multipartFiles, post, savePost);
+            return processImage(multipartFiles, post, savePost);
         } else {
             return PostMapper.INSTANCE.toResponse(post);
         }
@@ -84,7 +87,7 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponse increaseHeart(final Long memberId, final Long postId) {
+    public PostResponse increaseHeart(final Long memberId, final Long postId, final long heart) {
 
         if (postHeartRepository.existsByMemberId(memberId)) {
             throw new IllegalArgumentException("이미 좋아요를 눌렀습니다.");
@@ -99,7 +102,9 @@ public class PostService {
 
         postHeartRepository.save(postHeart);
 
-        post.addHeart();
+        post.addHeart(heart);
+
+        publisher.publishEvent(new RegisteredLevelUpEvent(post.getMember(), post));
 
         return PostMapper.INSTANCE.toResponse(post);
     }
@@ -159,7 +164,7 @@ public class PostService {
         return postRepository.findByNickName(nickName, pageable).map(PostPageMapper.INSTANCE::toResponse);
     }
 
-    private PostResponse processImages(List<MultipartFile> multipartFiles, Post post, Post savePost) {
+    private PostResponse processImage(List<MultipartFile> multipartFiles, Post post, Post savePost) {
         String thumbnailFileName = postImageService.thumbnail(post, multipartFiles.getFirst()).originFileName();
 
         savePost.setThumbnail(thumbnailFileName);

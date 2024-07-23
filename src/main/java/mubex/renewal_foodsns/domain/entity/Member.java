@@ -147,4 +147,10 @@ public class Member extends BaseEntity {
             throw new IllegalArgumentException("블랙리스트 유저는 사용할 수 없습니다.");
         }
     }
+
+    public void levelUp(long heart) {
+        addHeart(heart);
+
+        this.memberRank = MemberRank.convert(this.heart);
+    }
 }

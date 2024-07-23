@@ -77,7 +77,7 @@ public class PostApi {
     public ResponseEntity<PostResponse> increaseHeart(@RequestParam("postId") Long postId,
                                                       @Login Long memberId) {
 
-        PostResponse postResponse = postService.increaseHeart(memberId, postId);
+        PostResponse postResponse = postService.increaseHeart(memberId, postId, 1);
 
         return ResponseEntity.ok(postResponse);
     }
