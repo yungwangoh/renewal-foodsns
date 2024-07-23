@@ -93,7 +93,7 @@ public class PostServiceTest extends TestContainer {
         PostResponse postResponse = createPost();
 
         // when
-        postService.increaseHeart(memberId, postResponse.id());
+        postService.increaseHeart(memberId, postResponse.id(), 1);
 
         PostResponse response = postService.find(postResponse.id());
 
