@@ -46,7 +46,7 @@ public class PostService {
 
         final Member member = memberService.findAfterCheckBlackList(memberId);
 
-        Post post = Post.create(title, text, 0, 0, 0, false, member);
+        final Post post = Post.create(title, text, 0, 0, 0, false, member);
 
         post.addViews();
 
@@ -98,7 +98,7 @@ public class PostService {
         final Post post = postRepository.findById(postId);
 
         // post heart logic
-        PostHeart postHeart = PostHeart.create(post, member);
+        final PostHeart postHeart = PostHeart.create(post, member);
 
         postHeartRepository.save(postHeart);
 
