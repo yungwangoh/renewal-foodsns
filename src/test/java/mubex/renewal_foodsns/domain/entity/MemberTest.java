@@ -1,10 +1,11 @@
 package mubex.renewal_foodsns.domain.entity;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import mubex.renewal_foodsns.domain.type.MemberRank;
 import mubex.renewal_foodsns.common.util.PasswordUtil;
+import mubex.renewal_foodsns.domain.type.MemberRank;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -76,5 +77,27 @@ class MemberTest {
 
         // then
         assertTrue(PasswordUtil.match(encryptedPassword, password));
+    }
+
+    @Test
+    void 유저의_등급이_바뀌면_true를_반환한다() {
+        // given
+        Member member = Member.create(
+                "test",
+                "test",
+                "test",
+                1,
+                10,
+                0,
+                false,
+                MemberRank.NORMAL,
+                false);
+
+        // when
+        boolean levelUp = member.levelUp(1);
+
+        // then
+        assertTrue(levelUp);
+        assertThat(member.getMemberRank()).isEqualTo(MemberRank.MIDDLE);
     }
 }

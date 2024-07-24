@@ -32,6 +32,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,6 +57,9 @@ public class PostServiceTest {
 
     @Mock
     private PostReportRepository postReportRepository;
+
+    @Mock
+    private ApplicationEventPublisher publisher;
 
     @Test
     void 유저가_게시물_이미지를_10개를_초과하면_예외_발생() {
@@ -119,7 +123,7 @@ public class PostServiceTest {
 
         given(postReportRepository.existsByMemberId(anyLong())).willReturn(true);
 
-        assertThatThrownBy(() -> postService.increaseReport(memberId, postId))
+        assertThatThrownBy(() -> postService.increaseReport(memberId, postId, 1))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
