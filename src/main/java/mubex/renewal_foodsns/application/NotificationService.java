@@ -8,7 +8,6 @@ import mubex.renewal_foodsns.domain.dto.response.MemberResponse;
 import mubex.renewal_foodsns.domain.dto.response.NotificationResponse;
 import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.entity.Notification;
-import mubex.renewal_foodsns.domain.entity.Post;
 import mubex.renewal_foodsns.domain.mapper.map.MemberMapper;
 import mubex.renewal_foodsns.domain.mapper.map.NotificationMapper;
 import mubex.renewal_foodsns.domain.repository.EmitterRepository;
@@ -74,8 +73,7 @@ public class NotificationService {
         send(data, sseEmitter);
     }
 
-    public void sendTo(final Member receiver, final NotificationType type, final Post post) {
-        receiver.levelUp(post.getHeart());
+    public void sendTo(final Member receiver, final NotificationType type) {
 
         final SseEmitter sseEmitter = emitterRepository.get(receiver.getId());
 

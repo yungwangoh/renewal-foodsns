@@ -85,17 +85,21 @@ public class MemberService {
     }
 
     @Transactional
-    public void addToBlacklist(final String nickName) {
+    public boolean addToBlacklist(final String nickName) {
         final Member member = memberRepository.findByNickName(nickName);
 
         member.addToBlacklist();
+
+        return member.isInBlackList();
     }
 
     @Transactional
-    public void addToBlackList(final Long id) {
+    public boolean addToBlackList(final Long id) {
         final Member member = memberRepository.findById(id);
 
         member.addToBlacklist();
+
+        return member.isInBlackList();
     }
 
     @Transactional

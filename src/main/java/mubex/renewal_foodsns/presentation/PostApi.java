@@ -86,7 +86,7 @@ public class PostApi {
     public ResponseEntity<PostResponse> increaseReport(@RequestParam("postId") final Long postId,
                                                        @Login final Long memberId) {
 
-        final PostResponse postResponse = postService.increaseReport(memberId, postId);
+        final PostResponse postResponse = postService.increaseReport(memberId, postId, 1);
 
         return ResponseEntity.ok(postResponse);
     }

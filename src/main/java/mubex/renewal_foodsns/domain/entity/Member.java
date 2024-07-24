@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -101,19 +102,19 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    public void updateProfileId(int profileId) {
+    public void updateProfileId(final int profileId) {
         this.profileId = profileId;
     }
 
-    public void updateNickName(String newNickName) {
+    public void updateNickName(final String newNickName) {
         this.nickName = newNickName;
     }
 
-    public void updatePassword(String password) {
+    public void updatePassword(final String password) {
         this.password = PasswordUtil.encryptPassword(password);
     }
 
-    public void updateMemberRank(MemberRank memberRank) {
+    public void updateMemberRank(final MemberRank memberRank) {
         this.memberRank = memberRank;
     }
 
@@ -128,14 +129,14 @@ public class Member extends BaseEntity {
         }
     }
 
-    public void addHeart(long heart) {
+    public void addHeart(final long heart) {
         if (heart < 0) {
             throw new IllegalArgumentException("유효하지 않은 값입니다.");
         }
         this.heart += heart;
     }
 
-    public void addReport(int report) {
+    public void addReport(final int report) {
         if (report < 0) {
             throw new IllegalArgumentException("유효하지 않은 값입니다.");
         }
@@ -148,9 +149,20 @@ public class Member extends BaseEntity {
         }
     }
 
-    public void levelUp(long heart) {
+    public boolean levelUp(final long heart) {
+
+        final MemberRank before = this.memberRank;
+
         addHeart(heart);
 
-        this.memberRank = MemberRank.convert(this.heart);
+        final MemberRank after = MemberRank.convert(this.heart);
+
+        if (Objects.equals(before, after)) {
+            this.memberRank = MemberRank.convert(this.heart);
+            return false;
+        } else {
+            this.memberRank = MemberRank.convert(this.heart);
+            return true;
+        }
     }
 }

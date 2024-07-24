@@ -102,8 +102,8 @@ public class Post extends BaseEntity {
         this.heart += heart;
     }
 
-    public void addReport() {
-        this.report++;
+    public void addReport(int report) {
+        this.report += report;
     }
 
     public void addViews() {

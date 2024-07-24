@@ -3,6 +3,7 @@ package mubex.renewal_foodsns.application;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import mubex.renewal_foodsns.application.event.RegisteredBlackListEvent;
 import mubex.renewal_foodsns.application.event.RegisteredLevelUpEvent;
 import mubex.renewal_foodsns.domain.dto.response.PostImageResponse;
 import mubex.renewal_foodsns.domain.dto.response.PostPageResponse;
@@ -105,13 +106,18 @@ public class PostService {
 
         post.addHeart(heart);
 
-        publisher.publishEvent(new RegisteredLevelUpEvent(post.getMember(), NotificationType.MEMBER_RANK, post));
+        boolean levelUp = post.getMember().levelUp(post.getHeart());
+
+        if (levelUp) {
+            publisher.publishEvent(
+                    new RegisteredLevelUpEvent(post.getMember(), NotificationType.MEMBER_RANK));
+        }
 
         return PostMapper.INSTANCE.toResponse(post);
     }
 
     @Transactional
-    public PostResponse increaseReport(final Long memberId, final Long postId) {
+    public PostResponse increaseReport(final Long memberId, final Long postId, final int report) {
 
         if (postReportRepository.existsByMemberId(memberId)) {
             throw new IllegalArgumentException("이미 신고를 눌렀습니다.");
@@ -126,9 +132,13 @@ public class PostService {
 
         postReportRepository.save(postReport);
 
-        post.addReport();
+        post.addReport(report);
 
-        memberService.addToBlackList(post.getMemberId());
+        boolean blackList = memberService.addToBlackList(post.getMemberId());
+
+        if (blackList) {
+            publisher.publishEvent(new RegisteredBlackListEvent(post.getMember(), NotificationType.BLACK_LIST));
+        }
 
         return PostMapper.INSTANCE.toResponse(post);
     }
