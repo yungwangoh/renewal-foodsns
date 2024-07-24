@@ -2,6 +2,7 @@ package mubex.renewal_foodsns.common.config.web;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import mubex.renewal_foodsns.presentation.interceptor.BlackListInterceptor;
 import mubex.renewal_foodsns.presentation.interceptor.LoginInterceptor;
 import mubex.renewal_foodsns.presentation.interceptor.RequestMatcherInterceptor;
 import mubex.renewal_foodsns.presentation.resolver.LoginArgumentResolver;
@@ -18,14 +19,20 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final LoginArgumentResolver loginArgumentResolver;
     private final LoginInterceptor loginInterceptor;
+    private final BlackListInterceptor blackListInterceptor;
 
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(matchingInterceptor());
+    public void addInterceptors(final InterceptorRegistry registry) {
+
+        registry.addInterceptor(matchingInterceptor())
+                .order(0);
+
+        registry.addInterceptor(matchingBlackListInterceptor())
+                .order(1);
     }
 
     @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+    public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(loginArgumentResolver);
     }
 
@@ -35,5 +42,11 @@ public class WebConfig implements WebMvcConfigurer {
                 .addExcludingRequestPattern("/**", HttpMethod.GET)
                 .addExcludingRequestPattern("/**/members", HttpMethod.POST)
                 .addExcludingRequestPattern("/**/sign-in", HttpMethod.POST);
+    }
+
+    private HandlerInterceptor matchingBlackListInterceptor() {
+        return new RequestMatcherInterceptor(blackListInterceptor)
+                .addIncludingRequestPattern("/**")
+                .addExcludingRequestPattern("/**", HttpMethod.GET);
     }
 }
