@@ -1,129 +1,155 @@
 package mubex.renewal_foodsns.presentation;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.doNothing;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import mubex.renewal_foodsns.application.MemberService;
-import mubex.renewal_foodsns.application.login.LoginHandler;
-import mubex.renewal_foodsns.domain.dto.request.sign.SignUpParam;
-import mubex.renewal_foodsns.domain.dto.request.update.UpdateNickNameParam;
-import mubex.renewal_foodsns.domain.dto.response.MemberResponse;
+import io.restassured.RestAssured;
+import io.restassured.filter.cookie.CookieFilter;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import java.net.URI;
+import java.util.HashSet;
+import java.util.Set;
+import mubex.renewal_foodsns.common.TestContainer;
+import mubex.renewal_foodsns.common.exception.ExceptionResolver;
+import mubex.renewal_foodsns.domain.dto.request.PostParam;
+import mubex.renewal_foodsns.domain.dto.request.sign.SignInParam;
+import mubex.renewal_foodsns.domain.entity.Member;
+import mubex.renewal_foodsns.domain.repository.MemberRepository;
 import mubex.renewal_foodsns.domain.type.MemberRank;
+import mubex.renewal_foodsns.domain.type.Tag;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.http.ProblemDetail;
+import org.springframework.test.context.jdbc.Sql;
 
-@WebMvcTest(MemberApi.class)
-class MemberApiTest {
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@Sql("/data.sql")
+class MemberApiTest extends TestContainer {
+
+    @LocalServerPort
+    private int port;
 
     @Autowired
-    private MockMvc mockMvc;
+    private MemberRepository memberRepository;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @BeforeEach
+    void setUp() {
+        RestAssured.port = port;
 
-    @MockBean
-    private MemberService memberService;
+        Member member = Member.create("qwer1234", "qwer1234@A", "qwer1234@naver.com", 1, 0, 0, true, MemberRank.NORMAL,
+                false);
 
-    @MockBean
-    private LoginHandler loginHandler;
-
-    @Test
-    void 회원_가입_API_201() throws Exception {
-        // given
-        String email = "qwer1234@gmail.com";
-        String password = "qwer1234@A";
-        String nickName = "yesIdo";
-
-        SignUpParam signUpParam = new SignUpParam(email, nickName, password, 1);
-
-        doNothing().when(memberService)
-                .signUp(
-                        signUpParam.email(),
-                        signUpParam.nickName(),
-                        signUpParam.password(),
-                        signUpParam.profileId()
-                );
-
-        // when
-        ResultActions resultActions = mockMvc.perform(post("/api/v1/members")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(signUpParam)));
-
-        // then
-        resultActions.andExpect(status().isCreated())
-                .andDo(print());
+        memberRepository.save(member);
     }
 
     @Test
-    void 회원_가입_할_때_입력_유효성을_지키지_않은_경우_400() throws Exception {
-        // given
-        String email = "qwer1234@gmail.com";
-        String password = "qwer1234";
-        String nickName = "yesIdo";
+    void 회원의_유효하지_않은_세션_일_떄_기능을_이용하면_예외_발생_401() {
+        // given && when
+        ExtractableResponse<Response> extract = RestAssured.given()
+                .log().all()
+                .when()
+                .post("/api/v1/members/sign-out")
+                .then()
+                .log().all()
+                .extract();
 
-        SignUpParam signUpParam = new SignUpParam(email, nickName, password, 1);
-
-        doNothing().when(memberService)
-                .signUp(
-                        signUpParam.email(),
-                        signUpParam.nickName(),
-                        signUpParam.password(),
-                        signUpParam.profileId()
-                );
-
-        // when
-        ResultActions resultActions = mockMvc.perform(post("/api/v1/members")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(signUpParam)));
+        int aStatusCode = extract.statusCode();
+        int eStatusCode = ExceptionResolver.UNAUTHORIZED_MEMBER.getStatusCode().value();
+        ProblemDetail aPd = extract.body().as(ProblemDetail.class);
+        ProblemDetail ePd = ExceptionResolver.UNAUTHORIZED_MEMBER.getBody();
+        ePd.setInstance(URI.create("/api/v1/members/sign-out"));
 
         // then
-        resultActions.andExpect(status().isBadRequest())
-                .andDo(print());
+        assertSoftly(softly -> {
+            softly.assertThat(aStatusCode).isEqualTo(eStatusCode);
+            softly.assertThat(aPd)
+                    .usingRecursiveComparison()
+                    .isEqualTo(ePd);
+        });
     }
 
     @Test
-    void 로그인_하지_않고_접근_할떄_예외_401() throws Exception {
+    void 블랙리스트인_회원은_기능을_사용하지_못한다_400() throws Exception {
         // given
-        UpdateNickNameParam updateNickNameParam = new UpdateNickNameParam("nickName", "updateName");
-        MemberResponse memberResponse = MemberResponse.builder()
-                .memberRank(MemberRank.NORMAL)
-                .heart(0)
-                .report(0)
-                .profileId(1)
-                .inBlackList(false)
-                .nickName("nickName")
-                .build();
+        CookieFilter cookieFilter = login();
 
-        given(memberService.updateNickName(anyString(), anyString())).willReturn(memberResponse);
+        PostParam postParam = new PostParam("Title", "Text");
+        Set<Tag> tags = new HashSet<>();
+        tags.add(Tag.SOUP);
+
+        String postParamJson = new ObjectMapper().writeValueAsString(postParam);
 
         // when
-        ResultActions resultActions = mockMvc.perform(patch("/api/v1/members/nick-name")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updateNickNameParam)));
+        ExtractableResponse<Response> extract = RestAssured.given()
+                .log().all()
+                .filter(cookieFilter)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                .multiPart("post", "post", postParamJson, MediaType.APPLICATION_JSON_VALUE)
+                .multiPart("image", "image.png", new byte[]{}, MediaType.IMAGE_PNG_VALUE)
+                .param("tag", tags)
+                .when()
+                .post("/api/v1/posts")
+                .then()
+                .log().all()
+                .extract();
+
+        int aStatusCode = extract.statusCode();
+        int eStatusCode = HttpStatus.BAD_REQUEST.value();
+
+        ProblemDetail aPd = extract.body().as(ProblemDetail.class);
+        ProblemDetail ePd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "블랙리스트 유저는 사용할 수 없습니다.");
+        ePd.setInstance(URI.create("/api/v1/posts"));
 
         // then
-        resultActions.andExpect(status().isUnauthorized())
-                .andDo(print());
+        assertSoftly(softly -> {
+            softly.assertThat(aStatusCode).isEqualTo(eStatusCode);
+            softly.assertThat(aPd)
+                    .usingRecursiveComparison()
+                    .isEqualTo(ePd);
+        });
     }
 
     @Test
-    void 유저_탈퇴_204() throws Exception {
-        doNothing().when(memberService).markAsDeleted(anyString());
+    void 블랙리스트인_회원은_읽기_기능은_사용_가능하다_200() {
+        // given
+        CookieFilter cookieFilter = login();
 
-        mockMvc.perform(delete("/api/v1/members")
-                        .param("nickName", "testNick"))
-                .andExpect(status().isNoContent());
+        // when
+        ExtractableResponse<Response> extract = RestAssured.given()
+                .log().all()
+                .filter(cookieFilter)
+                .when()
+                .get("/api/v1/posts")
+                .then()
+                .log().all()
+                .extract();
+
+        // then
+        assertThat(extract.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    private CookieFilter login() {
+        CookieFilter cookieFilter = new CookieFilter();
+
+        SignInParam sign = new SignInParam("qwer1234@naver.com", "qwer1234@A");
+
+        RestAssured.given()
+                .filter(cookieFilter)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(sign)
+                .when()
+                .post("/api/v1/members/sign-in")
+                .then()
+                .statusCode(200);
+
+        return cookieFilter;
     }
 }
