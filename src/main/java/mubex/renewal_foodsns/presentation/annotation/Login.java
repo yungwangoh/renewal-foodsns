@@ -1,4 +1,4 @@
-package mubex.renewal_foodsns.common.annotation;
+package mubex.renewal_foodsns.presentation.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

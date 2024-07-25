@@ -2,7 +2,7 @@ package mubex.renewal_foodsns.presentation;
 
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.NotificationService;
-import mubex.renewal_foodsns.common.annotation.Login;
+import mubex.renewal_foodsns.presentation.annotation.Login;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ public class NotificationApi {
 
     @GetMapping
     public ResponseEntity<SseEmitter> notification(@Login final Long memberId) {
-        
+
         final SseEmitter sseEmitter = notificationService.subscribe(memberId);
 
         return ResponseEntity.ok(sseEmitter);
