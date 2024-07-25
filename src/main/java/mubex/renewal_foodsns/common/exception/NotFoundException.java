@@ -1,7 +1,6 @@
-package mubex.renewal_foodsns.domain.exception;
+package mubex.renewal_foodsns.common.exception;
 
 import lombok.Getter;
-import mubex.renewal_foodsns.common.exception.ExceptionResolver;
 
 @Getter
 public class NotFoundException extends RuntimeException {

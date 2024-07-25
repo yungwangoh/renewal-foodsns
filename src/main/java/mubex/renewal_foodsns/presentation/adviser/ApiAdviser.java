@@ -2,8 +2,8 @@ package mubex.renewal_foodsns.presentation.adviser;
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
-import mubex.renewal_foodsns.domain.exception.LoginException;
-import mubex.renewal_foodsns.domain.exception.NotFoundException;
+import mubex.renewal_foodsns.common.exception.LoginException;
+import mubex.renewal_foodsns.common.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.ErrorResponse;
