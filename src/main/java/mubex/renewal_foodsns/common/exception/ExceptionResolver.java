@@ -42,7 +42,7 @@ public enum ExceptionResolver implements ErrorResponse {
 
     @Override
     public ProblemDetail getBody() {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(this.httpStatus, this.message);
+        final ProblemDetail pd = ProblemDetail.forStatusAndDetail(this.httpStatus, this.message);
         pd.setTitle(this.code);
 
         return pd;

@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import mubex.renewal_foodsns.domain.exception.LoginException;
 import mubex.renewal_foodsns.domain.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.ProblemDetail;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,46 +18,53 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ApiAdviser {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(final IllegalArgumentException exception) {
+    public ErrorResponse handleIllegalArgumentException(final IllegalArgumentException exception) {
 
-        final ErrorResponse errorResponse = new ErrorResponseException(HttpStatus.BAD_REQUEST, exception);
+        final ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
 
-        return ResponseEntity.badRequest().body(errorResponse);
+        return new ErrorResponseException(HttpStatus.BAD_REQUEST, pd, exception);
     }
 
     @ExceptionHandler(LoginException.class)
-    public ResponseEntity<ErrorResponse> handleLoginException(final LoginException exception) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getExceptionResolver());
+    public ErrorResponse handleLoginException(final LoginException exception) {
+
+        final ProblemDetail pd = exception.getExceptionResolver().getBody();
+
+        return new ErrorResponseException(HttpStatus.UNAUTHORIZED, pd, exception);
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFoundException(final NotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getExceptionResolver());
+    public ErrorResponse handleNotFoundException(final NotFoundException exception) {
+
+        final ProblemDetail pd = exception.getExceptionResolver().getBody();
+
+        return new ErrorResponseException(HttpStatus.NOT_FOUND, pd, exception);
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleRuntimeException(final RuntimeException exception) {
+    public ErrorResponse handleRuntimeException(final RuntimeException exception) {
 
-        final ErrorResponse errorResponse = new ErrorResponseException(HttpStatus.INTERNAL_SERVER_ERROR, exception);
+        final ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
+                exception.getMessage());
 
-        return ResponseEntity.internalServerError().body(errorResponse);
+        return new ErrorResponseException(HttpStatus.INTERNAL_SERVER_ERROR, pd, exception);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
+    public ErrorResponse handleMethodArgumentNotValidException(
             final MethodArgumentNotValidException exception) {
 
-        final ErrorResponse errorResponse = new ErrorResponseException(HttpStatus.BAD_REQUEST, exception);
+        final ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
 
-        return ResponseEntity.badRequest().body(errorResponse);
+        return new ErrorResponseException(HttpStatus.BAD_REQUEST, pd, exception);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleConstraintViolationException(
+    public ErrorResponse handleConstraintViolationException(
             final ConstraintViolationException exception) {
 
-        final ErrorResponse errorResponse = new ErrorResponseException(HttpStatus.BAD_REQUEST, exception);
+        final ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
 
-        return ResponseEntity.badRequest().body(errorResponse);
+        return new ErrorResponseException(HttpStatus.BAD_REQUEST, pd, exception);
     }
 }

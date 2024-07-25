@@ -26,6 +26,6 @@ public class BlackListInterceptor implements HandlerInterceptor {
 
         Member member = memberRepository.findById(memberId);
 
-        return member.isInBlackList();
+        return !member.isInBlackList();
     }
 }

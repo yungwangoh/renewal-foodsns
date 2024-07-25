@@ -33,7 +33,12 @@ public class SessionBasedLogin implements LoginHandler {
 
     @Override
     public void signOut() {
-        httpSession.removeAttribute(SessionUtil.SESSION_ID.getValue());
+
+        if (httpSession.getAttribute(SessionUtil.SESSION_ID.getValue()) == null) {
+            throw new LoginException(ExceptionResolver.UNAUTHORIZED_MEMBER);
+        }
+
+        httpSession.invalidate();
     }
 
     @Override
