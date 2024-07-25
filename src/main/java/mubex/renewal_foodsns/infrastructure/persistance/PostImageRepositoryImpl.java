@@ -2,10 +2,10 @@ package mubex.renewal_foodsns.infrastructure.persistance;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import mubex.renewal_foodsns.application.repository.PostImageRepository;
 import mubex.renewal_foodsns.common.exception.ExceptionResolver;
 import mubex.renewal_foodsns.domain.entity.PostImage;
 import mubex.renewal_foodsns.domain.exception.NotFoundException;
-import mubex.renewal_foodsns.domain.repository.PostImageRepository;
 import mubex.renewal_foodsns.infrastructure.persistance.jpa.PostImageJpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

@@ -2,12 +2,12 @@ package mubex.renewal_foodsns.infrastructure.persistance;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import mubex.renewal_foodsns.application.repository.MemberRepository;
 import mubex.renewal_foodsns.common.exception.ExceptionResolver;
 import mubex.renewal_foodsns.common.util.PasswordUtil;
 import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.exception.LoginException;
 import mubex.renewal_foodsns.domain.exception.NotFoundException;
-import mubex.renewal_foodsns.domain.repository.MemberRepository;
 import mubex.renewal_foodsns.domain.type.MemberRank;
 import mubex.renewal_foodsns.infrastructure.persistance.jpa.MemberJpaRepository;
 import org.springframework.stereotype.Repository;

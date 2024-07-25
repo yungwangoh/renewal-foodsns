@@ -1,10 +1,11 @@
 package mubex.renewal_foodsns.infrastructure.persistance;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import mubex.renewal_foodsns.application.repository.PostRepository;
 import mubex.renewal_foodsns.common.exception.ExceptionResolver;
 import mubex.renewal_foodsns.domain.entity.Post;
 import mubex.renewal_foodsns.domain.exception.NotFoundException;
-import mubex.renewal_foodsns.domain.repository.PostRepository;
 import mubex.renewal_foodsns.infrastructure.persistance.jpa.PostJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,12 @@ public class PostRepositoryImpl implements PostRepository {
     @Transactional
     public Post save(final Post post) {
         return postJpaRepository.save(post);
+    }
+
+    @Override
+    @Transactional
+    public void saveAll(final List<Post> posts) {
+        postJpaRepository.saveAll(posts);
     }
 
     @Override

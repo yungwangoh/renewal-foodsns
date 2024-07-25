@@ -3,7 +3,7 @@ package mubex.renewal_foodsns.infrastructure.persistance;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mubex.renewal_foodsns.domain.repository.EmitterRepository;
+import mubex.renewal_foodsns.application.repository.EmitterRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 

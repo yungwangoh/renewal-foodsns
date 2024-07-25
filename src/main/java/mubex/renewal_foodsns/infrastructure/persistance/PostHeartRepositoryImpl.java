@@ -1,8 +1,8 @@
 package mubex.renewal_foodsns.infrastructure.persistance;
 
 import lombok.RequiredArgsConstructor;
+import mubex.renewal_foodsns.application.repository.PostHeartRepository;
 import mubex.renewal_foodsns.domain.entity.PostHeart;
-import mubex.renewal_foodsns.domain.repository.PostHeartRepository;
 import mubex.renewal_foodsns.infrastructure.persistance.jpa.PostHeartJpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

@@ -2,9 +2,9 @@ package mubex.renewal_foodsns.infrastructure.persistance;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import mubex.renewal_foodsns.application.repository.FoodTagRepository;
 import mubex.renewal_foodsns.domain.entity.FoodTag;
 import mubex.renewal_foodsns.domain.entity.Post;
-import mubex.renewal_foodsns.domain.repository.FoodTagRepository;
 import mubex.renewal_foodsns.domain.type.Tag;
 import mubex.renewal_foodsns.infrastructure.persistance.jpa.FoodTagJpaRepository;
 import org.springframework.data.domain.Pageable;

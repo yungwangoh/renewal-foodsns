@@ -2,10 +2,10 @@ package mubex.renewal_foodsns.infrastructure.persistance;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import mubex.renewal_foodsns.application.repository.CommentRepository;
 import mubex.renewal_foodsns.common.exception.ExceptionResolver;
 import mubex.renewal_foodsns.domain.entity.Comment;
 import mubex.renewal_foodsns.domain.exception.NotFoundException;
-import mubex.renewal_foodsns.domain.repository.CommentRepository;
 import mubex.renewal_foodsns.infrastructure.persistance.jpa.CommentJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +23,12 @@ public class CommentRepositoryImpl implements CommentRepository {
     @Transactional
     public Comment save(final Comment comment) {
         return commentJpaRepository.save(comment);
+    }
+
+    @Override
+    @Transactional
+    public void saveAll(final List<Comment> comments) {
+        commentJpaRepository.saveAll(comments);
     }
 
     @Override

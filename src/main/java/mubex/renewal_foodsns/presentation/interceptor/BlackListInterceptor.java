@@ -4,9 +4,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import mubex.renewal_foodsns.application.repository.MemberRepository;
 import mubex.renewal_foodsns.common.util.SessionUtil;
 import mubex.renewal_foodsns.domain.entity.Member;
-import mubex.renewal_foodsns.domain.repository.MemberRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 

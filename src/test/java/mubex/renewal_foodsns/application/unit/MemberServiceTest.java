@@ -1,13 +1,13 @@
 package mubex.renewal_foodsns.application.unit;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.anyString;
+import static org.mockito.BDDMockito.given;
 
 import mubex.renewal_foodsns.application.MemberService;
 import mubex.renewal_foodsns.application.login.LoginHandler;
-import mubex.renewal_foodsns.domain.dto.response.MemberResponse;
+import mubex.renewal_foodsns.application.repository.MemberRepository;
 import mubex.renewal_foodsns.domain.entity.Member;
-import mubex.renewal_foodsns.domain.repository.MemberRepository;
 import mubex.renewal_foodsns.domain.type.MemberRank;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;

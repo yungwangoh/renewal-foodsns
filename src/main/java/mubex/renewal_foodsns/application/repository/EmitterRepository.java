@@ -1,4 +1,4 @@
-package mubex.renewal_foodsns.domain.repository;
+package mubex.renewal_foodsns.application.repository;
 
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 

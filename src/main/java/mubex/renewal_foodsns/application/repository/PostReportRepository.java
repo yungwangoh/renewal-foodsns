@@ -1,4 +1,4 @@
-package mubex.renewal_foodsns.domain.repository;
+package mubex.renewal_foodsns.application.repository;
 
 import mubex.renewal_foodsns.domain.entity.PostReport;
 

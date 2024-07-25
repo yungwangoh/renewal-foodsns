@@ -4,13 +4,13 @@ import jakarta.servlet.http.HttpSession;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.login.LoginHandler;
+import mubex.renewal_foodsns.application.repository.MemberRepository;
 import mubex.renewal_foodsns.common.exception.ExceptionResolver;
 import mubex.renewal_foodsns.common.util.SessionUtil;
 import mubex.renewal_foodsns.domain.dto.response.MemberResponse;
 import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.exception.LoginException;
 import mubex.renewal_foodsns.domain.mapper.map.MemberMapper;
-import mubex.renewal_foodsns.domain.repository.MemberRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 

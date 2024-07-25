@@ -2,8 +2,8 @@ package mubex.renewal_foodsns.infrastructure.persistance;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import mubex.renewal_foodsns.application.repository.BlackListRepository;
 import mubex.renewal_foodsns.domain.entity.BlackList;
-import mubex.renewal_foodsns.domain.repository.BlackListRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
