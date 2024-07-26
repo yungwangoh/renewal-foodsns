@@ -25,4 +25,6 @@ public interface PostRepository {
     Page<Post> findByNickName(String userName, Pageable pageable);
 
     boolean existsByTitle(String title);
+
+    Slice<Post> findAllByTitleOrText(String title, String text, Pageable pageable);
 }
