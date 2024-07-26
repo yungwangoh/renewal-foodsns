@@ -24,6 +24,8 @@ import lombok.NoArgsConstructor;
 @Table(
         name = "comment",
         indexes = {
+                @Index(name = "post_idx", columnList = "post_id"),
+                @Index(name = "member_idx", columnList = "member_id"),
                 @Index(name = "member_comment_idx", columnList = "member_id, id"),
                 @Index(name = "post_comment_idx", columnList = "post_id, id")
         }

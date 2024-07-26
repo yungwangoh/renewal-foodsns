@@ -25,7 +25,9 @@ import lombok.NoArgsConstructor;
 @Table(
         name = "post",
         indexes = {
+                @Index(name = "member_idx", columnList = "member_id"),
                 @Index(name = "title_idx", columnList = "title", unique = true),
+                @Index(name = "member_post_idx", columnList = "member_id, id")
         }
 )
 public class Post extends BaseEntity {

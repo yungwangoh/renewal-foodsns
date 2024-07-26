@@ -7,6 +7,7 @@ import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -19,7 +20,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(
-        name = "comment_heart"
+        name = "comment_heart",
+        indexes = {
+                @Index(name = "member_comment_idx", columnList = "member_id, comment_id")
+        }
 )
 public class CommentHeart {
 
