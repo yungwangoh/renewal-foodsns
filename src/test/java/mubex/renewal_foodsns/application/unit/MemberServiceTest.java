@@ -1,6 +1,7 @@
 package mubex.renewal_foodsns.application.unit;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.BDDMockito.anyString;
 import static org.mockito.BDDMockito.given;
 
@@ -64,7 +65,7 @@ class MemberServiceTest {
     }
 
     @Test
-    void 유저의_블랙_리스트_기준이_넘지않는다_이미_블랙리스트로_등록_예외_발생() {
+    void 유저의_블랙_리스트_기준이_넘지않는다_이미_블랙리스트로_등록되어있는_경우() {
         Member member = Member.create(
                 "name",
                 "pwd",
@@ -80,11 +81,11 @@ class MemberServiceTest {
                 .willReturn(member);
 
         assertThatThrownBy(() -> memberService.addToBlacklist("name"))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    void 유저의_블랙_리스트_기준이_넘지않는다_신고_수가_기준에_달성_하지_못함_예외_발생() {
+    void 유저의_블랙_리스트_기준이_넘지않는다_신고_수가_기준에_달성_하지_못한다() {
         Member member = Member.create(
                 "name",
                 "pwd",
@@ -92,15 +93,16 @@ class MemberServiceTest {
                 0,
                 1,
                 1,
-                true,
+                false,
                 MemberRank.NORMAL,
                 false);
 
         given(memberRepository.findByNickName(anyString()))
                 .willReturn(member);
 
-        assertThatThrownBy(() -> memberService.addToBlacklist("name"))
-                .isInstanceOf(IllegalStateException.class);
+        boolean check = memberService.addToBlacklist("name");
+
+        assertFalse(check);
     }
 
     @Test

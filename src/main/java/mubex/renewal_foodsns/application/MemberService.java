@@ -88,6 +88,10 @@ public class MemberService {
     public boolean addToBlacklist(final String nickName) {
         final Member member = memberRepository.findByNickName(nickName);
 
+        if (member.isInBlackList()) {
+            throw new IllegalArgumentException("이미 블랙리스트인 유저입니다.");
+        }
+
         member.addToBlacklist();
 
         return member.isInBlackList();

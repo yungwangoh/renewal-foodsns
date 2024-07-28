@@ -6,15 +6,14 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 import mubex.renewal_foodsns.application.CommentService;
+import mubex.renewal_foodsns.application.MemberService;
 import mubex.renewal_foodsns.application.repository.CommentHeartRepository;
 import mubex.renewal_foodsns.application.repository.CommentReportRepository;
 import mubex.renewal_foodsns.application.repository.CommentRepository;
 import mubex.renewal_foodsns.application.repository.MemberRepository;
 import mubex.renewal_foodsns.application.repository.PostRepository;
 import mubex.renewal_foodsns.common.exception.NotFoundException;
-import mubex.renewal_foodsns.domain.dto.response.CommentResponse;
 import mubex.renewal_foodsns.domain.entity.Comment;
-import mubex.renewal_foodsns.domain.mapper.Mappable;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -22,6 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayNameGeneration(ReplaceUnderscores.class)
@@ -46,7 +46,10 @@ public class CommentServiceTest {
     private PostRepository postRepository;
 
     @Mock
-    private Mappable<CommentResponse, Comment> mappable;
+    private MemberService memberService;
+
+    @Mock
+    private ApplicationEventPublisher publisher;
 
     @Test
     void 유저가_댓글을_등록할_때_유저가_없는_경우_예외_발생() {
@@ -55,7 +58,7 @@ public class CommentServiceTest {
         Long postId = 2L;
         String text = "으아";
 
-        given(memberRepository.findById(anyLong())).willThrow(NotFoundException.class);
+        given(memberService.findAfterCheckBlackList(anyLong())).willThrow(NotFoundException.class);
 
         assertThatThrownBy(() -> commentService.create(memberId, postId, text))
                 .isInstanceOf(NotFoundException.class);
