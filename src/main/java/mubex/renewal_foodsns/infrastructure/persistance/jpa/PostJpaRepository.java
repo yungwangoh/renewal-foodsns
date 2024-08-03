@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostJpaRepository extends JpaRepository<Post, Long> {
 
-    Page<Post> findAllByTitle(String title, Pageable pageable);
+    Page<Post> findAllByTitleStartsWith(String title, Pageable pageable);
 
     Page<Post> findAllByMemberNickName(String nickName, Pageable pageable);
 
