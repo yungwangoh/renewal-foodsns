@@ -99,8 +99,8 @@ public class PostApi {
         return ResponseEntity.ok(postResponse);
     }
 
-    @GetMapping("/{title}/page")
-    public ResponseEntity<Page<PostPageResponse>> findPage(@PathVariable("title") final String title,
+    @GetMapping("/title/page")
+    public ResponseEntity<Page<PostPageResponse>> findPage(@RequestParam("title") final String title,
                                                            @PageableDefault(
                                                                    sort = "createdAt",
                                                                    direction = Sort.Direction.DESC
@@ -111,8 +111,8 @@ public class PostApi {
         return ResponseEntity.ok(postsByTitle);
     }
 
-    @GetMapping("/{nickName}/page")
-    public ResponseEntity<Page<PostPageResponse>> findPageByNickName(@PathVariable("nickName") final String nickName,
+    @GetMapping("/nickName/page")
+    public ResponseEntity<Page<PostPageResponse>> findPageByNickName(@RequestParam("nickName") final String nickName,
                                                                      @PageableDefault(
                                                                              sort = "createdAt",
                                                                              direction = Sort.Direction.DESC
