@@ -10,6 +10,7 @@ import java.util.stream.IntStream;
 import net.datafaker.Faker;
 import net.datafaker.transformations.CsvTransformer;
 import net.datafaker.transformations.Schema;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest
 @DisplayNameGeneration(ReplaceUnderscores.class)
+@Disabled
 class CsvGeneratorTest {
 
     @Autowired
@@ -79,12 +81,19 @@ class CsvGeneratorTest {
                 "INTO TABLE post " +
                 "FIELDS TERMINATED BY ',' ";
 
-        IntStream.range(0, 10)
-                .forEach(idx -> {
-                    String insert = insert(idx, sql);
+        List<CompletableFuture<List<String>>> list = IntStream.range(0, 3)
+                .mapToObj(index -> CompletableFuture.supplyAsync(() -> {
 
-                    System.out.println(insert);
-                });
+                    List<String> strings = IntStream.range(index * 10, 10 * index + 10)
+                            .mapToObj(idx -> insert(idx, sql))
+                            .toList();
+
+                    System.out.println(index);
+
+                    return strings;
+                })).toList();
+
+        list.forEach(CompletableFuture::join);
     }
 
     private String insert(final int idx, final String sql) {
