@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mubex.renewal_foodsns.application.PostService;
 import mubex.renewal_foodsns.domain.dto.request.PostParam;
 import mubex.renewal_foodsns.domain.dto.request.update.UpdatePostParam;
@@ -35,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/posts")
 @Validated
+@Slf4j
 public class PostApi {
 
     private final PostService postService;
@@ -77,7 +79,11 @@ public class PostApi {
     public ResponseEntity<PostResponse> increaseHeart(@RequestParam("postId") final Long postId,
                                                       @Login final Long memberId) {
 
+        log.info("[increaseHeart] postId={}, memberId={}", postId, memberId);
+
         final PostResponse postResponse = postService.increaseHeart(memberId, postId, 1);
+
+        log.info("[postResponse] = {}", postResponse);
 
         return ResponseEntity.ok(postResponse);
     }

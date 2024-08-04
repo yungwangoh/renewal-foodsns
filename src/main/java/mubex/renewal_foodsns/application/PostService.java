@@ -93,9 +93,9 @@ public class PostService {
     @OptimisticLock
     public PostResponse increaseHeart(final Long memberId, final Long postId, final long heart) {
 
-        if (postHeartRepository.existsByMemberId(memberId)) {
-            throw new IllegalArgumentException("이미 좋아요를 눌렀습니다.");
-        }
+//        if (postHeartRepository.existsByMemberId(memberId)) {
+//            throw new IllegalArgumentException("이미 좋아요를 눌렀습니다.");
+//        }
 
         final Member member = memberService.findMember(memberId);
 

@@ -17,7 +17,7 @@ import org.springframework.retry.annotation.Retryable;
                 StaleObjectStateException.class,
         },
         maxAttempts = 10,
-        backoff = @Backoff(delay = 100, multiplier = 2)
+        backoff = @Backoff(delay = 50, multiplier = 2)
 )
 public @interface OptimisticLock {
 }

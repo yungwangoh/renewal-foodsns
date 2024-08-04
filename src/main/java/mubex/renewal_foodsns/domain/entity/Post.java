@@ -28,7 +28,8 @@ import lombok.NoArgsConstructor;
         indexes = {
                 @Index(name = "member_idx", columnList = "member_id"),
                 @Index(name = "title_idx", columnList = "title", unique = true),
-                @Index(name = "member_post_idx", columnList = "member_id, id")
+                @Index(name = "member_post_idx", columnList = "member_id, id"),
+                @Index(name = "create_at_idx", columnList = "created_at")
         }
 )
 public class Post extends BaseEntity {
