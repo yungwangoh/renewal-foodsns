@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -66,6 +67,9 @@ public class Post extends BaseEntity {
             foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT)
     )
     private Member member;
+
+    @Version
+    private long version;
 
     @Builder
     private Post(String title, String text, long heart, int report, long views, boolean inDeleted, Member member) {

@@ -68,7 +68,7 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public Post findById(final Long id) {
-        return postJpaRepository.findById(id)
+        return postJpaRepository.findByPostId(id)
                 .orElseThrow(() -> new NotFoundException(ExceptionResolver.NOT_FOUND_POST));
     }
 

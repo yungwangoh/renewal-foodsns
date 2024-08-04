@@ -3,6 +3,7 @@ package mubex.renewal_foodsns.application;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import mubex.renewal_foodsns.application.annotation.OptimisticLock;
 import mubex.renewal_foodsns.application.event.RegisteredBlackListEvent;
 import mubex.renewal_foodsns.application.event.RegisteredLevelUpEvent;
 import mubex.renewal_foodsns.application.repository.PostHeartRepository;
@@ -89,6 +90,7 @@ public class PostService {
     }
 
     @Transactional
+    @OptimisticLock
     public PostResponse increaseHeart(final Long memberId, final Long postId, final long heart) {
 
         if (postHeartRepository.existsByMemberId(memberId)) {
@@ -117,6 +119,7 @@ public class PostService {
     }
 
     @Transactional
+    @OptimisticLock
     public PostResponse increaseReport(final Long memberId, final Long postId, final int report) {
 
         if (postReportRepository.existsByMemberId(memberId)) {
