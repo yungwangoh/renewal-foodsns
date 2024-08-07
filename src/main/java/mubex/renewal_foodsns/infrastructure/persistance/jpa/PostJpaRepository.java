@@ -17,13 +17,15 @@ public interface PostJpaRepository extends JpaRepository<Post, Long> {
     @Query("select p from Post p where p.id = :postId")
     Optional<Post> findByPostId(@Param("postId") Long postId);
 
-    Page<Post> findAllByTitleStartsWith(String title, Pageable pageable);
+    Slice<Post> findAllByTitleStartsWith(String title, Pageable pageable);
 
     Page<Post> findAllByMemberNickName(String nickName, Pageable pageable);
 
     Page<Post> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
     boolean existsByTitle(String title);
+
+    Slice<Post> findSliceBy(Pageable pageable);
 
     Slice<Post> findAllByTitleOrText(String title, String text, Pageable pageable);
 }

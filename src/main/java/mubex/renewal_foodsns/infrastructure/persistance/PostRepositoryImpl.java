@@ -73,13 +73,13 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public Page<Post> findByTitle(final String title, final Pageable pageable) {
+    public Slice<Post> findByTitle(final String title, final Pageable pageable) {
         return postJpaRepository.findAllByTitleStartsWith(title, pageable);
     }
 
     @Override
     public Slice<Post> findSliceAll(final Pageable pageable) {
-        return postJpaRepository.findAll(pageable);
+        return postJpaRepository.findSliceBy(pageable);
     }
 
     @Override

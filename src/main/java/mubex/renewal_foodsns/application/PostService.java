@@ -20,6 +20,7 @@ import mubex.renewal_foodsns.domain.mapper.map.PostMapper;
 import mubex.renewal_foodsns.domain.mapper.map.PostPageMapper;
 import mubex.renewal_foodsns.domain.type.NotificationType;
 import mubex.renewal_foodsns.domain.type.Tag;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,17 +52,12 @@ public class PostService {
 
         final Post post = Post.create(title, text, 0, 0, 0, false, member);
 
-        post.addViews();
-
         final Post savePost = postRepository.save(post);
 
         foodTagService.create(tags, savePost);
 
-        if (!multipartFiles.isEmpty()) {
-            return processImage(multipartFiles, post, savePost);
-        } else {
-            return PostMapper.INSTANCE.toResponse(post);
-        }
+        return !multipartFiles.isEmpty() ? processImage(multipartFiles, post, savePost)
+                : PostMapper.INSTANCE.toResponse(savePost);
     }
 
     @Transactional
@@ -82,20 +78,16 @@ public class PostService {
 
         foodTagService.update(tags, post);
 
-        if (!multipartFiles.isEmpty()) {
-            return processImage(multipartFiles, post);
-        } else {
-            return PostMapper.INSTANCE.toResponse(post);
-        }
+        return !multipartFiles.isEmpty() ? processImage(multipartFiles, post) : PostMapper.INSTANCE.toResponse(post);
     }
 
     @Transactional
     @OptimisticLock
     public PostResponse increaseHeart(final Long memberId, final Long postId, final long heart) {
 
-//        if (postHeartRepository.existsByMemberId(memberId)) {
-//            throw new IllegalArgumentException("이미 좋아요를 눌렀습니다.");
-//        }
+        if (postHeartRepository.existsByMemberId(memberId)) {
+            throw new IllegalArgumentException("이미 좋아요를 눌렀습니다.");
+        }
 
         final Member member = memberService.findMember(memberId);
 
@@ -155,8 +147,11 @@ public class PostService {
         post.decideDeletedPost();
     }
 
+    @Transactional
     public PostResponse find(final Long postId) {
         final Post post = postRepository.findById(postId);
+
+        post.addViews();
 
         return PostMapper.INSTANCE.toResponse(post);
     }
@@ -166,11 +161,12 @@ public class PostService {
                 .map(foodTag -> PostPageMapper.INSTANCE.toResponse(foodTag.getPost()));
     }
 
+    @Cacheable(cacheNames = "post_cache", key = "#pageable.pageNumber")
     public Slice<PostPageResponse> findAll(final Pageable pageable) {
         return postRepository.findAll(pageable).map(PostPageMapper.INSTANCE::toResponse);
     }
 
-    public Page<PostPageResponse> findPostsByTitle(final String title, final Pageable pageable) {
+    public Slice<PostPageResponse> findPostsByTitle(final String title, final Pageable pageable) {
         return postRepository.findByTitle(title, pageable).map(PostPageMapper.INSTANCE::toResponse);
     }
 

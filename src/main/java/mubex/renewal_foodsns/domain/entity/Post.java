@@ -19,6 +19,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OptimisticLock;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -57,6 +58,7 @@ public class Post extends BaseEntity {
     private int report;
 
     @Column(name = "views", nullable = false)
+    @OptimisticLock(excluded = true)
     private long views;
 
     @Column(name = "in_deleted", nullable = false)

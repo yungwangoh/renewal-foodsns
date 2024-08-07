@@ -14,7 +14,7 @@ public interface PostRepository {
 
     Post findById(Long id);
 
-    Page<Post> findByTitle(String title, Pageable pageable);
+    Slice<Post> findByTitle(String title, Pageable pageable);
 
     Page<Post> findAll(Pageable pageable);
 

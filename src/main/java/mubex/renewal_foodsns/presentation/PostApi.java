@@ -105,19 +105,19 @@ public class PostApi {
         return ResponseEntity.ok(postResponse);
     }
 
-    @GetMapping("/title/page")
-    public ResponseEntity<Page<PostPageResponse>> findPage(@RequestParam("title") final String title,
-                                                           @PageableDefault(
-                                                                   sort = "createdAt",
-                                                                   direction = Sort.Direction.DESC
-                                                           ) final Pageable pageable) {
+    @GetMapping("/title")
+    public ResponseEntity<Slice<PostPageResponse>> findTitlePage(@RequestParam("title") final String title,
+                                                                 @PageableDefault(
+                                                                         sort = "createdAt",
+                                                                         direction = Sort.Direction.DESC
+                                                                 ) final Pageable pageable) {
 
-        final Page<PostPageResponse> postsByTitle = postService.findPostsByTitle(title, pageable);
+        final Slice<PostPageResponse> postsByTitle = postService.findPostsByTitle(title, pageable);
 
         return ResponseEntity.ok(postsByTitle);
     }
 
-    @GetMapping("/nickName/page")
+    @GetMapping("/nickName")
     public ResponseEntity<Page<PostPageResponse>> findPageByNickName(@RequestParam("nickName") final String nickName,
                                                                      @PageableDefault(
                                                                              sort = "createdAt",

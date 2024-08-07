@@ -27,6 +27,7 @@ import mubex.renewal_foodsns.domain.type.Tag;
         name = "food_tag",
         indexes = {
                 @Index(name = "tag_post_idx", columnList = "tag, post_id"),
+                @Index(name = "tag", columnList = "tag")
         }
 )
 public class FoodTag {
