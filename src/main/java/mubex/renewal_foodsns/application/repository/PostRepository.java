@@ -1,6 +1,7 @@
 package mubex.renewal_foodsns.application.repository;
 
 import java.util.List;
+import mubex.renewal_foodsns.domain.document.PostDocument;
 import mubex.renewal_foodsns.domain.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,5 +27,5 @@ public interface PostRepository {
 
     boolean existsByTitle(String title);
 
-    Slice<Post> findAllByTitleOrText(String title, String text, Pageable pageable);
+    Slice<PostDocument> findAllByTitleOrText(String title, String text, Pageable pageable);
 }

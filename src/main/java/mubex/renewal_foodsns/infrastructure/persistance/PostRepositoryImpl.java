@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.repository.PostRepository;
 import mubex.renewal_foodsns.common.exception.ExceptionResolver;
 import mubex.renewal_foodsns.common.exception.NotFoundException;
+import mubex.renewal_foodsns.domain.document.PostDocument;
 import mubex.renewal_foodsns.domain.entity.Post;
+import mubex.renewal_foodsns.infrastructure.persistance.elasticsearch.PostElasticSearchRepository;
 import mubex.renewal_foodsns.infrastructure.persistance.generator.SqlDSL;
 import mubex.renewal_foodsns.infrastructure.persistance.jpa.PostJpaRepository;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostRepositoryImpl implements PostRepository {
 
     private final PostJpaRepository postJpaRepository;
+    private final PostElasticSearchRepository postElasticSearchRepository;
     private final JdbcTemplate jdbcTemplate;
 
     @Override
@@ -103,7 +106,7 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public Slice<Post> findAllByTitleOrText(final String title, final String text, final Pageable pageable) {
-        return postJpaRepository.findAllByTitleOrText(title, text, pageable);
+    public Slice<PostDocument> findAllByTitleOrText(final String title, final String text, final Pageable pageable) {
+        return postElasticSearchRepository.findByTitleContainingOrTextContaining(title, text, pageable);
     }
 }
