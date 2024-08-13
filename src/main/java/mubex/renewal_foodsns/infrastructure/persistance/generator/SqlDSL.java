@@ -183,6 +183,27 @@ public class SqlDSL {
                 return this;
             }
 
+            public Select join(final String val) {
+                sb.append("join")
+                        .append(" ")
+                        .append(val)
+                        .append(" ");
+
+                return this;
+            }
+
+            public Select on(final String column, final String mappingColumn) {
+                sb.append("on")
+                        .append(" ")
+                        .append(column)
+                        .append(" ")
+                        .append("=")
+                        .append(mappingColumn)
+                        .append(" ");
+
+                return this;
+            }
+
             public String getSql() {
                 return sb.toString().trim();
             }
