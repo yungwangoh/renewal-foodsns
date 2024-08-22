@@ -11,12 +11,13 @@ import mubex.renewal_foodsns.common.exception.ExceptionResolver;
 import mubex.renewal_foodsns.common.exception.NotFoundException;
 import mubex.renewal_foodsns.domain.document.PostDocument;
 import mubex.renewal_foodsns.domain.entity.Post;
-import mubex.renewal_foodsns.infrastructure.persistance.elasticsearch.PostElasticSearchRepository;
+import mubex.renewal_foodsns.infrastructure.persistance.elasticsearch.querydsl.ElasticSearchQueryDslRepository;
 import mubex.renewal_foodsns.infrastructure.persistance.generator.SqlDSL;
 import mubex.renewal_foodsns.infrastructure.persistance.jpa.PostJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -28,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostRepositoryImpl implements PostRepository {
 
     private final PostJpaRepository postJpaRepository;
-    private final PostElasticSearchRepository postElasticSearchRepository;
+    private final ElasticSearchQueryDslRepository elasticSearchQueryDslRepository;
     private final JdbcTemplate jdbcTemplate;
 
     @Override
@@ -46,27 +47,7 @@ public class PostRepositoryImpl implements PostRepository {
                 .values()
                 .getSql();
 
-        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement ps, int i) throws SQLException {
-                Post post = posts.get(i);
-                ps.setString(1, post.getTitle());
-                ps.setString(2, post.getText());
-                ps.setString(3, post.getThumbnail());
-                ps.setLong(4, post.getHeart());
-                ps.setInt(5, post.getReport());
-                ps.setLong(6, post.getViews());
-                ps.setBoolean(7, post.isInDeleted());
-                ps.setLong(8, post.getMember().getId());
-                ps.setTimestamp(9, Timestamp.valueOf(LocalDateTime.now()));
-                ps.setTimestamp(10, Timestamp.valueOf(LocalDateTime.now()));
-            }
-
-            @Override
-            public int getBatchSize() {
-                return posts.size();
-            }
-        });
+        jdbcTemplate.batchUpdate(sql, getBatchPreparedStatementSetter(posts));
     }
 
     @Override
@@ -106,7 +87,32 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public Slice<PostDocument> findAllByTitleOrText(final String title, final String text, final Pageable pageable) {
-        return postElasticSearchRepository.findByTitleContainingOrTextContaining(title, text, pageable);
+    public SearchHits<PostDocument> findAllByTitleOrText(final String searchText, final Pageable pageable) {
+        return elasticSearchQueryDslRepository.findTitleOrTextBySearchText(searchText, pageable);
+    }
+
+    private BatchPreparedStatementSetter getBatchPreparedStatementSetter(final List<Post> posts) {
+
+        return new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                Post post = posts.get(i);
+                ps.setString(1, post.getTitle());
+                ps.setString(2, post.getText());
+                ps.setString(3, post.getThumbnail());
+                ps.setLong(4, post.getHeart());
+                ps.setInt(5, post.getReport());
+                ps.setLong(6, post.getViews());
+                ps.setBoolean(7, post.isInDeleted());
+                ps.setLong(8, post.getMember().getId());
+                ps.setTimestamp(9, Timestamp.valueOf(LocalDateTime.now()));
+                ps.setTimestamp(10, Timestamp.valueOf(LocalDateTime.now()));
+            }
+
+            @Override
+            public int getBatchSize() {
+                return posts.size();
+            }
+        };
     }
 }

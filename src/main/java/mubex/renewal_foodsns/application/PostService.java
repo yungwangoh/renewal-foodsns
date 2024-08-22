@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.annotation.OptimisticLock;
-import mubex.renewal_foodsns.application.event.RegisteredBlackListEvent;
-import mubex.renewal_foodsns.application.event.RegisteredLevelUpEvent;
+import mubex.renewal_foodsns.application.event.dirtycheck.DeleteDirtyCheck;
+import mubex.renewal_foodsns.application.event.dirtycheck.InsertDirtyCheck;
+import mubex.renewal_foodsns.application.event.notification.RegisteredBlackListEvent;
+import mubex.renewal_foodsns.application.event.notification.RegisteredLevelUpEvent;
 import mubex.renewal_foodsns.application.repository.PostHeartRepository;
 import mubex.renewal_foodsns.application.repository.PostReportRepository;
 import mubex.renewal_foodsns.application.repository.PostRepository;
+import mubex.renewal_foodsns.domain.document.PostDocument;
 import mubex.renewal_foodsns.domain.dto.response.PostImageResponse;
 import mubex.renewal_foodsns.domain.dto.response.PostPageResponse;
 import mubex.renewal_foodsns.domain.dto.response.PostResponse;
@@ -25,6 +28,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,8 +60,12 @@ public class PostService {
 
         foodTagService.create(tags, savePost);
 
-        return !multipartFiles.isEmpty() ? processImage(multipartFiles, post, savePost)
+        PostResponse postResponse = !multipartFiles.isEmpty() ? processImage(multipartFiles, post, savePost)
                 : PostMapper.INSTANCE.toResponse(savePost);
+
+        publisher.publishEvent(new InsertDirtyCheck(postResponse));
+
+        return postResponse;
     }
 
     @Transactional
@@ -78,7 +86,12 @@ public class PostService {
 
         foodTagService.update(tags, post);
 
-        return !multipartFiles.isEmpty() ? processImage(multipartFiles, post) : PostMapper.INSTANCE.toResponse(post);
+        PostResponse postResponse =
+                !multipartFiles.isEmpty() ? processImage(multipartFiles, post) : PostMapper.INSTANCE.toResponse(post);
+
+        publisher.publishEvent(postResponse);
+
+        return postResponse;
     }
 
     @Transactional
@@ -145,6 +158,8 @@ public class PostService {
         post.checkDeletedPost();
 
         post.decideDeletedPost();
+
+        publisher.publishEvent(new DeleteDirtyCheck(PostMapper.INSTANCE.toResponse(post)));
     }
 
     @Transactional
@@ -161,7 +176,11 @@ public class PostService {
                 .map(foodTag -> PostPageMapper.INSTANCE.toResponse(foodTag.getPost()));
     }
 
-    @Cacheable(cacheNames = "post_cache", key = "#pageable.pageNumber")
+    public SearchHits<PostDocument> findAllByText(final String searchText, final Pageable pageable) {
+        return postRepository.findAllByTitleOrText(searchText, pageable);
+    }
+
+    @Cacheable(cacheNames = "posts_cache", key = "#pageable.pageNumber")
     public Slice<PostPageResponse> findAll(final Pageable pageable) {
         return postRepository.findAll(pageable).map(PostPageMapper.INSTANCE::toResponse);
     }

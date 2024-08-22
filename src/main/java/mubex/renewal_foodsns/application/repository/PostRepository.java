@@ -6,6 +6,7 @@ import mubex.renewal_foodsns.domain.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.elasticsearch.core.SearchHits;
 
 public interface PostRepository {
 
@@ -27,5 +28,5 @@ public interface PostRepository {
 
     boolean existsByTitle(String title);
 
-    Slice<PostDocument> findAllByTitleOrText(String title, String text, Pageable pageable);
+    SearchHits<PostDocument> findAllByTitleOrText(String searchText, Pageable pageable);
 }
