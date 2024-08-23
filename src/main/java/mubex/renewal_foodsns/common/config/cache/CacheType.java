@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum CacheType {
 
     POST_CACHE("post_cache", 3, 100),
-    ;
+    DIRTY_CHECK_CACHE("post_dirty_check", 1, 1000);
 
     private final String cacheName;     // 캐시 이름
     private final int expireAfterWrite; // 만료시간
