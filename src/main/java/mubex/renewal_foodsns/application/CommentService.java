@@ -3,7 +3,7 @@ package mubex.renewal_foodsns.application;
 import static mubex.renewal_foodsns.common.util.UriUtil.COMMENT_URI;
 
 import lombok.RequiredArgsConstructor;
-import mubex.renewal_foodsns.application.event.RegisteredSendEvent;
+import mubex.renewal_foodsns.application.event.notification.RegisteredSendEvent;
 import mubex.renewal_foodsns.application.repository.CommentHeartRepository;
 import mubex.renewal_foodsns.application.repository.CommentReportRepository;
 import mubex.renewal_foodsns.application.repository.CommentRepository;
