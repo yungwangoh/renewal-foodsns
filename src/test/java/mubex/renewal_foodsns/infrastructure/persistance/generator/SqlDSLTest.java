@@ -12,7 +12,7 @@ class SqlDSLTest {
 
     @Test
     void SQL_DSL은_INSERT_INTO_문을_작성해준다() {
-        String expectedSql = "insert into post (title, text, thumbnail, heart, report, views, in_deleted, member_id, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String expectedSql = "insert into post (title, text, thumbnail, heart, report, views, in_deleted, member_id, version, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         String actualSql = SqlDSL.generator(Post.class)
                 .insertInto()
@@ -80,5 +80,19 @@ class SqlDSLTest {
                 .getSql();
 
         assertThat(actualSql).isEqualTo(expectedSql);
+    }
+
+    @Test
+    void 게시물을_조회한다() {
+        // given
+        String expectedSql = "select id, title, text, heart, views, in_deleted from post";
+
+        // when
+        String query = SqlDSL.generator(Post.class)
+                .selectFrom("id", "title", "text", "heart", "views", "in_deleted")
+                .getSql();
+
+        // then
+        assertThat(query).isEqualTo(expectedSql);
     }
 }
