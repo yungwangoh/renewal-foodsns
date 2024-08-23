@@ -2,16 +2,16 @@ package mubex.renewal_foodsns.application.event.handler;
 
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.NotificationService;
-import mubex.renewal_foodsns.application.event.RegisteredBlackListEvent;
-import mubex.renewal_foodsns.application.event.RegisteredLevelUpEvent;
-import mubex.renewal_foodsns.application.event.RegisteredSendEvent;
-import mubex.renewal_foodsns.application.event.RegisteredSubscribeEvent;
+import mubex.renewal_foodsns.application.event.notification.RegisteredBlackListEvent;
+import mubex.renewal_foodsns.application.event.notification.RegisteredLevelUpEvent;
+import mubex.renewal_foodsns.application.event.notification.RegisteredSendEvent;
+import mubex.renewal_foodsns.application.event.notification.RegisteredSubscribeEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @RequiredArgsConstructor
-public class EventHandler {
+public class NotificationEventHandler {
 
     private final NotificationService notificationService;
 
