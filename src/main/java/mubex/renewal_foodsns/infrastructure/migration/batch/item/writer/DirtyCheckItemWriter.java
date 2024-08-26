@@ -44,6 +44,7 @@ public class DirtyCheckItemWriter implements ItemWriter<PostResponse> {
         return PostDocument.builder()
                 .id(postResponse.id())
                 .title(postResponse.title())
+                .text(postResponse.text())
                 .heart(postResponse.heart())
                 .views(postResponse.views())
                 .inDeleted(postResponse.visible())
