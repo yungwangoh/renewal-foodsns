@@ -21,9 +21,6 @@ class DataMigrationJobTest {
     @Autowired
     private JobLauncherTestUtils jobLauncherTestUtils;
 
-    @Autowired
-    private DataMigrationJob dataMigrationJob;
-
     @Test
     void Mysql_To_ElasticSearch_천만건_데이터_마이그레이션을_한다() throws Exception {
         // given

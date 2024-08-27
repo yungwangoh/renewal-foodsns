@@ -27,5 +27,6 @@ public interface PostJpaRepository extends JpaRepository<Post, Long> {
 
     Slice<Post> findSliceBy(Pageable pageable);
 
-    Slice<Post> findAllByTitleOrText(String title, String text, Pageable pageable);
+    @Query(value = "select * from post p where match(p.title, p.text) against (?1 in boolean mode)", nativeQuery = true)
+    Slice<Post> findTitleOrTextBySearchText(String searchText, Pageable pageable);
 }
