@@ -1,4 +1,4 @@
-import {Button, Card, CardBody, CardFooter, CardHeader, Image} from "@nextui-org/react";
+import {Button, Card, CardBody, CardFooter, CardHeader, Image, User} from "@nextui-org/react";
 import {HeartIcon} from "../icon/HeartIcon";
 import {CommentIcon} from "../icon/CommentIcon";
 import {ShareIcon} from "../icon/ShareIcon";
@@ -19,9 +19,7 @@ export function Home() {
     return (
         <Card>
             <CardHeader className="flex-col items-start">
-                <p className="text-tiny uppercase font-bold">Daily Mix</p>
-                <small className="text-default-500">12 Tracks</small>
-                <h4 className="font-bold text-large">Frontend Radio</h4>
+                <User name="yun" description="developer"/>
             </CardHeader>
             <CardBody className="overflow-visible p-0">
                 <Image

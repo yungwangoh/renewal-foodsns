@@ -1,4 +1,4 @@
-import {Button, Navbar, NavbarBrand, NavbarContent, NavbarItem} from '@nextui-org/react';
+import {Button, Link, Navbar, NavbarBrand, NavbarContent, NavbarItem} from '@nextui-org/react';
 import {AcmeLogo} from "../icon/AcmeLogo";
 import {HomeIcon} from "../icon/HomeIcon";
 import {SearchIcon} from "../icon/SearchIcon";
@@ -20,14 +20,19 @@ function NavbarComponent() {
 
             <NavbarContent justify="center">
                 <NavbarItem>
-                    <Button isIconOnly variant="light" href="/"
+                    <Button isIconOnly variant="light"
+                            href="/"
+                            as={Link}
                             className="px-6 min-w-24 h-12 text-medium gap-3 rounded-large"
                             aria-label="home">
                         <HomeIcon/>
                     </Button>
                 </NavbarItem>
                 <NavbarItem>
-                    <Button isIconOnly variant="light" className="px-6 min-w-24 h-12 text-medium gap-3 rounded-large"
+                    <Button isIconOnly variant="light"
+                            href="/search"
+                            as={Link}
+                            className="px-6 min-w-24 h-12 text-medium gap-3 rounded-large"
                             aria-label="search">
                         <SearchIcon/>
                     </Button>
