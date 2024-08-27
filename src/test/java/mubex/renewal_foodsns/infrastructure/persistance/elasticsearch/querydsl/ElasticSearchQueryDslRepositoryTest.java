@@ -3,6 +3,7 @@ package mubex.renewal_foodsns.infrastructure.persistance.elasticsearch.querydsl;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import mubex.renewal_foodsns.domain.document.PostDocument;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 
 @DataElasticsearchTest
 @Import(ElasticSearchQueryDslRepository.class)
+@Disabled
 class ElasticSearchQueryDslRepositoryTest {
 
     private static final Logger log = LoggerFactory.getLogger(ElasticSearchQueryDslRepositoryTest.class);

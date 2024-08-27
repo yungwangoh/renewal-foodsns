@@ -41,7 +41,7 @@ public class PostConcurrencyTest extends TestContainer {
         String password = "qwer1234@A";
         String email = "qwer1234@gmail.com";
 
-        Member member = Member.create(nickName, password, email, 0, 0, 0, false, MemberRank.NORMAL, false);
+        Member member = Member.create(nickName, password, email, "", 0, 0, false, MemberRank.NORMAL, false);
 
         Member saveMember = memberRepository.save(member);
 

@@ -43,7 +43,7 @@ public class PostServiceTest extends TestContainer {
         String password = "qwer1234";
         String nickName = "안녕";
 
-        memberService.signUp(email, nickName, password, 1);
+        memberService.signUp(email, nickName, password, null);
     }
 
     @Test

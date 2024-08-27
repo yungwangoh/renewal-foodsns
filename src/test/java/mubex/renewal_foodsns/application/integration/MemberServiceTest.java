@@ -38,7 +38,7 @@ public class MemberServiceTest extends TestContainer {
         String password = "qwer1234@A";
         String nickName = "name";
 
-        memberService.signUp(email, nickName, password, 1);
+        memberService.signUp(email, nickName, password, null);
 
         // when
         MemberResponse memberResponse = memberService.signIn(email, password);
@@ -55,7 +55,7 @@ public class MemberServiceTest extends TestContainer {
         String password = "qwer1234@A";
         String nickName = "name";
 
-        memberService.signUp(email, nickName, password, 1);
+        memberService.signUp(email, nickName, password, null);
         memberService.signIn(email, password);
 
         // when

@@ -7,7 +7,6 @@ import mubex.renewal_foodsns.application.annotation.OptimisticLock;
 import mubex.renewal_foodsns.application.event.dirtycheck.DeleteDirtyCheck;
 import mubex.renewal_foodsns.application.event.dirtycheck.InsertDirtyCheck;
 import mubex.renewal_foodsns.application.event.notification.RegisteredBlackListEvent;
-import mubex.renewal_foodsns.application.event.notification.RegisteredLevelUpEvent;
 import mubex.renewal_foodsns.application.repository.PostHeartRepository;
 import mubex.renewal_foodsns.application.repository.PostReportRepository;
 import mubex.renewal_foodsns.application.repository.PostRepository;
@@ -112,13 +111,6 @@ public class PostService {
         postHeartRepository.save(postHeart);
 
         post.addHeart(heart);
-
-        boolean levelUp = post.getMember().levelUp(post.getHeart());
-
-        if (levelUp) {
-            publisher.publishEvent(
-                    new RegisteredLevelUpEvent(post.getMember(), NotificationType.MEMBER_RANK));
-        }
 
         return PostMapper.INSTANCE.toResponse(post);
     }

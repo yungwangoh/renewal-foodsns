@@ -9,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,8 +42,8 @@ public class Member extends BaseEntity {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "profile_id", nullable = false)
-    private int profileId;
+    @Column(name = "profile_image", nullable = false)
+    private String profileImage;
 
     @Column(name = "heart", nullable = false)
     private long heart;
@@ -63,14 +62,14 @@ public class Member extends BaseEntity {
     private boolean inDeleted;
 
     @Builder
-    private Member(String nickName, String password, String email, int profileId, long heart, int report,
+    private Member(String nickName, String password, String email, String profileImage, long heart, int report,
                    boolean inBlackList,
                    MemberRank memberRank, boolean inDeleted) {
 
         this.nickName = nickName;
         this.password = PasswordUtil.encryptPassword(password);
         this.email = email;
-        this.profileId = profileId;
+        this.profileImage = profileImage;
         this.heart = heart;
         this.report = report;
         this.inBlackList = inBlackList;
@@ -82,7 +81,7 @@ public class Member extends BaseEntity {
             String nickName,
             String password,
             String email,
-            int profileId,
+            String profileImage,
             long heart,
             int report,
             boolean inBlackList,
@@ -93,7 +92,7 @@ public class Member extends BaseEntity {
                 .nickName(nickName)
                 .password(password)
                 .email(email)
-                .profileId(profileId)
+                .profileImage(profileImage)
                 .heart(heart)
                 .report(report)
                 .inBlackList(inBlackList)
@@ -102,8 +101,8 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    public void updateProfileId(final int profileId) {
-        this.profileId = profileId;
+    public void updateProfileImage(final String profileImage) {
+        this.profileImage = profileImage;
     }
 
     public void updateNickName(final String newNickName) {
@@ -146,23 +145,6 @@ public class Member extends BaseEntity {
     public void checkMemberBlackList() {
         if (this.inBlackList || this.report >= 10) {
             throw new IllegalArgumentException("블랙리스트 유저는 사용할 수 없습니다.");
-        }
-    }
-
-    public boolean levelUp(final long heart) {
-
-        final MemberRank before = this.memberRank;
-
-        addHeart(heart);
-
-        final MemberRank after = MemberRank.convert(this.heart);
-
-        if (Objects.equals(before, after)) {
-            this.memberRank = MemberRank.convert(this.heart);
-            return false;
-        } else {
-            this.memberRank = MemberRank.convert(this.heart);
-            return true;
         }
     }
 }

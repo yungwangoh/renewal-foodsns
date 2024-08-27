@@ -3,6 +3,7 @@ package mubex.renewal_foodsns.application;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.login.LoginHandler;
+import mubex.renewal_foodsns.application.processor.MultiPartFileProcessor;
 import mubex.renewal_foodsns.application.repository.MemberRepository;
 import mubex.renewal_foodsns.domain.dto.response.MemberResponse;
 import mubex.renewal_foodsns.domain.entity.Member;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -21,19 +23,23 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final LoginHandler loginHandler;
+    private final MultiPartFileProcessor fileProcessor;
 
     @Transactional
-    public void signUp(final String email, final String nickName, final String password, int profileId) {
+    public void signUp(final String email, final String nickName, final String password,
+                       final MultipartFile multipartFile) {
 
         if (memberRepository.existsByNickName(nickName)) {
             throw new IllegalArgumentException("닉네임이 중복 됩니다.");
         }
 
+        final String profileImageUrl = fileProcessor.write(multipartFile);
+
         final Member member = Member.create(
                 nickName,
                 password,
                 email,
-                profileId,
+                profileImageUrl,
                 0,
                 0,
                 false,

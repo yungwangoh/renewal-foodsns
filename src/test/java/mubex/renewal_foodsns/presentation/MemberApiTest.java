@@ -44,7 +44,7 @@ class MemberApiTest extends TestContainer {
     void setUp() {
         RestAssured.port = port;
 
-        Member member = Member.create("qwer1234", "qwer1234@A", "qwer1234@naver.com", 1, 0, 0, true, MemberRank.NORMAL,
+        Member member = Member.create("qwer1234", "qwer1234@A", "qwer1234@naver.com", "", 0, 0, true, MemberRank.NORMAL,
                 false);
 
         memberRepository.save(member);

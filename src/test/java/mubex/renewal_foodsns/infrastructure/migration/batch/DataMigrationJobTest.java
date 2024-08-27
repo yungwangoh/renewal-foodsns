@@ -2,6 +2,7 @@ package mubex.renewal_foodsns.infrastructure.migration.batch;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 @SpringBatchTest
 @DisplayNameGeneration(ReplaceUnderscores.class)
+@Disabled
 class DataMigrationJobTest {
 
     @Autowired

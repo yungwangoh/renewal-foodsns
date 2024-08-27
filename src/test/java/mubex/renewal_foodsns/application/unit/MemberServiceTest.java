@@ -40,7 +40,7 @@ class MemberServiceTest {
                 "qwer1234@na.com",
                 "name",
                 "qwer1234",
-                1)
+                null)
         ).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -50,7 +50,7 @@ class MemberServiceTest {
                 "name",
                 "pwd",
                 "email",
-                0,
+                "",
                 1,
                 1,
                 false,
@@ -70,7 +70,7 @@ class MemberServiceTest {
                 "name",
                 "pwd",
                 "email",
-                0,
+                "",
                 1,
                 1,
                 true,
@@ -90,7 +90,7 @@ class MemberServiceTest {
                 "name",
                 "pwd",
                 "email",
-                0,
+                "",
                 1,
                 1,
                 false,
@@ -111,7 +111,7 @@ class MemberServiceTest {
                 "name",
                 "pwd",
                 "email",
-                0,
+                "",
                 1,
                 1,
                 true,

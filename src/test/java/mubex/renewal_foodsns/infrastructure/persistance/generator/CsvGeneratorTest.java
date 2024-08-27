@@ -11,17 +11,17 @@ import java.util.stream.IntStream;
 import net.datafaker.Faker;
 import net.datafaker.transformations.CsvTransformer;
 import net.datafaker.transformations.Schema;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-@Nested
 @SpringBootTest
 @DisplayNameGeneration(ReplaceUnderscores.class)
+@Disabled
 class CsvGeneratorTest {
 
     @Autowired

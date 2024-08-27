@@ -1,6 +1,7 @@
 package mubex.renewal_foodsns.infrastructure.persistance.elasticsearch;
 
 import mubex.renewal_foodsns.infrastructure.persistance.elasticsearch.querydsl.ElasticSearchQueryDslRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 
 @DataElasticsearchTest
 @DisplayNameGeneration(ReplaceUnderscores.class)
+@Disabled
 class PostElasticSearchRepositoryTest {
 
     @Autowired

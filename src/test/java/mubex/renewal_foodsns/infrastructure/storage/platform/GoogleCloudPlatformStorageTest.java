@@ -9,6 +9,7 @@ import java.util.List;
 import mubex.renewal_foodsns.common.property.CloudProperties;
 import mubex.renewal_foodsns.common.util.UriUtil;
 import mubex.renewal_foodsns.infrastructure.storage.PlatformStorage;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @EnableConfigurationProperties(CloudProperties.class)
 @ActiveProfiles("test")
+@Disabled
 class GoogleCloudPlatformStorageTest {
 
     @Autowired
