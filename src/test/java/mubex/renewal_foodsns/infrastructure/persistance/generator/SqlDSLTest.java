@@ -12,7 +12,7 @@ class SqlDSLTest {
 
     @Test
     void SQL_DSL은_INSERT_INTO_문을_작성해준다() {
-        String expectedSql = "insert into post (title, text, thumbnail, heart, report, views, in_deleted, member_id, version, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String expectedSql = "insert into post (title, text, heart, report, views, in_deleted, member_id, version, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         String actualSql = SqlDSL.generator(Post.class)
                 .insertInto()

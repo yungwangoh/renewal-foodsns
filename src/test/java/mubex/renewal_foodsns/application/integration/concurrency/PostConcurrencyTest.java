@@ -14,7 +14,6 @@ import mubex.renewal_foodsns.domain.dto.response.PostResponse;
 import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.entity.PostHeart;
 import mubex.renewal_foodsns.domain.type.MemberRank;
-import mubex.renewal_foodsns.domain.type.Tag;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +46,7 @@ public class PostConcurrencyTest {
 
         Member saveMember = memberRepository.save(member);
 
-        PostResponse postResponse = postService.create("test", "test", saveMember.getId(), Set.of(Tag.NOODLE),
+        PostResponse postResponse = postService.create("test", "test", saveMember.getId(), Set.of("test"),
                 List.of());
 
         // when

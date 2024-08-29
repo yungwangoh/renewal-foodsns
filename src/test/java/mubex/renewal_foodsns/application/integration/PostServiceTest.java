@@ -11,7 +11,6 @@ import mubex.renewal_foodsns.application.MemberService;
 import mubex.renewal_foodsns.application.PostService;
 import mubex.renewal_foodsns.common.TestContainer;
 import mubex.renewal_foodsns.domain.dto.response.PostResponse;
-import mubex.renewal_foodsns.domain.type.Tag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -20,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
         executionPhase = ExecutionPhase.AFTER_TEST_METHOD
 )
 @Import(TestContainer.class)
+@ActiveProfiles("test")
 public class PostServiceTest {
 
     @Autowired
@@ -56,7 +57,7 @@ public class PostServiceTest {
         Long memberId = 1L;
 
         List<MultipartFile> multipartFiles = getMultipartFiles();
-        Set<Tag> tags = Set.of(Tag.SOUP, Tag.NOODLE);
+        Set<String> tags = Set.of("ttt", "test");
 
         // when
         PostResponse postResponse = postService.create(title, text, memberId, tags, multipartFiles);
@@ -76,7 +77,7 @@ public class PostServiceTest {
 
         PostResponse postResponse = createPost();
         List<MultipartFile> multipartFiles = getMultipartFiles();
-        Set<Tag> tags = Set.of(Tag.SOUP, Tag.NOODLE);
+        Set<String> tags = Set.of("ttt", "test");
 
         // when
         PostResponse update = postService.update(postResponse.id(), title, text, memberId, tags, multipartFiles);
@@ -139,7 +140,7 @@ public class PostServiceTest {
         Long memberId = 1L;
 
         List<MultipartFile> multipartFiles = getMultipartFiles();
-        Set<Tag> tags = Set.of(Tag.SOUP, Tag.NOODLE, Tag.SNACK);
+        Set<String> tags = Set.of("test", "te", "Tess");
 
         return postService.create(title, text, memberId, tags, multipartFiles);
     }

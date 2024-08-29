@@ -18,7 +18,6 @@ import mubex.renewal_foodsns.application.repository.PostHeartRepository;
 import mubex.renewal_foodsns.application.repository.PostReportRepository;
 import mubex.renewal_foodsns.application.repository.PostRepository;
 import mubex.renewal_foodsns.domain.entity.Post;
-import mubex.renewal_foodsns.domain.type.Tag;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -61,7 +60,7 @@ public class PostServiceTest {
         String title = "하이";
         String text = "하이용";
         Long memberId = 1L;
-        Set<Tag> tags = new HashSet<>();
+        Set<String> tags = new HashSet<>();
 
         assertThatThrownBy(() -> postService.create(title, text, memberId, tags, getMultipartFiles(11)))
                 .isInstanceOf(IllegalArgumentException.class);
@@ -73,7 +72,7 @@ public class PostServiceTest {
         String title = "하이";
         String text = "하이용";
         Long memberId = 1L;
-        Set<Tag> tags = new HashSet<>();
+        Set<String> tags = new HashSet<>();
 
         given(postRepository.existsByTitle(anyString())).willReturn(true);
 
