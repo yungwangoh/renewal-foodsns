@@ -1,22 +1,31 @@
 package mubex.renewal_foodsns.common;
 
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.context.annotation.Bean;
 import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Testcontainers
-@ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@TestConfiguration(proxyBeanMethods = false)
 public class TestContainer {
 
     private static final String MYSQL_VERSION = "mysql:8.2.0";
+//    private static final String ES = "docker.elastic.co/elasticsearch/elasticsearch:7.17.23";
 
-    @Container
-    private static final MySQLContainer<?> mySqlContainer = new MySQLContainer<>(MYSQL_VERSION)
-            .withUsername("test").withPassword("test");
+    @Bean
+    @ServiceConnection
+    public MySQLContainer<?> mySqlContainer() {
+        MySQLContainer<?> mySQLContainer = new MySQLContainer<>(MYSQL_VERSION);
+
+        return mySQLContainer.withInitScript("init.sql");
+    }
+
+//    @Bean
+//    @ServiceConnection
+//    @DependsOn("mySqlContainer")
+//    public ElasticsearchContainer elasticsearchContainer() {
+//        ElasticsearchContainer elasticsearchContainer = new ElasticsearchContainer(ES);
+//
+//        return elasticsearchContainer
+//                .withCommand("bin/elasticsearch-plugin install analysis-nori");
+//    }
 }

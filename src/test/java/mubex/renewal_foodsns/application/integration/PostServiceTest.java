@@ -18,6 +18,7 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
@@ -29,7 +30,8 @@ import org.springframework.web.multipart.MultipartFile;
         value = "/data.sql",
         executionPhase = ExecutionPhase.AFTER_TEST_METHOD
 )
-public class PostServiceTest extends TestContainer {
+@Import(TestContainer.class)
+public class PostServiceTest {
 
     @Autowired
     private PostService postService;
@@ -38,12 +40,12 @@ public class PostServiceTest extends TestContainer {
     private MemberService memberService;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         String email = "qwer1234@gmail.com";
         String password = "qwer1234";
         String nickName = "안녕";
 
-        memberService.signUp(email, nickName, password, null);
+        memberService.signUp(email, nickName, password, getMultipartFiles().getFirst());
     }
 
     @Test
