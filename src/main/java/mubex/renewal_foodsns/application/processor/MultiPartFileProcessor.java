@@ -11,15 +11,15 @@ public class MultiPartFileProcessor {
 
     private final PlatformStorage platformStorage;
 
-    public String write(MultipartFile multipartFile) {
+    public String write(final MultipartFile multipartFile) {
         return platformStorage.process(multipartFile);
     }
 
-    public String thumbnail(byte[] content, String format) {
+    public String thumbnail(final byte[] content, final String format) {
         return platformStorage.process(content, format);
     }
 
-    public String update(MultipartFile multipartFile) {
+    public String update(final MultipartFile multipartFile) {
         return platformStorage.update(multipartFile);
     }
 }

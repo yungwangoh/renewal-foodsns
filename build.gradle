@@ -34,6 +34,12 @@ dependencies {
     implementation 'com.google.cloud:spring-cloud-gcp-starter'
     implementation platform("com.google.cloud:spring-cloud-gcp-dependencies:5.5.0")
     implementation 'com.google.cloud:spring-cloud-gcp-starter-storage'
+    implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.0")
+    // Replace the following with the starter dependencies of specific modules you wish to use
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3'
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+    testImplementation 'org.springframework.batch:spring-batch-test'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
@@ -41,6 +47,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
 
     // querydsl 추가
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
@@ -53,10 +60,11 @@ dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 
     // mysql test-container
-    testImplementation "org.testcontainers:testcontainers:1.19.3"
-    testImplementation "org.testcontainers:junit-jupiter:1.19.3"
-    testImplementation "org.testcontainers:mysql:1.19.3"
-    testImplementation 'org.testcontainers:jdbc:1.19.4'
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation 'org.testcontainers:testcontainers:1.20.0'
+    testImplementation 'org.testcontainers:junit-jupiter:1.20.0'
+    testImplementation "org.testcontainers:elasticsearch:1.20.0"
+    testImplementation 'org.testcontainers:mysql:1.20.0'
 
     // thumbnail
     implementation 'net.coobird:thumbnailator:0.4.20'
@@ -66,6 +74,15 @@ dependencies {
 
     // data faker
     implementation 'net.datafaker:datafaker:2.3.1'
+
+    // spring retry
+    implementation 'org.springframework.retry:spring-retry'
+
+    // https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.1.8'
+
+    // https://mvnrepository.com/artifact/org.jooq/jooq
+    implementation 'org.jooq:jooq:3.19.11'
 }
 
 tasks.named('test') {
