@@ -1,13 +1,14 @@
-package mubex.renewal_foodsns.infrastructure.persistance.jpa;
+package mubex.renewal_foodsns.application.repository;
 
 import java.util.List;
 import mubex.renewal_foodsns.domain.entity.Post;
 import mubex.renewal_foodsns.domain.entity.PostTag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface FoodTagJpaRepository extends JpaRepository<PostTag, Long> {
+public interface TagRepository {
+
+    PostTag save(PostTag postTag);
 
     List<PostTag> findByTag(String tag);
 
@@ -16,4 +17,6 @@ public interface FoodTagJpaRepository extends JpaRepository<PostTag, Long> {
     List<PostTag> findByPostId(Long postId);
 
     void deleteAllByPost(Post post);
+
+    void saveAll(List<PostTag> postTags);
 }

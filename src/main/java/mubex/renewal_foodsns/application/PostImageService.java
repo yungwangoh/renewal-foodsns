@@ -48,6 +48,7 @@ public class PostImageService {
         return PostImageMapper.INSTANCE.toResponse(postImage);
     }
 
+    @Deprecated
     @Transactional
     public PostImageResponse thumbnail(final Post post, final MultipartFile multipartFile) {
 

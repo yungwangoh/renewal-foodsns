@@ -99,14 +99,13 @@ public class PostRepositoryImpl implements PostRepository {
                 Post post = posts.get(i);
                 ps.setString(1, post.getTitle());
                 ps.setString(2, post.getText());
-                ps.setString(3, post.getThumbnail());
-                ps.setLong(4, post.getHeart());
-                ps.setInt(5, post.getReport());
-                ps.setLong(6, post.getViews());
-                ps.setBoolean(7, post.isInDeleted());
-                ps.setLong(8, post.getMember().getId());
+                ps.setLong(3, post.getHeart());
+                ps.setInt(4, post.getReport());
+                ps.setLong(5, post.getViews());
+                ps.setBoolean(6, post.isInDeleted());
+                ps.setLong(7, post.getMember().getId());
+                ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
                 ps.setTimestamp(9, Timestamp.valueOf(LocalDateTime.now()));
-                ps.setTimestamp(10, Timestamp.valueOf(LocalDateTime.now()));
             }
 
             @Override

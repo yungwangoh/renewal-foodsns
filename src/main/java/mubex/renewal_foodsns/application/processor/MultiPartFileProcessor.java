@@ -20,6 +20,6 @@ public class MultiPartFileProcessor {
     }
 
     public String update(final MultipartFile multipartFile) {
-        return platformStorage.update(multipartFile);
+        return platformStorage.process(multipartFile);
     }
 }

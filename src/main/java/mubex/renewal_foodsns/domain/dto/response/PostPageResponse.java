@@ -5,7 +5,6 @@ import lombok.Builder;
 @Builder
 public record PostPageResponse(
         long id,
-        String thumbnail,
         String title,
         long heart,
         long views,

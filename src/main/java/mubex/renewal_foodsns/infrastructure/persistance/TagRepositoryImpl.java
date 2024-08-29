@@ -2,10 +2,9 @@ package mubex.renewal_foodsns.infrastructure.persistance;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import mubex.renewal_foodsns.application.repository.FoodTagRepository;
-import mubex.renewal_foodsns.domain.entity.FoodTag;
+import mubex.renewal_foodsns.application.repository.TagRepository;
 import mubex.renewal_foodsns.domain.entity.Post;
-import mubex.renewal_foodsns.domain.type.Tag;
+import mubex.renewal_foodsns.domain.entity.PostTag;
 import mubex.renewal_foodsns.infrastructure.persistance.jpa.FoodTagJpaRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -15,28 +14,28 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class FoodTagRepositoryImpl implements FoodTagRepository {
+public class TagRepositoryImpl implements TagRepository {
 
     private final FoodTagJpaRepository foodTagJpaRepository;
 
     @Override
     @Transactional
-    public FoodTag save(final FoodTag foodTag) {
-        return foodTagJpaRepository.save(foodTag);
+    public PostTag save(final PostTag postTag) {
+        return foodTagJpaRepository.save(postTag);
     }
 
     @Override
-    public List<FoodTag> findByTag(final Tag tag) {
+    public List<PostTag> findByTag(final String tag) {
         return foodTagJpaRepository.findByTag(tag);
     }
 
     @Override
-    public Slice<FoodTag> findByTag(final Tag tag, final Pageable pageable) {
+    public Slice<PostTag> findByTag(final String tag, final Pageable pageable) {
         return foodTagJpaRepository.findByTag(tag, pageable);
     }
 
     @Override
-    public List<FoodTag> findByPostId(final Long postId) {
+    public List<PostTag> findByPostId(final Long postId) {
         return foodTagJpaRepository.findByPostId(postId);
     }
 
@@ -48,7 +47,7 @@ public class FoodTagRepositoryImpl implements FoodTagRepository {
 
     @Override
     @Transactional
-    public void saveAll(List<FoodTag> foodTags) {
-        foodTagJpaRepository.saveAll(foodTags);
+    public void saveAll(List<PostTag> postTags) {
+        foodTagJpaRepository.saveAll(postTags);
     }
 }

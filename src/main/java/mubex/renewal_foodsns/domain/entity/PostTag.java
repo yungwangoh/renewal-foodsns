@@ -3,8 +3,6 @@ package mubex.renewal_foodsns.domain.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
@@ -18,27 +16,25 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import mubex.renewal_foodsns.domain.type.Tag;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(
-        name = "food_tag",
+        name = "post_tag",
         indexes = {
                 @Index(name = "tag_post_idx", columnList = "tag, post_id"),
                 @Index(name = "tag", columnList = "tag")
         }
 )
-public class FoodTag {
+public class PostTag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "tag", length = 20)
-    @Enumerated(EnumType.STRING)
-    private Tag tag;
+    @Column(name = "tag", length = 10)
+    private String tag;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
@@ -48,19 +44,19 @@ public class FoodTag {
     private Post post;
 
     @Builder
-    private FoodTag(Tag tag, Post post) {
+    private PostTag(String tag, Post post) {
         this.tag = tag;
         this.post = post;
     }
 
-    public static FoodTag create(Tag tag, Post post) {
-        return FoodTag.builder()
+    public static PostTag create(String tag, Post post) {
+        return PostTag.builder()
                 .tag(tag)
                 .post(post)
                 .build();
     }
 
-    public void updateTag(Tag tag) {
+    public void updateTag(String tag) {
         this.tag = tag;
     }
 }

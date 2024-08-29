@@ -46,9 +46,6 @@ public class Post extends BaseEntity {
     @Column(name = "text", nullable = false)
     private String text;
 
-    @Column(name = "thumbnail")
-    private String thumbnail;
-
     // 좋아요 수
     @Column(name = "heart", nullable = false)
     private long heart;
@@ -117,10 +114,6 @@ public class Post extends BaseEntity {
 
     public void addViews() {
         this.views++;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
     }
 
     public void markAsDeleted() {

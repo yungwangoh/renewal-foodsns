@@ -18,10 +18,10 @@ import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.domain.entity.Post;
 import mubex.renewal_foodsns.domain.entity.PostHeart;
 import mubex.renewal_foodsns.domain.entity.PostReport;
+import mubex.renewal_foodsns.domain.mapper.map.MemberMapper;
 import mubex.renewal_foodsns.domain.mapper.map.PostMapper;
 import mubex.renewal_foodsns.domain.mapper.map.PostPageMapper;
 import mubex.renewal_foodsns.domain.type.NotificationType;
-import mubex.renewal_foodsns.domain.type.Tag;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -42,12 +42,12 @@ public class PostService {
     private final PostImageService postImageService;
     private final PostHeartRepository postHeartRepository;
     private final PostReportRepository postReportRepository;
-    private final FoodTagService foodTagService;
+    private final TagService tagService;
     private final ApplicationEventPublisher publisher;
 
     @Transactional
     public PostResponse create(final String title, final String text, final Long memberId,
-                               final Set<Tag> tags, final List<MultipartFile> multipartFiles) {
+                               final Set<String> tags, final List<MultipartFile> multipartFiles) {
 
         checkValidation(title, multipartFiles);
 
@@ -57,10 +57,12 @@ public class PostService {
 
         final Post savePost = postRepository.save(post);
 
-        foodTagService.create(tags, savePost);
+        tagService.create(tags, savePost);
 
-        PostResponse postResponse = !multipartFiles.isEmpty() ? processImage(multipartFiles, post, savePost)
-                : PostMapper.INSTANCE.toResponse(savePost);
+        List<PostImageResponse> postImageResponses = postImageService.create(savePost, multipartFiles);
+
+        PostResponse postResponse = PostResponse.of(savePost, MemberMapper.INSTANCE.toResponse(member),
+                postImageResponses);
 
         publisher.publishEvent(new InsertDirtyCheck(postResponse));
 
@@ -69,7 +71,7 @@ public class PostService {
 
     @Transactional
     public PostResponse update(final Long postId, final String title, final String text,
-                               final Long memberId, final Set<Tag> tags, final List<MultipartFile> multipartFiles) {
+                               final Long memberId, final Set<String> tags, final List<MultipartFile> multipartFiles) {
 
         checkValidation(title, multipartFiles);
 
@@ -83,10 +85,12 @@ public class PostService {
 
         post.updateText(text);
 
-        foodTagService.update(tags, post);
+        tagService.update(tags, post);
 
-        PostResponse postResponse =
-                !multipartFiles.isEmpty() ? processImage(multipartFiles, post) : PostMapper.INSTANCE.toResponse(post);
+        List<PostImageResponse> postImageResponses = postImageService.update(post, multipartFiles);
+
+        PostResponse postResponse = PostResponse.of(post, MemberMapper.INSTANCE.toResponse(member),
+                postImageResponses);
 
         publisher.publishEvent(postResponse);
 
@@ -163,11 +167,6 @@ public class PostService {
         return PostMapper.INSTANCE.toResponse(post);
     }
 
-    public Slice<PostPageResponse> findByTag(final Tag tag, final Pageable pageable) {
-        return foodTagService.findByTag(tag, pageable)
-                .map(foodTag -> PostPageMapper.INSTANCE.toResponse(foodTag.getPost()));
-    }
-
     public SearchHits<PostDocument> findAllByText(final String searchText, final Pageable pageable) {
         return postRepository.findAllByTitleOrText(searchText, pageable);
     }
@@ -183,22 +182,6 @@ public class PostService {
 
     public Page<PostPageResponse> findPostsByNickName(final String nickName, final Pageable pageable) {
         return postRepository.findByNickName(nickName, pageable).map(PostPageMapper.INSTANCE::toResponse);
-    }
-
-    private PostResponse processImage(final List<MultipartFile> multipartFiles, final Post post, final Post savePost) {
-        final String thumbnailFileName = postImageService.thumbnail(post, multipartFiles.getFirst()).originFileName();
-
-        savePost.setThumbnail(thumbnailFileName);
-
-        final List<PostImageResponse> postImageResponses = postImageService.create(savePost, multipartFiles);
-
-        return PostMapper.INSTANCE.toResponseWithImages(savePost, postImageResponses);
-    }
-
-    private PostResponse processImage(final List<MultipartFile> multipartFiles, final Post post) {
-        final List<PostImageResponse> postImageResponses = postImageService.update(post, multipartFiles);
-
-        return PostMapper.INSTANCE.toResponseWithImages(post, postImageResponses);
     }
 
     private void checkValidation(final String title, final List<MultipartFile> multipartFiles) {

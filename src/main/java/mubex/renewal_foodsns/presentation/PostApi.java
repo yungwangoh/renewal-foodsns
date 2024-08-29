@@ -11,7 +11,6 @@ import mubex.renewal_foodsns.domain.dto.request.PostParam;
 import mubex.renewal_foodsns.domain.dto.request.update.UpdatePostParam;
 import mubex.renewal_foodsns.domain.dto.response.PostPageResponse;
 import mubex.renewal_foodsns.domain.dto.response.PostResponse;
-import mubex.renewal_foodsns.domain.type.Tag;
 import mubex.renewal_foodsns.presentation.annotation.Login;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,7 +45,7 @@ public class PostApi {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PostResponse create(@RequestPart("post") @Valid final PostParam postParam,
-                               @RequestParam("tag") final Set<Tag> tags,
+                               @RequestParam("tag") final Set<String> tags,
                                @RequestPart(value = "image", required = false) final List<MultipartFile> multipartFiles,
                                @Login final Long memberId) {
 
@@ -62,7 +61,7 @@ public class PostApi {
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public PostResponse update(@RequestBody @Valid final UpdatePostParam updatePostParam,
-                               @RequestParam("tags") final Set<Tag> tags,
+                               @RequestParam("tags") final Set<String> tags,
                                @Login final Long memberId) {
 
         return postService.update(

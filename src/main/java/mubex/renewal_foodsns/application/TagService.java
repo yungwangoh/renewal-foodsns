@@ -3,10 +3,10 @@ package mubex.renewal_foodsns.application;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
-import mubex.renewal_foodsns.application.repository.FoodTagRepository;
-import mubex.renewal_foodsns.domain.entity.FoodTag;
+import mubex.renewal_foodsns.application.repository.TagRepository;
+import mubex.renewal_foodsns.domain.dto.response.PostTagResponse;
 import mubex.renewal_foodsns.domain.entity.Post;
-import mubex.renewal_foodsns.domain.type.Tag;
+import mubex.renewal_foodsns.domain.entity.PostTag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -15,43 +15,43 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class FoodTagService {
+public class TagService {
 
-    private final FoodTagRepository foodTagRepository;
+    private final TagRepository tagRepository;
 
     @Transactional
-    public void create(final Set<Tag> tags, final Post post) {
+    public void create(final Set<String> tags, final Post post) {
 
         checkValidation(tags);
 
-        final List<FoodTag> foodTags = tags
+        final List<PostTag> postTags = tags
                 .stream()
-                .map(tag -> FoodTag.create(tag, post))
+                .map(tag -> PostTag.create(tag, post))
                 .toList();
 
-        foodTagRepository.saveAll(foodTags);
+        tagRepository.saveAll(postTags);
     }
 
     @Transactional
-    public void update(final Set<Tag> tags, final Post post) {
+    public void update(final Set<String> tags, final Post post) {
 
         checkValidation(tags);
 
-        foodTagRepository.deleteAllByPost(post);
+        tagRepository.deleteAllByPost(post);
 
-        final List<FoodTag> foodTags = tags
+        final List<PostTag> postTags = tags
                 .stream()
-                .map(tag -> FoodTag.create(tag, post))
+                .map(tag -> PostTag.create(tag, post))
                 .toList();
 
-        foodTagRepository.saveAll(foodTags);
+        tagRepository.saveAll(postTags);
     }
 
-    public Slice<FoodTag> findByTag(final Tag tag, final Pageable pageable) {
-        return foodTagRepository.findByTag(tag, pageable);
+    public Slice<PostTagResponse> findByTag(final String tag, final Pageable pageable) {
+        return tagRepository.findByTag(tag, pageable).map(PostTagResponse::of);
     }
 
-    private static void checkValidation(Set<Tag> tags) {
+    private static void checkValidation(Set<String> tags) {
         if (tags.isEmpty()) {
             throw new IllegalArgumentException("태그를 넣어주세요!!.");
         }
