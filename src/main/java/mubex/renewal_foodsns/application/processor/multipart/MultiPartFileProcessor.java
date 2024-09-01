@@ -1,4 +1,4 @@
-package mubex.renewal_foodsns.application.processor;
+package mubex.renewal_foodsns.application.processor.multipart;
 
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.infrastructure.storage.PlatformStorage;

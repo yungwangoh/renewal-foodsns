@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
 import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.call.AsyncCall;
-import mubex.renewal_foodsns.application.processor.MultiPartFileProcessor;
+import mubex.renewal_foodsns.application.processor.multipart.MultiPartFileProcessor;
 import mubex.renewal_foodsns.application.repository.PostImageRepository;
 import mubex.renewal_foodsns.domain.dto.response.PostImageResponse;
 import mubex.renewal_foodsns.domain.entity.Post;
