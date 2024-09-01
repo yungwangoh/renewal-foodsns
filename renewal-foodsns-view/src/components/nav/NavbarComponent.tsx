@@ -14,7 +14,6 @@ function NavbarComponent() {
             <NavbarContent justify="start">
                 <NavbarBrand className="mr-4">
                     <AcmeLogo/>
-                    <p className="hidden sm:block font-bold text-inherit">FOOD-SNS</p>
                 </NavbarBrand>
             </NavbarContent>
 
@@ -50,7 +49,11 @@ function NavbarComponent() {
                     </Button>
                 </NavbarItem>
                 <NavbarItem>
-                    <Button isIconOnly variant="light" className="px-6 min-w-24 h-12 text-medium gap-3 rounded-large"
+                    <Button isIconOnly
+                            href="/my-page"
+                            variant="light"
+                            className="px-6 min-w-24 h-12 text-medium gap-3 rounded-large"
+                            as={Link}
                             aria-label="human">
                         <HumanIcon/>
                     </Button>
@@ -59,7 +62,7 @@ function NavbarComponent() {
 
             <NavbarContent justify="end">
                 <NavbarItem className="lg:flex">
-                    <Button color="default" href="#" variant="bordered">
+                    <Button color="default" href="/sign-in" variant="bordered" as={Link}>
                         로그인
                     </Button>
                 </NavbarItem>

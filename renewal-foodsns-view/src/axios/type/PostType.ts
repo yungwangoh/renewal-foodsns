@@ -1,15 +1,22 @@
-// MemberResponse 인터페이스 (실제 구조에 맞게 조정 필요)
+// MemberRank 열거형 정의
+export enum MemberRank {
+    NORMAL = "NORMAL",
+    INFLUENCE = "INFLUENCE"
+}
+
+// MemberResponse 인터페이스 정의
 export interface MemberResponse {
-    id: number;
-    nickname: string;
-    // 추가 필드가 있다면 여기에 정의
+    nickName: string;
+    heart: number;
+    memberRank: MemberRank;
+    report: number;
+    inBlackList: boolean;
+    profileImage: string;
 }
 
 // PostImageResponse 인터페이스 (실제 구조에 맞게 조정 필요)
 export interface PostImageResponse {
-    id: number;
-    url: string;
-    // 추가 필드가 있다면 여기에 정의
+    originFileName: string;
 }
 
 // PostResponse 인터페이스
@@ -88,5 +95,8 @@ export interface PostDocument {
     id: number;
     title: string;
     text: string;
+    heart: number;
+    views: number;
+    inDeleted: boolean;
     // 추가 필드가 있다면 여기에 정의
 } // Assuming Tag is a string, adjust if it's a more complex type

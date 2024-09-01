@@ -17,7 +17,7 @@ export function Home() {
     }, []);
 
     return (
-        <Card>
+        <Card isPressable onPress>
             <CardHeader className="flex-col items-start">
                 <User name="yun" description="developer"/>
             </CardHeader>
@@ -27,19 +27,19 @@ export function Home() {
                     className="w-full object-cover"
                     src="https://nextui.org/images/hero-card-complete.jpeg"
                     width={450}
-                    height={300}
+                    height={350}
                 />
             </CardBody>
             <CardFooter>
-                <Button variant="light" size="sm">
+                <Button variant="light" size="sm" isDisabled>
                     <HeartIcon size={20}/>
                     {70}
                 </Button>
-                <Button variant="light" size="sm">
+                <Button variant="light" size="sm" isDisabled>
                     <CommentIcon/>
                     {80}
                 </Button>
-                <Button variant="light" size="sm">
+                <Button variant="light" size="sm" isDisabled>
                     <ShareIcon size={20}/>
                     {80}
                 </Button>
