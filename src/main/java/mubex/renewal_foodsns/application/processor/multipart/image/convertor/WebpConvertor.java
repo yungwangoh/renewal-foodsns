@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.util.Objects;
 import javax.imageio.ImageIO;
 import lombok.extern.slf4j.Slf4j;
-import mubex.renewal_foodsns.application.processor.multipart.LosslessSelector;
+import mubex.renewal_foodsns.application.processor.multipart.CompressionSelector;
 import mubex.renewal_foodsns.application.processor.multipart.image.ImageProcessor;
 import mubex.renewal_foodsns.application.processor.multipart.impl.CustomMultipartFile;
 import mubex.renewal_foodsns.common.util.FileUtils;
@@ -31,7 +31,7 @@ public class WebpConvertor implements ImageProcessor {
             final BufferedImage bufferedImage = Thumbnails.of(is)
                     .size(w, h)
                     .asBufferedImage();
-            
+
             log.info("w = {}, h = {}", bufferedImage.getWidth(), bufferedImage.getHeight());
 
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -55,7 +55,7 @@ public class WebpConvertor implements ImageProcessor {
     }
 
     @Override
-    public MultipartFile convert(final MultipartFile multipartFile, final LosslessSelector selector) {
+    public MultipartFile compress(final MultipartFile multipartFile, final CompressionSelector selector) {
 
         if (FileExt.WEBP.isCheck(Objects.requireNonNull(multipartFile.getOriginalFilename()))) {
             return multipartFile;
@@ -64,7 +64,7 @@ public class WebpConvertor implements ImageProcessor {
         try (InputStream is = multipartFile.getInputStream()) {
             final File file = ImmutableImage.loader()
                     .fromStream(is)
-                    .output(LosslessSelector.selectLossOrLossless(selector),
+                    .output(CompressionSelector.selectLossOrLossless(selector),
                             new File(FileUtils.changeFileExt(
                                     Objects.requireNonNull(multipartFile.getOriginalFilename()),
                                     FileExt.WEBP.getExt()))

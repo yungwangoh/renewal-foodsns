@@ -6,5 +6,5 @@ public interface FileProcessor {
 
     MultipartFile resize(MultipartFile multipartFile, int w, int h);
 
-    MultipartFile convert(MultipartFile multipartFile, LosslessSelector selector);
+    MultipartFile compress(MultipartFile multipartFile, CompressionSelector selector);
 }
