@@ -6,7 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import mubex.renewal_foodsns.application.processor.multipart.LosslessSelector;
+import mubex.renewal_foodsns.application.processor.multipart.CompressionSelector;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -42,10 +42,32 @@ class WebpConvertorTest {
         MultipartFile multipartFile = getMultipartFiles().getFirst();
 
         // when
-        MultipartFile file = webpConvertor.convert(multipartFile, LosslessSelector.LOSS);
+        MultipartFile file = webpConvertor.compress(multipartFile, CompressionSelector.LOSS);
 
         // then
         double originFileSize = multipartFile.getSize() / 1024.0;
+        double newFileSize = file.getSize() / 1024.0;
+
+        double compressionRatio = (newFileSize / originFileSize) * 100;
+        double compressRate = 100 - compressionRatio;
+
+        System.out.printf("Original File Size: %.2f KB%n", originFileSize);
+        System.out.printf("Converted File Size: %.2f KB%n", newFileSize);
+        System.out.printf("Compression Rate: %.2f%%%n", compressRate);
+        assertTrue(file.getResource().exists());
+    }
+
+    @Test
+    void 이미지_리사이징_후_webp를_적용한다() throws IOException {
+        // given
+        MultipartFile multipartFile = getMultipartFiles().getFirst();
+
+        // when
+        MultipartFile resize = webpConvertor.resize(multipartFile, 1000, 1000);
+        MultipartFile file = webpConvertor.compress(resize, CompressionSelector.LOSS);
+
+        // then
+        double originFileSize = resize.getSize() / 1024.0;
         double newFileSize = file.getSize() / 1024.0;
 
         double compressionRatio = (newFileSize / originFileSize) * 100;
