@@ -1,5 +1,7 @@
 package mubex.renewal_foodsns.common.util;
 
+import lombok.Getter;
+
 public class FileUtils {
 
     public static String changeFileExt(final String originFileName, final String newExt) {
@@ -17,6 +19,7 @@ public class FileUtils {
         return originFileName.substring(originFileName.lastIndexOf('.') + 1);
     }
 
+    @Getter
     public enum FileExt {
         JPEG("jpeg"),
         JPG("jpg"),
@@ -32,7 +35,7 @@ public class FileUtils {
         }
 
         public boolean isCheck(final String originalFileName) {
-            int lastIndexOf = originalFileName.lastIndexOf('.');
+            final int lastIndexOf = originalFileName.lastIndexOf('.');
 
             if (lastIndexOf == -1) {
                 return false;
@@ -41,7 +44,7 @@ public class FileUtils {
             return originalFileName.substring(lastIndexOf + 1).equals(ext);
         }
 
-        public String getExt() {
+        public String addDotExt() {
             return "." + ext;
         }
     }
