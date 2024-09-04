@@ -1,4 +1,4 @@
-package mubex.renewal_foodsns.application.processor.multipart;
+package mubex.renewal_foodsns.application.processor.multipart.selector;
 
 import com.sksamuel.scrimage.nio.JpegWriter;
 import com.sksamuel.scrimage.webp.WebpWriter;

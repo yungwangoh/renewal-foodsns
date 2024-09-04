@@ -2,6 +2,7 @@ package mubex.renewal_foodsns.application.processor.multipart;
 
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.processor.multipart.image.ImageProcessor;
+import mubex.renewal_foodsns.application.processor.multipart.selector.CompressionSelector;
 import mubex.renewal_foodsns.infrastructure.storage.PlatformStorage;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;

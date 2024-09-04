@@ -7,16 +7,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
-import mubex.renewal_foodsns.application.processor.multipart.CompressionSelector;
 import mubex.renewal_foodsns.application.processor.multipart.image.ImageProcessor;
 import mubex.renewal_foodsns.application.processor.multipart.image.resize.ImageResizeSupport;
 import mubex.renewal_foodsns.application.processor.multipart.impl.CustomMultipartFile;
+import mubex.renewal_foodsns.application.processor.multipart.selector.CompressionSelector;
 import mubex.renewal_foodsns.common.util.FileUtils;
 import mubex.renewal_foodsns.common.util.FileUtils.FileExt;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
+@Primary
 @Component
 public class WebpConvertor implements ImageProcessor {
 

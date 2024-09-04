@@ -6,7 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import mubex.renewal_foodsns.application.processor.multipart.CompressionSelector;
+import mubex.renewal_foodsns.application.processor.multipart.selector.CompressionSelector;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -81,9 +81,9 @@ class WebpConvertorTest {
 
     private List<MultipartFile> getMultipartFiles() throws IOException {
         String name = "image";
-        String originalFileName = "FoodSNS.png";
+        String originalFileName = "test.png";
         String contentType = "image/png";
-        String fileUrl = "/Users/yungwang-o/Documents/FoodSNS.png";
+        String fileUrl = "/Users/yungwang-o/Documents/test.png";
 
         List<MultipartFile> mockMultipartFiles = new ArrayList<>();
         mockMultipartFiles.add(
