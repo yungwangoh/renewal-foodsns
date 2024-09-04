@@ -1,9 +1,14 @@
 package mubex.renewal_foodsns.application.processor.multipart.image.compression;
 
+import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.function.Supplier;
@@ -11,9 +16,10 @@ import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
-import javax.imageio.stream.FileImageOutputStream;
+import javax.imageio.stream.ImageOutputStream;
 import mubex.renewal_foodsns.common.util.FileUtils.FileExt;
 
+@Deprecated
 public class ImageCompressionSupport {
 
     private final FileExt fileExt;
@@ -21,6 +27,7 @@ public class ImageCompressionSupport {
     private InputStream is;
     private int compressionFactor;
     private Path path;
+    private File file;
 
     private ImageCompressionSupport(final FileExt fileExt) {
         this.fileExt = fileExt;
@@ -40,6 +47,12 @@ public class ImageCompressionSupport {
         return this;
     }
 
+    public ImageCompressionSupport from(final File file) {
+        this.file = file;
+
+        return this;
+    }
+
     /**
      * @param compressionFactor 0 (produce the lowest quality instead of lowest capacity) ~ 100 (produce the highest
      *                          quality instead of lowest capacity)
@@ -53,54 +66,59 @@ public class ImageCompressionSupport {
         return this;
     }
 
-    public File toFile(final Supplier<File> supplier) {
+    public File toFile(final Supplier<File> newFile) {
+        File outputFile = newFile.get();
 
-        BufferedImage image = getImage();
+        try (InputStream input = new FileInputStream(file);
+             OutputStream output = new FileOutputStream(outputFile)) {
 
-        File file = supplier.get();
+            BufferedImage image = getImage(input);
 
-        Iterator<ImageWriter> it = ImageIO.getImageWritersByFormatName(fileExt.getExt());
+            Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName(fileExt.getExt());
+            if (!writers.hasNext()) {
+                throw new IllegalStateException("No image writer found for format " + fileExt.name());
+            }
 
-        if (!it.hasNext()) {
-            throw new IllegalStateException("No image writer found for format " + fileExt.name());
-        }
+            ImageWriter writer = writers.next();
+            try (ImageOutputStream ios = ImageIO.createImageOutputStream(output)) {
+                writer.setOutput(ios);
+                ImageWriteParam param = writer.getDefaultWriteParam();
 
-        ImageWriter imageWriter = it.next();
-        ImageWriteParam param = imageWriter.getDefaultWriteParam();
+                if (param.canWriteCompressed()) {
+                    param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+                    param.setCompressionQuality(1 - (compressionFactor / 100f));
+                }
 
-        if (compressionFactor == 100) {
-            param.setCompressionMode(ImageWriteParam.MODE_DISABLED);
-        } else if (compressionFactor > -1 && compressionFactor < 100) {
-            param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-            param.setCompressionQuality(compressionFactor / 100f);
-        } else {
-            param.setCompressionMode(ImageWriteParam.MODE_COPY_FROM_METADATA);
-        }
-
-        try (FileImageOutputStream os = new FileImageOutputStream(file)) {
-            imageWriter.setOutput(os);
-            IIOImage iioImage = new IIOImage(image, null, null);
-            imageWriter.write(null, iioImage, param);
+                writer.write(null, new IIOImage(image, null, null), param);
+            } finally {
+                writer.dispose();
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } finally {
-            imageWriter.dispose();
         }
 
-        return file;
+        return outputFile;
     }
 
-    private BufferedImage getImage() {
+    private BufferedImage getImage(final InputStream is) {
         try {
             BufferedImage bufferedImage = ImageIO.read(is);
 
             boolean alpha = bufferedImage.getColorModel().hasAlpha();
 
-            return new BufferedImage(
-                    bufferedImage.getWidth(),
-                    bufferedImage.getHeight(),
-                    alpha ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB
-            );
+            if (!alpha) {
+                return bufferedImage;
+            }
+
+            // jpg is no alpha chanel
+            BufferedImage outputImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
+                    BufferedImage.TYPE_INT_RGB);
+
+            ColorConvertOp op = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_sRGB), null);
+
+            op.filter(bufferedImage, outputImage);
+
+            return outputImage;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
