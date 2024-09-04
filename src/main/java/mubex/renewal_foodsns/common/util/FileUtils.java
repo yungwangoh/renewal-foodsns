@@ -26,6 +26,7 @@ public class FileUtils {
         PNG("png"),
         WEBP("webp"),
         AVIF("avif"),
+        MP4("mp4"),
         ;
 
         private final String ext;

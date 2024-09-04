@@ -1,16 +1,16 @@
 package mubex.renewal_foodsns.application.processor.multipart.image.convertor;
 
+import com.sksamuel.scrimage.ImmutableImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
-import mubex.renewal_foodsns.application.processor.multipart.CompressionSelector;
 import mubex.renewal_foodsns.application.processor.multipart.image.ImageProcessor;
-import mubex.renewal_foodsns.application.processor.multipart.image.compression.ImageCompressionSupport;
 import mubex.renewal_foodsns.application.processor.multipart.image.resize.ImageResizeSupport;
 import mubex.renewal_foodsns.application.processor.multipart.impl.CustomMultipartFile;
+import mubex.renewal_foodsns.application.processor.multipart.selector.CompressionSelector;
 import mubex.renewal_foodsns.common.util.FileUtils;
 import mubex.renewal_foodsns.common.util.FileUtils.FileExt;
 import org.springframework.http.MediaType;
@@ -37,12 +37,14 @@ public class JpegConvertor implements ImageProcessor {
         }
 
         try (InputStream is = multipartFile.getInputStream()) {
-            final File file = ImageCompressionSupport.support(FileExt.JPEG)
-                    .from(is)
-                    .factor(70)
-                    .toFile(() -> new File(FileUtils.changeFileExt(
-                            Objects.requireNonNull(multipartFile.getOriginalFilename()),
-                            FileExt.JPEG.addDotExt())));
+
+            final File file = ImmutableImage.loader()
+                    .fromStream(is)
+                    .output(CompressionSelector.selectCompressionMethodToJpeg(selector),
+                            new File(FileUtils.changeFileExt(
+                                    Objects.requireNonNull(multipartFile.getOriginalFilename()),
+                                    FileExt.JPEG.addDotExt()))
+                    );
 
             return CustomMultipartFile.builder()
                     .size(file.length())
