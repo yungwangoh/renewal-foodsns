@@ -19,6 +19,16 @@ public class FileUtils {
         return originFileName.substring(originFileName.lastIndexOf('.') + 1);
     }
 
+    public static String parseContentType(final String contentType) {
+        int idxOf = contentType.lastIndexOf('/');
+
+        if (idxOf == -1) {
+            throw new IllegalArgumentException("Invalid content type: " + contentType);
+        }
+
+        return contentType.substring(0, idxOf);
+    }
+
     @Getter
     public enum FileExt {
         JPEG("jpeg"),

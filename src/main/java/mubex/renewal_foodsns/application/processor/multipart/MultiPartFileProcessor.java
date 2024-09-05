@@ -1,8 +1,7 @@
 package mubex.renewal_foodsns.application.processor.multipart;
 
 import lombok.RequiredArgsConstructor;
-import mubex.renewal_foodsns.application.processor.multipart.image.ImageProcessor;
-import mubex.renewal_foodsns.application.processor.multipart.selector.CompressionSelector;
+import mubex.renewal_foodsns.application.processor.multipart.selector.FileProcessSelector;
 import mubex.renewal_foodsns.infrastructure.storage.PlatformStorage;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,13 +11,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class MultiPartFileProcessor {
 
     private final PlatformStorage platformStorage;
-    private final ImageProcessor imageProcessor;
+    private final FileProcessSelector fileProcessSelector;
 
     public String write(final MultipartFile multipartFile) {
 
-        MultipartFile mf = imageProcessor.resize(multipartFile, 1000, 1000);
-
-        MultipartFile convertFile = imageProcessor.compress(mf, CompressionSelector.LOSS);
+        MultipartFile convertFile = fileProcessSelector.select(multipartFile);
 
         return platformStorage.process(convertFile);
     }
