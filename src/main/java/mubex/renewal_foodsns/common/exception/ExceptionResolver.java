@@ -17,6 +17,7 @@ public enum ExceptionResolver implements ErrorResponse {
     NOT_FOUND_POST_HEART(HttpStatus.NOT_FOUND, "NOT_FOUND_004", "게시물 좋아요를 찾을 수 없습니다."),
     NOT_FOUND_BLACK_LIST(HttpStatus.NOT_FOUND, "NOT_FOUND_005", "블랙 리스트를 찾을 수 없습니다."),
     NOT_FOUND_POST_IMAGE(HttpStatus.NOT_FOUND, "NOT_FOUND_006", "게시물 이미지를 찾을 수 없습니다."),
+    NOT_FOUND_FOLLOW(HttpStatus.NOT_FOUND, "NOT_FOUND_007", "팔로우를 찾을 수 없습니다."),
 
     // un_authorized 401
     LOGIN_FAILED(HttpStatus.UNAUTHORIZED, "UN_AUTHORIZED_000", "로그인에 실패하였습니다."),
