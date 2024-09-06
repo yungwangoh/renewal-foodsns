@@ -4,8 +4,6 @@ import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.repository.FollowRepository;
 import mubex.renewal_foodsns.domain.entity.Follow;
 import mubex.renewal_foodsns.domain.entity.Member;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,18 +23,10 @@ public class FollowService {
     }
 
     @Transactional
-    public void unfollow(final Member from, final Member to, final boolean inDeleted) {
+    public void unfollow(final Member follower, final Member followee) {
 
-        Follow follow = followRepository.findByFromAndTo(from, to);
+        Follow follow = followRepository.findByFollowerAndFollowee(follower, followee);
 
         follow.delete();
-    }
-
-    public Slice<Long> findFollow(final Member member, final Pageable pageable) {
-        return followRepository.findFollow(member, pageable);
-    }
-
-    public Slice<Long> findFollower(final Member member, final Pageable pageable) {
-        return followRepository.findFollower(member, pageable);
     }
 }

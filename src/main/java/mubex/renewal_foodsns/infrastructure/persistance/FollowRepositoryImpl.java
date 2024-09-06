@@ -7,8 +7,6 @@ import mubex.renewal_foodsns.common.exception.NotFoundException;
 import mubex.renewal_foodsns.domain.entity.Follow;
 import mubex.renewal_foodsns.domain.entity.Member;
 import mubex.renewal_foodsns.infrastructure.persistance.jpa.FollowJpaRepository;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,18 +29,8 @@ public class FollowRepositoryImpl implements FollowRepository {
     }
 
     @Override
-    public Follow findByFromAndTo(final Member from, final Member to) {
-        return followJpaRepository.findByFromAndTo(from, to)
+    public Follow findByFollowerAndFollowee(final Member follower, final Member followee) {
+        return followJpaRepository.findByFollowerAndFollowee(follower, followee)
                 .orElseThrow(() -> new NotFoundException(ExceptionResolver.NOT_FOUND_MEMBER));
-    }
-
-    @Override
-    public Slice<Long> findFollow(final Member from, final Pageable pageable) {
-        return followJpaRepository.findByGroupByFrom(from, pageable);
-    }
-
-    @Override
-    public Slice<Long> findFollower(final Member to, final Pageable pageable) {
-        return followJpaRepository.findByGroupByTo(to, pageable);
     }
 }

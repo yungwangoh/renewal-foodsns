@@ -22,8 +22,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "follow",
         indexes = {
-                @Index(name = "from_idx", columnList = "from"),
-                @Index(name = "to_idx", columnList = "to")
+                @Index(name = "follower_idx", columnList = "follower_id"),
+                @Index(name = "followee_idx", columnList = "followee_id")
         }
 )
 public class Follow {
@@ -34,34 +34,34 @@ public class Follow {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-            name = "from",
+            name = "follower_id",
             nullable = false,
             foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT)
     )
-    private Member from;
+    private Member follower;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-            name = "to",
+            name = "followee_id",
             nullable = false,
             foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT)
     )
-    private Member to;
+    private Member followee;
 
     @Column(name = "in_deleted", nullable = false)
     private boolean inDeleted;
 
     @Builder
-    private Follow(final Member from, final Member to, final boolean inDeleted) {
-        this.from = from;
-        this.to = to;
+    private Follow(final Member follower, final Member followee, final boolean inDeleted) {
+        this.follower = follower;
+        this.followee = followee;
         this.inDeleted = inDeleted;
     }
 
-    public static Follow create(final Member from, final Member to, final boolean inDeleted) {
+    public static Follow create(final Member follower, final Member followee, final boolean inDeleted) {
         return Follow.builder()
-                .from(from)
-                .to(to)
+                .follower(follower)
+                .followee(followee)
                 .inDeleted(inDeleted)
                 .build();
     }
@@ -71,7 +71,7 @@ public class Follow {
     }
 
     public void update(final Member from, final Member to) {
-        this.from = from;
-        this.to = to;
+        this.follower = from;
+        this.followee = to;
     }
 }
