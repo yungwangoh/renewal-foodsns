@@ -91,11 +91,6 @@ public class PostRepositoryImpl implements PostRepository {
         return elasticSearchQueryDslRepository.findTitleOrTextBySearchText(searchText, pageable);
     }
 
-    @Override
-    public Slice<Post> findByFanOutFollower(final Long memberId, final Pageable pageable) {
-        return postJpaRepository.findByFollower(memberId, pageable);
-    }
-
     private BatchPreparedStatementSetter getBatchPreparedStatementSetter(final List<Post> posts) {
 
         return new BatchPreparedStatementSetter() {

@@ -29,6 +29,4 @@ public interface PostRepository {
     boolean existsByTitle(String title);
 
     SearchHits<PostDocument> findAllByTitleOrText(String searchText, Pageable pageable);
-
-    Slice<Post> findByFanOutFollower(Long memberId, Pageable pageable);
 }
