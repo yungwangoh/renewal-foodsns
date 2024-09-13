@@ -1,13 +1,13 @@
 package mubex.renewal_foodsns.application.repository;
 
 import java.util.List;
-import mubex.renewal_foodsns.domain.entity.Feed;
+import mubex.renewal_foodsns.domain.dto.response.Feed;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 public interface FeedRepository {
 
-    Feed save(Feed feed);
+    List<Feed> findFeedsToAuthorId(Long authorId);
 
-    Feed findById(Long id);
-
-    List<Feed> findFanoutByPostId(Long postId);
+    Slice<Feed> findFeedsToMemberId(Long memberId, Pageable pageable);
 }

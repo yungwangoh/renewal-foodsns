@@ -16,6 +16,8 @@ public interface PostRepository {
 
     Post findById(Long id);
 
+    Post findByMemberId(Long memberId);
+
     Slice<Post> findByTitle(String title, Pageable pageable);
 
     Page<Post> findAll(Pageable pageable);

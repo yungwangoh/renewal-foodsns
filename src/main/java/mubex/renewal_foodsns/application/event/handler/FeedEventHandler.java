@@ -1,10 +1,8 @@
 package mubex.renewal_foodsns.application.event.handler;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import mubex.renewal_foodsns.application.FeedService;
 import mubex.renewal_foodsns.application.event.feed.RegisteredFeedEvent;
-import mubex.renewal_foodsns.application.repository.FeedRepository;
-import mubex.renewal_foodsns.domain.entity.Feed;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -12,12 +10,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class FeedEventHandler {
 
-    private final FeedRepository feedRepository;
+    private final FeedService feedService;
 
     @EventListener
     public void propagateFeedEvent(final RegisteredFeedEvent event) {
-        List<Feed> list = feedRepository.findFanoutByPostId(event.postId());
-
-        
+        feedService.fanoutOnWrite(event.memberId());
     }
 }

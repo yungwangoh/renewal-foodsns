@@ -1,11 +1,12 @@
 package mubex.renewal_foodsns.application;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import mubex.renewal_foodsns.application.annotation.OptimisticLock;
 import mubex.renewal_foodsns.application.event.dirtycheck.DeleteDirtyCheck;
-import mubex.renewal_foodsns.application.event.dirtycheck.InsertDirtyCheck;
+import mubex.renewal_foodsns.application.event.feed.RegisteredFeedEvent;
 import mubex.renewal_foodsns.application.event.notification.RegisteredBlackListEvent;
 import mubex.renewal_foodsns.application.repository.PostHeartRepository;
 import mubex.renewal_foodsns.application.repository.PostReportRepository;
@@ -21,6 +22,7 @@ import mubex.renewal_foodsns.domain.entity.PostReport;
 import mubex.renewal_foodsns.domain.mapper.map.MemberMapper;
 import mubex.renewal_foodsns.domain.mapper.map.PostMapper;
 import mubex.renewal_foodsns.domain.mapper.map.PostPageMapper;
+import mubex.renewal_foodsns.domain.type.MemberRank;
 import mubex.renewal_foodsns.domain.type.NotificationType;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
@@ -61,12 +63,12 @@ public class PostService {
 
         List<PostImageResponse> postImageResponses = postImageService.create(savePost, multipartFiles);
 
-        PostResponse postResponse = PostResponse.of(savePost, MemberMapper.INSTANCE.toResponse(member),
+        if (Objects.equals(member.getMemberRank(), MemberRank.NORMAL)) {
+            publisher.publishEvent(new RegisteredFeedEvent(member.getId()));
+        }
+
+        return PostResponse.of(savePost, MemberMapper.INSTANCE.toResponse(member),
                 postImageResponses);
-
-        publisher.publishEvent(new InsertDirtyCheck(postResponse));
-
-        return postResponse;
     }
 
     @Transactional
@@ -159,6 +161,11 @@ public class PostService {
     }
 
     @Transactional
+    @Cacheable(
+            cacheNames = "post-cache",
+            key = "#postId",
+            cacheManager = "caffeineCacheManager"
+    )
     public PostResponse find(final Long postId) {
         final Post post = postRepository.findById(postId);
 
@@ -167,11 +174,25 @@ public class PostService {
         return PostMapper.INSTANCE.toResponse(post);
     }
 
+    @Cacheable(
+            cacheNames = "post-cache",
+            key = "#result.id()",
+            cacheManager = "caffeineCacheManager"
+    )
+    public PostResponse findByMemberId(final Long memberId) {
+        final Post post = postRepository.findByMemberId(memberId);
+
+        return PostMapper.INSTANCE.toResponse(post);
+    }
+
     public SearchHits<PostDocument> findAllByText(final String searchText, final Pageable pageable) {
         return postRepository.findAllByTitleOrText(searchText, pageable);
     }
 
-    @Cacheable(cacheNames = "posts_cache", key = "#pageable.pageNumber")
+    @Cacheable(
+            cacheNames = "posts_cache",
+            key = "#pageable.pageNumber"
+    )
     public Slice<PostPageResponse> findAll(final Pageable pageable) {
         return postRepository.findAll(pageable).map(PostPageMapper.INSTANCE::toResponse);
     }

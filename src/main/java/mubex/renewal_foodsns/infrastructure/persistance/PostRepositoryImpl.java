@@ -57,6 +57,12 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
+    public Post findByMemberId(final Long memberId) {
+        return postJpaRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new NotFoundException(ExceptionResolver.NOT_FOUND_POST));
+    }
+
+    @Override
     public Slice<Post> findByTitle(final String title, final Pageable pageable) {
         return postJpaRepository.findAllByTitleStartsWith(title, pageable);
     }
