@@ -19,7 +19,6 @@
 ## 개선점
 
 - [동시성 이슈 낙관적 락 vs 비관적 락](https://velog.io/@swager253/Yuuny-Bucks.-JPA-%EC%97%90%EC%84%9C-%EB%8F%99%EC%8B%9C%EC%84%B1-%EC%9D%B4%EC%8A%88)
-- [조회 성능 개선](https://velog.io/@swager253/Food-SNS-%EC%A1%B0%ED%9A%8C-%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0-Feat.-K6-%EB%B6%80%ED%95%98-%ED%85%8C%EC%8A%A4%ED%8A%B8)
 
 ## Git Convention
 
